@@ -28,16 +28,29 @@ interface BlacklistEntry {
   updated_at?: string;
 }
 
+interface ManualSeed {
+  id?: number;
+  kind: 'base64' | 'url';
+  value: string;
+  custom_title?: string | null;
+  custom_description?: string | null;
+  custom_date?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export default function AdminPage() {
   const [episodes, setEpisodes] = useState<EpisodeWithLanguage[]>([]);
   const [keywords, setKeywords] = useState<Keyword[]>([]);
   const [languageRules, setLanguageRules] = useState<LanguageRule[]>([]);
   const [blacklistEntries, setBlacklistEntries] = useState<BlacklistEntry[]>([]);
+  const [manualSeeds, setManualSeeds] = useState<ManualSeed[]>([]);
   const [loading, setLoading] = useState(true);
   const [keywordsLoading, setKeywordsLoading] = useState(true);
   const [rulesLoading, setRulesLoading] = useState(true);
   const [blacklistLoading, setBlacklistLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'episodes' | 'keywords' | 'language-rules' | 'blacklist'>('episodes');
+  const [manualSeedsLoading, setManualSeedsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'episodes' | 'keywords' | 'language-rules' | 'blacklist' | 'manual-seeds'>('episodes');
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingKeywordId, setEditingKeywordId] = useState<number | null>(null);
   const [editingRuleId, setEditingRuleId] = useState<number | null>(null);
@@ -61,12 +74,28 @@ export default function AdminPage() {
   });
   const [newKeyword, setNewKeyword] = useState('');
   const [editingBlacklistId, setEditingBlacklistId] = useState<number | null>(null);
+  const [editingManualSeedId, setEditingManualSeedId] = useState<number | null>(null);
+  const [newManualSeed, setNewManualSeed] = useState({
+    kind: 'url' as 'base64' | 'url',
+    value: '',
+    custom_title: '',
+    custom_description: '',
+    custom_date: '',
+  });
+  const [manualSeedForm, setManualSeedForm] = useState({
+    kind: 'url' as 'base64' | 'url',
+    value: '',
+    custom_title: '',
+    custom_description: '',
+    custom_date: '',
+  });
 
   useEffect(() => {
     fetchEpisodes();
     fetchKeywords();
     fetchLanguageRules();
     fetchBlacklist();
+    fetchManualSeeds();
   }, []);
 
   async function fetchEpisodes() {
@@ -122,6 +151,20 @@ export default function AdminPage() {
       console.error(err);
     } finally {
       setBlacklistLoading(false);
+    }
+  }
+
+  async function fetchManualSeeds() {
+    try {
+      setManualSeedsLoading(true);
+      const response = await fetch('/api/manual-seeds');
+      if (!response.ok) throw new Error('Failed to fetch manual seeds');
+      const data = await response.json();
+      setManualSeeds(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setManualSeedsLoading(false);
     }
   }
 
@@ -384,6 +427,110 @@ export default function AdminPage() {
     });
   }
 
+  async function handleCreateManualSeed() {
+    if (!newManualSeed.value.trim()) return;
+    try {
+      const response = await fetch('/api/manual-seeds', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: newManualSeed.kind,
+          value: newManualSeed.value.trim(),
+          custom_title: newManualSeed.custom_title || null,
+          custom_description: newManualSeed.custom_description || null,
+          custom_date: newManualSeed.custom_date || null,
+        }),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create manual seed');
+      }
+      setNewManualSeed({
+        kind: 'url',
+        value: '',
+        custom_title: '',
+        custom_description: '',
+        custom_date: '',
+      });
+      await fetchManualSeeds();
+    } catch (err) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : 'Fehler beim Erstellen');
+    }
+  }
+
+  function startEditManualSeed(seed: ManualSeed) {
+    setEditingManualSeedId(seed.id!);
+    setManualSeedForm({
+      kind: seed.kind,
+      value: seed.value,
+      custom_title: seed.custom_title || '',
+      custom_description: seed.custom_description || '',
+      custom_date: seed.custom_date || '',
+    });
+  }
+
+  async function handleUpdateManualSeed(id: number) {
+    try {
+      const response = await fetch(`/api/manual-seeds/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: manualSeedForm.kind,
+          value: manualSeedForm.value.trim(),
+          custom_title: manualSeedForm.custom_title || null,
+          custom_description: manualSeedForm.custom_description || null,
+          custom_date: manualSeedForm.custom_date || null,
+        }),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update manual seed');
+      }
+      await fetchManualSeeds();
+      setEditingManualSeedId(null);
+      setManualSeedForm({
+        kind: 'url',
+        value: '',
+        custom_title: '',
+        custom_description: '',
+        custom_date: '',
+      });
+    } catch (err) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : 'Fehler beim Aktualisieren');
+    }
+  }
+
+  async function handleDeleteManualSeed(id: number) {
+    if (!confirm('Möchten Sie diesen Seed wirklich löschen?')) return;
+    try {
+      const response = await fetch(`/api/manual-seeds/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete manual seed');
+      await fetchManualSeeds();
+    } catch (err) {
+      console.error(err);
+      alert('Fehler beim Löschen');
+    }
+  }
+
+  async function handleSeedManualEpisodes() {
+    try {
+      const response = await fetch('/api/manual-seeds/seed', {
+        method: 'POST',
+      });
+      if (!response.ok) throw new Error('Failed to seed manual episodes');
+      const result = await response.json();
+      alert(`Manuelles Seeding abgeschlossen: ${result.seeded} erstellt, ${result.failed} fehlgeschlagen.`);
+      await fetchEpisodes();
+    } catch (err) {
+      console.error(err);
+      alert('Fehler beim manuellen Seeding');
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -398,6 +545,7 @@ export default function AdminPage() {
               else if (activeTab === 'keywords') fetchKeywords();
               else if (activeTab === 'language-rules') fetchLanguageRules();
               else if (activeTab === 'blacklist') fetchBlacklist();
+              else if (activeTab === 'manual-seeds') fetchManualSeeds();
             }}
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
           >
@@ -405,6 +553,7 @@ export default function AdminPage() {
             {activeTab === 'keywords' && 'Schlüsselwörter aktualisieren'}
             {activeTab === 'language-rules' && 'Sprachregeln aktualisieren'}
             {activeTab === 'blacklist' && 'Blacklist aktualisieren'}
+            {activeTab === 'manual-seeds' && 'Manuelle Seeds aktualisieren'}
           </button>
           {activeTab === 'episodes' && (
             <>
@@ -432,6 +581,14 @@ export default function AdminPage() {
                 Alle Episoden löschen
               </button>
             </>
+          )}
+          {activeTab === 'manual-seeds' && (
+            <button
+              onClick={handleSeedManualEpisodes}
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg"
+            >
+              Manuelles Seeding starten
+            </button>
           )}
           <a
             href="/"
@@ -482,6 +639,16 @@ export default function AdminPage() {
               }`}
             >
               Blacklist
+            </button>
+            <button
+              onClick={() => setActiveTab('manual-seeds')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'manual-seeds'
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+              }`}
+            >
+              Manuelle Seeds
             </button>
           </nav>
         </div>
@@ -1015,8 +1182,219 @@ export default function AdminPage() {
             )}
           </>
         )}
+
+        {activeTab === 'manual-seeds' && (
+          <div className="mb-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+              <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                Manuellen Seed hinzufügen
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                <select
+                  value={newManualSeed.kind}
+                  onChange={(e) => setNewManualSeed({ ...newManualSeed, kind: e.target.value as 'base64' | 'url' })}
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="url">URL</option>
+                  <option value="base64">Base64-ID</option>
+                </select>
+                <input
+                  type="text"
+                  value={newManualSeed.value}
+                  onChange={(e) => setNewManualSeed({ ...newManualSeed, value: e.target.value })}
+                  placeholder="URL oder Base64-ID"
+                  className="md:col-span-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                />
+                <input
+                  type="text"
+                  value={newManualSeed.custom_title}
+                  onChange={(e) => setNewManualSeed({ ...newManualSeed, custom_title: e.target.value })}
+                  placeholder="Titel (optional)"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                />
+                <input
+                  type="text"
+                  value={newManualSeed.custom_description}
+                  onChange={(e) => setNewManualSeed({ ...newManualSeed, custom_description: e.target.value })}
+                  placeholder="Beschreibung (optional)"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                />
+                <input
+                  type="date"
+                  value={newManualSeed.custom_date}
+                  onChange={(e) => setNewManualSeed({ ...newManualSeed, custom_date: e.target.value })}
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                />
+                <div className="md:col-span-6 flex justify-end">
+                  <button
+                    onClick={handleCreateManualSeed}
+                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg"
+                  >
+                    Hinzufügen
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'manual-seeds' && (
+          <>
+            {manualSeedsLoading ? (
+              <p className="text-gray-600 dark:text-gray-400">Lade manuelle Seeds…</p>
+            ) : (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead className="bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Typ
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Wert
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Titel
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Beschreibung
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Datum
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Aktionen
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {manualSeeds.map(seed => (
+                      <tr key={seed.id}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {editingManualSeedId === seed.id ? (
+                            <select
+                              value={manualSeedForm.kind}
+                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, kind: e.target.value as 'base64' | 'url' })}
+                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
+                            >
+                              <option value="url">URL</option>
+                              <option value="base64">Base64-ID</option>
+                            </select>
+                          ) : (
+                            <div className="text-sm font-medium text-gray-900 dark:text-white">
+                              {seed.kind === 'url' ? 'URL' : 'Base64-ID'}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {editingManualSeedId === seed.id ? (
+                            <input
+                              type="text"
+                              value={manualSeedForm.value}
+                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, value: e.target.value })}
+                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
+                            />
+                          ) : (
+                            <div className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs">
+                              {seed.value}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {editingManualSeedId === seed.id ? (
+                            <input
+                              type="text"
+                              value={manualSeedForm.custom_title}
+                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, custom_title: e.target.value })}
+                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
+                              placeholder="Optional"
+                            />
+                          ) : (
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                              {seed.custom_title || '—'}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {editingManualSeedId === seed.id ? (
+                            <input
+                              type="text"
+                              value={manualSeedForm.custom_description}
+                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, custom_description: e.target.value })}
+                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
+                              placeholder="Optional"
+                            />
+                          ) : (
+                            <div className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs">
+                              {seed.custom_description || '—'}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {editingManualSeedId === seed.id ? (
+                            <input
+                              type="date"
+                              value={manualSeedForm.custom_date}
+                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, custom_date: e.target.value })}
+                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
+                            />
+                          ) : (
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                              {seed.custom_date || '—'}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          {editingManualSeedId === seed.id ? (
+                            <div className="space-x-2">
+                              <button
+                                onClick={() => handleUpdateManualSeed(seed.id!)}
+                                className="text-green-600 hover:text-green-900 dark:text-green-400"
+                              >
+                                Speichern
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setEditingManualSeedId(null);
+                                  setManualSeedForm({
+                                    kind: 'url',
+                                    value: '',
+                                    custom_title: '',
+                                    custom_description: '',
+                                    custom_date: '',
+                                  });
+                                }}
+                                className="text-gray-600 hover:text-gray-900 dark:text-gray-400"
+                              >
+                                Abbrechen
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="space-x-2">
+                              <button
+                                onClick={() => startEditManualSeed(seed)}
+                                className="text-blue-600 hover:text-blue-900 dark:text-blue-400"
+                              >
+                                Bearbeiten
+                              </button>
+                              <button
+                                onClick={() => handleDeleteManualSeed(seed.id!)}
+                                className="text-red-600 hover:text-red-900 dark:text-red-400"
+                              >
+                                Löschen
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
 }
-

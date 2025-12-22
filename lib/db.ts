@@ -53,6 +53,17 @@ export interface BlacklistEntry {
   updated_at: string;
 }
 
+export interface ManualSeed {
+  id?: number;
+  kind: string; // 'base64' or 'url'
+  value: string;
+  custom_title: string | null;
+  custom_description: string | null;
+  custom_date: string | null; // YYYY-MM-DD
+  created_at: string;
+  updated_at: string;
+}
+
 let db: Database.Database | null = null;
 
 export function getDb(): Database.Database {
@@ -118,6 +129,19 @@ export function getDb(): Database.Database {
     );
     
     CREATE INDEX IF NOT EXISTS idx_blacklist_type ON blacklist(type);
+
+    CREATE TABLE IF NOT EXISTS manual_seeds (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      kind TEXT NOT NULL CHECK(kind IN ('base64', 'url')),
+      value TEXT NOT NULL UNIQUE,
+      custom_title TEXT,
+      custom_description TEXT,
+      custom_date TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_manual_seeds_kind ON manual_seeds(kind);
   `);
   
   return db;
@@ -129,4 +153,3 @@ export function closeDb() {
     db = null;
   }
 }
-
