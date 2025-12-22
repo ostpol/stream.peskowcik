@@ -18,10 +18,15 @@ export interface EpisodeWithLanguage extends Episode {
   displayLanguage: string;
 }
 
-export async function getAllEpisodes(): Promise<EpisodeWithLanguage[]> {
+export async function getAllEpisodes(options?: { includeUnavailable?: boolean }): Promise<EpisodeWithLanguage[]> {
   const db = getDb();
+  const includeUnavailable = options?.includeUnavailable ?? false;
+  const availabilityFilter = includeUnavailable
+    ? ''
+    : `WHERE available_until IS NULL OR date(available_until) >= date('now')`;
   const rows = db.prepare(`
     SELECT * FROM episodes 
+    ${availabilityFilter}
     ORDER BY timestamp DESC
   `).all() as Episode[];
   
@@ -94,6 +99,7 @@ export async function createOrUpdateEpisode(
           custom_title = COALESCE(?, custom_title),
           custom_description = COALESCE(?, custom_description),
           custom_language = COALESCE(?, custom_language),
+          available_until = COALESCE(?, available_until),
           original_title = COALESCE(?, original_title),
           original_description = COALESCE(?, original_description),
           timestamp = COALESCE(?, timestamp),
@@ -110,6 +116,7 @@ export async function createOrUpdateEpisode(
       data.custom_title ?? null,
       data.custom_description ?? null,
       data.custom_language ?? null,
+      data.available_until ?? null,
       data.original_title ?? null,
       data.original_description ?? null,
       data.timestamp ?? null,
@@ -125,10 +132,10 @@ export async function createOrUpdateEpisode(
     const stmt = db.prepare(`
       INSERT INTO episodes (
         base64_id, url_website, url_video,
-        custom_title, custom_description, custom_language,
+        custom_title, custom_description, custom_language, available_until,
         original_title, original_description,
         timestamp, duration, channel, is_manual
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     
     stmt.run(
@@ -138,6 +145,7 @@ export async function createOrUpdateEpisode(
       data.custom_title ?? null,
       data.custom_description ?? null,
       data.custom_language ?? null,
+      data.available_until ?? null,
       data.original_title ?? null,
       data.original_description ?? null,
       data.timestamp ?? 0,
@@ -260,4 +268,3 @@ export async function syncEpisodesFromAPI(): Promise<number> {
   
   return synced;
 }
-

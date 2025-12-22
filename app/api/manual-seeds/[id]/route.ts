@@ -9,7 +9,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     }
 
     const body = await request.json();
-    const { kind, value, custom_title, custom_description, custom_date } = body;
+    const { kind, value, custom_title, custom_description, custom_date, custom_language, available_until } = body;
 
     if (!kind || !value) {
       return NextResponse.json({ error: 'kind and value are required' }, { status: 400 });
@@ -25,6 +25,8 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       custom_title: custom_title?.trim() || null,
       custom_description: custom_description?.trim() || null,
       custom_date: custom_date || null,
+      custom_language: custom_language?.trim() || null,
+      available_until: available_until || null,
     });
 
     if (!seed) {

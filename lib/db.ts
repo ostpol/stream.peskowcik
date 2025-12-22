@@ -18,6 +18,7 @@ export interface Episode {
   custom_title: string | null;
   custom_description: string | null;
   custom_language: string | null;
+  available_until: string | null;
   original_title: string | null;
   original_description: string | null;
   timestamp: number;
@@ -60,6 +61,8 @@ export interface ManualSeed {
   custom_title: string | null;
   custom_description: string | null;
   custom_date: string | null; // YYYY-MM-DD
+  custom_language: string | null;
+  available_until: string | null; // YYYY-MM-DD
   created_at: string;
   updated_at: string;
 }
@@ -84,6 +87,7 @@ export function getDb(): Database.Database {
       custom_title TEXT,
       custom_description TEXT,
       custom_language TEXT,
+      available_until TEXT,
       original_title TEXT,
       original_description TEXT,
       timestamp INTEGER NOT NULL DEFAULT 0,
@@ -137,12 +141,25 @@ export function getDb(): Database.Database {
       custom_title TEXT,
       custom_description TEXT,
       custom_date TEXT,
+      custom_language TEXT,
+      available_until TEXT,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
 
     CREATE INDEX IF NOT EXISTS idx_manual_seeds_kind ON manual_seeds(kind);
   `);
+
+  const ensureColumn = (table: string, columnName: string, columnDefinition: string) => {
+    const columns = db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
+    if (!columns.some(column => column.name === columnName)) {
+      db.exec(`ALTER TABLE ${table} ADD COLUMN ${columnDefinition}`);
+    }
+  };
+
+  ensureColumn('episodes', 'available_until', 'available_until TEXT');
+  ensureColumn('manual_seeds', 'custom_language', 'custom_language TEXT');
+  ensureColumn('manual_seeds', 'available_until', 'available_until TEXT');
   
   return db;
 }

@@ -14,7 +14,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { kind, value, custom_title, custom_description, custom_date } = body;
+    const { kind, value, custom_title, custom_description, custom_date, custom_language, available_until } = body;
 
     if (!kind || !value) {
       return NextResponse.json({ error: 'kind and value are required' }, { status: 400 });
@@ -30,6 +30,8 @@ export async function POST(request: NextRequest) {
       custom_title: custom_title?.trim() || null,
       custom_description: custom_description?.trim() || null,
       custom_date: custom_date || null,
+      custom_language: custom_language?.trim() || null,
+      available_until: available_until || null,
     });
 
     return NextResponse.json(seed, { status: 201 });
