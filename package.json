@@ -1,0 +1,39 @@
+{
+  "name": "stream-peskowcik",
+  "version": "2.0.0",
+  "description": "Modern web app for streaming Sorbian Sandmännchen episodes with custom episode management",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:seed-keywords": "tsx scripts/seed-keywords.ts",
+    "db:seed-language-rules": "tsx scripts/seed-language-rules.ts"
+  },
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "better-sqlite3": "^11.0.0",
+    "axios": "^1.7.0",
+    "hls.js": "^1.5.0",
+    "date-fns": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@types/better-sqlite3": "^7.6.0",
+    "typescript": "^5.4.0",
+    "tsx": "^4.16.0",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0"
+  }
+}
+

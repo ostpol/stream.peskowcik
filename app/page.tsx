@@ -1,0 +1,415 @@
+'use client';
+
+import { useEffect, useState, useMemo } from 'react';
+import EpisodeCard from '@/components/EpisodeCard';
+import { EpisodeWithLanguage } from '@/lib/episodes';
+import { format } from 'date-fns';
+
+export default function Home() {
+  const [episodes, setEpisodes] = useState<EpisodeWithLanguage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Search and filter state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [languageFilter, setLanguageFilter] = useState<string>('all'); // 'all', 'Obersorbisch', 'Niedersorbisch'
+  const [dateFrom, setDateFrom] = useState<string>('');
+  const [dateTo, setDateTo] = useState<string>('');
+  const [showFilters, setShowFilters] = useState(false);
+
+  useEffect(() => {
+    fetchEpisodes();
+  }, []);
+
+  async function fetchEpisodes() {
+    try {
+      setLoading(true);
+      // Enable auto-sync if database is empty
+      const response = await fetch('/api/episodes?autoSync=true');
+      if (!response.ok) {
+        throw new Error('Failed to fetch episodes');
+      }
+      const data = await response.json();
+      setEpisodes(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function syncEpisodes() {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/episodes?sync=true');
+      if (!response.ok) {
+        throw new Error('Failed to sync episodes');
+      }
+      const result = await response.json();
+      // After sync, fetch episodes again
+      await fetchEpisodes();
+      if (result.synced > 0) {
+        alert(`Erfolgreich ${result.synced} Episode(n) synchronisiert.`);
+      } else {
+        alert('Keine neuen Episoden gefunden.');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      alert('Fehler beim Synchronisieren der Episoden');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Filter episodes based on search and filters
+  const filteredEpisodes = useMemo(() => {
+    let filtered = [...episodes];
+
+    // Search filter (title and description)
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(ep => 
+        ep.displayTitle.toLowerCase().includes(query) ||
+        ep.displayDescription.toLowerCase().includes(query)
+      );
+    }
+
+    // Language filter
+    if (languageFilter !== 'all') {
+      filtered = filtered.filter(ep => ep.displayLanguage === languageFilter);
+    }
+
+    // Date filters
+    if (dateFrom) {
+      const fromDate = new Date(dateFrom);
+      fromDate.setHours(0, 0, 0, 0);
+      filtered = filtered.filter(ep => {
+        if (!ep.timestamp) return false;
+        const epDate = new Date(ep.timestamp * 1000);
+        epDate.setHours(0, 0, 0, 0);
+        return epDate >= fromDate;
+      });
+    }
+
+    if (dateTo) {
+      const toDate = new Date(dateTo);
+      toDate.setHours(23, 59, 59, 999);
+      filtered = filtered.filter(ep => {
+        if (!ep.timestamp) return false;
+        const epDate = new Date(ep.timestamp * 1000);
+        epDate.setHours(23, 59, 59, 999);
+        return epDate <= toDate;
+      });
+    }
+
+    return filtered;
+  }, [episodes, searchQuery, languageFilter, dateFrom, dateTo]);
+
+  // Group filtered episodes by language
+  const obersorbisch = filteredEpisodes.filter(e => e.displayLanguage === 'Obersorbisch');
+  const niedersorbisch = filteredEpisodes.filter(e => e.displayLanguage === 'Niedersorbisch');
+  const other = filteredEpisodes.filter(e => 
+    e.displayLanguage !== 'Obersorbisch' && e.displayLanguage !== 'Niedersorbisch'
+  );
+
+  // Get date range for date inputs (min/max from episodes)
+  const dateRange = useMemo(() => {
+    if (episodes.length === 0) return { min: '', max: '' };
+    
+    const timestamps = episodes
+      .map(e => e.timestamp)
+      .filter(ts => ts > 0);
+    
+    if (timestamps.length === 0) return { min: '', max: '' };
+    
+    const minDate = new Date(Math.min(...timestamps) * 1000);
+    const maxDate = new Date(Math.max(...timestamps) * 1000);
+    
+    return {
+      min: format(minDate, 'yyyy-MM-dd'),
+      max: format(maxDate, 'yyyy-MM-dd'),
+    };
+  }, [episodes]);
+
+  function clearFilters() {
+    setSearchQuery('');
+    setLanguageFilter('all');
+    setDateFrom('');
+    setDateTo('');
+  }
+
+  const hasActiveFilters = searchQuery.trim() || languageFilter !== 'all' || dateFrom || dateTo;
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <header className="bg-white dark:bg-gray-800 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <img
+            src="https://www.mdr.de/sandmann/sandmann824-resimage_v-variantBig24x9_w-2560.jpg?version=55897"
+            alt="Sandmännchen"
+            className="w-full h-auto rounded-lg"
+          />
+          <h1 className="text-4xl font-bold mt-6 text-gray-900 dark:text-white">
+            Pěskowčik – Stream Now!
+          </h1>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+          <p className="text-blue-800 dark:text-blue-200">
+            Diese App befindet sich noch im Aufbau und in der Entwicklung
+          </p>
+        </div>
+
+        <div className="prose dark:prose-invert max-w-none mb-8">
+          <p>
+            Um sich nicht mit den Mediatheken oder Google herumärgern zu müssen und um die wenigen aktuell verfügbaren sorbischen Folgen schnell griffbereit zu haben, habe ich diese App entwickelt.
+          </p>
+          <p>
+            Diese App nutzt die offene MediathekViewWeb‑API, um sorbischsprachige Sandmännchen‑Folgen zu finden und anzuzeigen.
+          </p>
+        </div>
+
+        {loading && (
+          <div className="text-center py-12">
+            <p className="text-gray-600 dark:text-gray-400">Lade Daten von der Mediathek…</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+            <p className="text-red-800 dark:text-red-200">Fehler: {error}</p>
+          </div>
+        )}
+
+        {!loading && !error && episodes.length === 0 && (
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+            <p className="text-yellow-800 dark:text-yellow-200">
+              Derzeit sind keine sorbischsprachigen Sandmännchen‑Folgen verfügbar.
+            </p>
+          </div>
+        )}
+
+        {!loading && !error && (
+          <>
+            {episodes.length === 0 && (
+              <div className="mb-6 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                <p className="text-yellow-800 dark:text-yellow-200 mb-4">
+                  Keine Episoden gefunden. Möchten Sie Episoden von der MediathekViewWeb API synchronisieren?
+                </p>
+                <button
+                  onClick={syncEpisodes}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+                >
+                  Episoden synchronisieren
+                </button>
+              </div>
+            )}
+
+            {episodes.length > 0 && (
+              <>
+            {/* Search and Filter Section */}
+            <div className="mb-8 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="flex flex-col md:flex-row gap-4 mb-4">
+                {/* Search Input */}
+                <div className="flex-1">
+                  <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Suche
+                  </label>
+                  <input
+                    id="search"
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Nach Titel oder Beschreibung suchen..."
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  />
+                </div>
+                
+                {/* Filter Toggle */}
+                <div className="flex items-end">
+                  <button
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors"
+                  >
+                    {showFilters ? 'Filter ausblenden' : 'Filter anzeigen'}
+                    {hasActiveFilters && (
+                      <span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-blue-600 rounded-full">
+                        {[searchQuery, languageFilter !== 'all' ? 1 : 0, dateFrom ? 1 : 0, dateTo ? 1 : 0].filter(Boolean).length}
+                      </span>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Filter Panel */}
+              {showFilters && (
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Language Filter */}
+                    <div>
+                      <label htmlFor="language" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Sprache
+                      </label>
+                      <select
+                        id="language"
+                        value={languageFilter}
+                        onChange={(e) => setLanguageFilter(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                      >
+                        <option value="all">Alle Sprachen</option>
+                        <option value="Obersorbisch">Obersorbisch</option>
+                        <option value="Niedersorbisch">Niedersorbisch</option>
+                      </select>
+                    </div>
+
+                    {/* Date From */}
+                    <div>
+                      <label htmlFor="dateFrom" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Von Datum
+                      </label>
+                      <input
+                        id="dateFrom"
+                        type="date"
+                        value={dateFrom}
+                        onChange={(e) => setDateFrom(e.target.value)}
+                        min={dateRange.min}
+                        max={dateRange.max}
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                      />
+                    </div>
+
+                    {/* Date To */}
+                    <div>
+                      <label htmlFor="dateTo" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Bis Datum
+                      </label>
+                      <input
+                        id="dateTo"
+                        type="date"
+                        value={dateTo}
+                        onChange={(e) => setDateTo(e.target.value)}
+                        min={dateFrom || dateRange.min}
+                        max={dateRange.max}
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Clear Filters Button */}
+                  {hasActiveFilters && (
+                    <div className="mt-4">
+                      <button
+                        onClick={clearFilters}
+                        className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                      >
+                        Filter zurücksetzen
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Results Count */}
+              <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                {hasActiveFilters ? (
+                  <>
+                    {filteredEpisodes.length} von {episodes.length} Folgen
+                  </>
+                ) : (
+                  <>
+                    {episodes.length} {episodes.length === 1 ? 'Folge' : 'Folgen'} verfügbar
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="mb-8 space-x-4">
+              <button
+                onClick={syncEpisodes}
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+              >
+                Episoden synchronisieren
+              </button>
+              <a
+                href="/api/episodes/rss"
+                download="sandmaennchen_sorbisch.xml"
+                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+              >
+                RSS‑Feed herunterladen
+              </a>
+            </div>
+
+            {filteredEpisodes.length === 0 ? (
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                <p className="text-yellow-800 dark:text-yellow-200">
+                  Keine Folgen gefunden, die den Suchkriterien entsprechen.
+                </p>
+              </div>
+            ) : (
+              <>
+                {obersorbisch.length > 0 && (
+                  <section className="mb-12">
+                    <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+                      Obersorbisch {hasActiveFilters && `(${obersorbisch.length})`}
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {obersorbisch.map(episode => (
+                        <EpisodeCard key={episode.id} episode={episode} />
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {niedersorbisch.length > 0 && (
+                  <section className="mb-12">
+                    <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+                      Niedersorbisch {hasActiveFilters && `(${niedersorbisch.length})`}
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {niedersorbisch.map(episode => (
+                        <EpisodeCard key={episode.id} episode={episode} />
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {other.length > 0 && (
+                  <section className="mb-12">
+                    <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+                      Weitere Folgen {hasActiveFilters && `(${other.length})`}
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {other.map(episode => (
+                        <EpisodeCard key={episode.id} episode={episode} />
+                      ))}
+                    </div>
+                  </section>
+                )}
+              </>
+            )}
+              </>
+            )}
+          </>
+        )}
+      </main>
+
+      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
+        <div className="max-w-7xl mx-auto px-4 py-6 text-center text-gray-600 dark:text-gray-400">
+          <p>
+            <a
+              href="https://github.com/max2058/stream.peskowcik"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              GitHub Repository
+            </a>
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
