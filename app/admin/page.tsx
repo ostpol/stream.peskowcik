@@ -35,6 +35,8 @@ interface ManualSeed {
   custom_title?: string | null;
   custom_description?: string | null;
   custom_date?: string | null;
+  custom_language?: string | null;
+  available_until?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -81,6 +83,8 @@ export default function AdminPage() {
     custom_title: '',
     custom_description: '',
     custom_date: '',
+    custom_language: '',
+    available_until: '',
   });
   const [manualSeedForm, setManualSeedForm] = useState({
     kind: 'url' as 'base64' | 'url',
@@ -88,6 +92,8 @@ export default function AdminPage() {
     custom_title: '',
     custom_description: '',
     custom_date: '',
+    custom_language: '',
+    available_until: '',
   });
 
   useEffect(() => {
@@ -101,7 +107,7 @@ export default function AdminPage() {
   async function fetchEpisodes() {
     try {
       setLoading(true);
-      const response = await fetch('/api/episodes');
+      const response = await fetch('/api/episodes?includeUnavailable=true');
       if (!response.ok) throw new Error('Failed to fetch episodes');
       const data = await response.json();
       setEpisodes(data);
@@ -439,6 +445,8 @@ export default function AdminPage() {
           custom_title: newManualSeed.custom_title || null,
           custom_description: newManualSeed.custom_description || null,
           custom_date: newManualSeed.custom_date || null,
+          custom_language: newManualSeed.custom_language || null,
+          available_until: newManualSeed.available_until || null,
         }),
       });
       if (!response.ok) {
@@ -451,6 +459,8 @@ export default function AdminPage() {
         custom_title: '',
         custom_description: '',
         custom_date: '',
+        custom_language: '',
+        available_until: '',
       });
       await fetchManualSeeds();
     } catch (err) {
@@ -467,6 +477,8 @@ export default function AdminPage() {
       custom_title: seed.custom_title || '',
       custom_description: seed.custom_description || '',
       custom_date: seed.custom_date || '',
+      custom_language: seed.custom_language || '',
+      available_until: seed.available_until || '',
     });
   }
 
@@ -481,6 +493,8 @@ export default function AdminPage() {
           custom_title: manualSeedForm.custom_title || null,
           custom_description: manualSeedForm.custom_description || null,
           custom_date: manualSeedForm.custom_date || null,
+          custom_language: manualSeedForm.custom_language || null,
+          available_until: manualSeedForm.available_until || null,
         }),
       });
       if (!response.ok) {
@@ -495,6 +509,8 @@ export default function AdminPage() {
         custom_title: '',
         custom_description: '',
         custom_date: '',
+        custom_language: '',
+        available_until: '',
       });
     } catch (err) {
       console.error(err);
@@ -1189,7 +1205,7 @@ export default function AdminPage() {
               <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
                 Manuellen Seed hinzufügen
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
                 <select
                   value={newManualSeed.kind}
                   onChange={(e) => setNewManualSeed({ ...newManualSeed, kind: e.target.value as 'base64' | 'url' })}
@@ -1224,8 +1240,25 @@ export default function AdminPage() {
                   value={newManualSeed.custom_date}
                   onChange={(e) => setNewManualSeed({ ...newManualSeed, custom_date: e.target.value })}
                   className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                  aria-label="Datum (optional)"
                 />
-                <div className="md:col-span-6 flex justify-end">
+                <select
+                  value={newManualSeed.custom_language}
+                  onChange={(e) => setNewManualSeed({ ...newManualSeed, custom_language: e.target.value })}
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="">Sprache (optional)</option>
+                  <option value="Obersorbisch">Obersorbisch</option>
+                  <option value="Niedersorbisch">Niedersorbisch</option>
+                </select>
+                <input
+                  type="date"
+                  value={newManualSeed.available_until}
+                  onChange={(e) => setNewManualSeed({ ...newManualSeed, available_until: e.target.value })}
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                  aria-label="Verfügbar bis (optional)"
+                />
+                <div className="md:col-span-8 flex justify-end">
                   <button
                     onClick={handleCreateManualSeed}
                     className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg"
@@ -1261,6 +1294,12 @@ export default function AdminPage() {
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Datum
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Sprache
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Verfügbar bis
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         Aktionen
@@ -1344,6 +1383,37 @@ export default function AdminPage() {
                             </div>
                           )}
                         </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {editingManualSeedId === seed.id ? (
+                            <select
+                              value={manualSeedForm.custom_language}
+                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, custom_language: e.target.value })}
+                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
+                            >
+                              <option value="">—</option>
+                              <option value="Obersorbisch">Obersorbisch</option>
+                              <option value="Niedersorbisch">Niedersorbisch</option>
+                            </select>
+                          ) : (
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                              {seed.custom_language || '—'}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {editingManualSeedId === seed.id ? (
+                            <input
+                              type="date"
+                              value={manualSeedForm.available_until}
+                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, available_until: e.target.value })}
+                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
+                            />
+                          ) : (
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                              {seed.available_until || '—'}
+                            </div>
+                          )}
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           {editingManualSeedId === seed.id ? (
                             <div className="space-x-2">
@@ -1362,6 +1432,8 @@ export default function AdminPage() {
                                     custom_title: '',
                                     custom_description: '',
                                     custom_date: '',
+                                    custom_language: '',
+                                    available_until: '',
                                   });
                                 }}
                                 className="text-gray-600 hover:text-gray-900 dark:text-gray-400"

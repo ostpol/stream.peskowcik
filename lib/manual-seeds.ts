@@ -9,6 +9,8 @@ export interface ManualSeedInput {
   custom_title?: string | null;
   custom_description?: string | null;
   custom_date?: string | null;
+  custom_language?: string | null;
+  available_until?: string | null;
 }
 
 export async function getAllManualSeeds(): Promise<ManualSeed[]> {
@@ -19,15 +21,25 @@ export async function getAllManualSeeds(): Promise<ManualSeed[]> {
 export async function createManualSeed(input: ManualSeedInput): Promise<ManualSeed> {
   const db = getDb();
   const stmt = db.prepare(`
-    INSERT INTO manual_seeds (kind, value, custom_title, custom_description, custom_date)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO manual_seeds (
+      kind,
+      value,
+      custom_title,
+      custom_description,
+      custom_date,
+      custom_language,
+      available_until
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
   stmt.run(
     input.kind,
     input.value,
     input.custom_title ?? null,
     input.custom_description ?? null,
-    input.custom_date ?? null
+    input.custom_date ?? null,
+    input.custom_language ?? null,
+    input.available_until ?? null
   );
   return db.prepare('SELECT * FROM manual_seeds WHERE value = ?').get(input.value) as ManualSeed;
 }
@@ -41,6 +53,8 @@ export async function updateManualSeed(id: number, input: ManualSeedInput): Prom
         custom_title = ?,
         custom_description = ?,
         custom_date = ?,
+        custom_language = ?,
+        available_until = ?,
         updated_at = datetime('now')
     WHERE id = ?
   `);
@@ -50,6 +64,8 @@ export async function updateManualSeed(id: number, input: ManualSeedInput): Prom
     input.custom_title ?? null,
     input.custom_description ?? null,
     input.custom_date ?? null,
+    input.custom_language ?? null,
+    input.available_until ?? null,
     id
   );
   return db.prepare('SELECT * FROM manual_seeds WHERE id = ?').get(id) as ManualSeed | undefined || null;
@@ -94,6 +110,8 @@ export async function seedManualSeeds(): Promise<{ seeded: number; failed: numbe
           is_manual: 1,
           custom_title: seed.custom_title ?? null,
           custom_description: seed.custom_description ?? null,
+          custom_language: seed.custom_language ?? null,
+          available_until: seed.available_until ?? null,
         });
         seeded++;
         continue;
@@ -129,6 +147,12 @@ export async function seedManualSeeds(): Promise<{ seeded: number; failed: numbe
       }
       if (seed.custom_description) {
         episodeData.custom_description = seed.custom_description;
+      }
+      if (seed.custom_language) {
+        episodeData.custom_language = seed.custom_language;
+      }
+      if (seed.available_until) {
+        episodeData.available_until = seed.available_until;
       }
 
       await createOrUpdateEpisode(seed.value, episodeData);

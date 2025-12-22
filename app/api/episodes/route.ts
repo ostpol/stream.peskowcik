@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const sync = searchParams.get('sync') === 'true';
     const autoSync = searchParams.get('autoSync') === 'true';
+    const includeUnavailable = searchParams.get('includeUnavailable') === 'true';
     
     if (sync) {
       // Sync episodes from API
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ synced: count });
     }
     
-    const episodes = await getAllEpisodes();
+    const episodes = await getAllEpisodes({ includeUnavailable });
     
     // Auto-sync if enabled and database is empty
     if (autoSync && episodes.length === 0) {
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
       const count = await syncEpisodesFromAPI();
       console.log(`Auto-synced ${count} episodes`);
       // Return the newly synced episodes
-      return NextResponse.json(await getAllEpisodes());
+      return NextResponse.json(await getAllEpisodes({ includeUnavailable }));
     }
     
     return NextResponse.json(episodes);
@@ -95,4 +96,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
