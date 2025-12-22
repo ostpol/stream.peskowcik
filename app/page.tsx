@@ -38,29 +38,6 @@ export default function Home() {
     }
   }
 
-  async function syncEpisodes() {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/episodes?sync=true');
-      if (!response.ok) {
-        throw new Error('Failed to sync episodes');
-      }
-      const result = await response.json();
-      // After sync, fetch episodes again
-      await fetchEpisodes();
-      if (result.synced > 0) {
-        alert(`Erfolgreich ${result.synced} Episode(n) synchronisiert.`);
-      } else {
-        alert('Keine neuen Episoden gefunden.');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-      alert('Fehler beim Synchronisieren der Episoden');
-    } finally {
-      setLoading(false);
-    }
-  }
-
   // Filter episodes based on search and filters
   const filteredEpisodes = useMemo(() => {
     let filtered = [...episodes];
@@ -193,20 +170,6 @@ export default function Home() {
 
         {!loading && !error && (
           <>
-            {episodes.length === 0 && (
-              <div className="mb-6 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                <p className="text-yellow-800 dark:text-yellow-200 mb-4">
-                  Keine Episoden gefunden. Möchten Sie Episoden von der MediathekViewWeb API synchronisieren?
-                </p>
-                <button
-                  onClick={syncEpisodes}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
-                >
-                  Episoden synchronisieren
-                </button>
-              </div>
-            )}
-
             {episodes.length > 0 && (
               <>
             {/* Search and Filter Section */}
@@ -326,12 +289,6 @@ export default function Home() {
             </div>
 
             <div className="mb-8 space-x-4">
-              <button
-                onClick={syncEpisodes}
-                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
-              >
-                Episoden synchronisieren
-              </button>
               <a
                 href="/api/episodes/rss"
                 download="sandmaennchen_sorbisch.xml"
@@ -412,4 +369,3 @@ export default function Home() {
     </div>
   );
 }
-
