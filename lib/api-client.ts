@@ -53,6 +53,8 @@ function resolveArdId(item: Record<string, any>): string | null {
     item.ardId,
     item.mediaIdentifier,
     item?.target?.id,
+    item?.links?.target?.id,
+    item?.links?.self?.id,
   ];
   for (const candidate of candidates) {
     if (typeof candidate === 'string' && candidate.startsWith('Y3Jp')) {
@@ -68,13 +70,14 @@ function resolveArdUrl(item: Record<string, any>, base64Id: string | null): stri
     item.url_website,
     item.href,
     item?.links?.self?.href,
+    item?.links?.target?.href,
     item?.links?.canonical?.href,
     item?.links?.main?.href,
     item?.links?.web?.href,
   ];
   for (const link of linkCandidates) {
     if (typeof link === 'string' && link.length > 0) {
-      if (link.includes('page-gateway/pages/ard/item/') && base64Id) {
+      if ((link.includes('page-gateway/pages/') || link.includes('page-gateway/teasers/')) && base64Id) {
         return getArdVideoUrl(base64Id) || link;
       }
       if (link.includes('ardmediathek.de/video/') || link.includes('ardmediathek.de')) {
@@ -144,19 +147,30 @@ export async function fetchArdSearchResults(
     });
 
     const data = response.data;
-    const rawResults = data?.results || data?.searchResults || data?.result?.results || [];
+    const rawResults = data?.teasers || data?.results || data?.searchResults || data?.result?.results || [];
     if (!Array.isArray(rawResults)) return [];
 
     return rawResults.map((item: Record<string, any>) => {
       const base64Id = resolveArdId(item);
       const title = firstString(
-        item.longTitle || item.mediumTitle || item.title || item.teaserTitle || item.name
+        item.longTitle || item.mediumTitle || item.shortTitle || item.title || item.teaserTitle || item.name
       );
       const description = firstString(
-        item.longSynopsis || item.synopsis || item.shortSynopsis || item.teaserText || item.description
+        item.longSynopsis ||
+          item.synopsis ||
+          item.shortSynopsis ||
+          item.show?.longSynopsis ||
+          item.show?.synopsis ||
+          item.show?.shortSynopsis ||
+          item.teaserText ||
+          item.description
       );
       const timestamp = toTimestamp(
-        item.broadcastedOn || item.publicationStartDate || item.publicationDate || item.availableFrom
+        item.broadcastedOn ||
+          item.publicationStartDate ||
+          item.publicationDate ||
+          item.availableFrom ||
+          item.availableTo
       );
       const url_website = resolveArdUrl(item, base64Id);
       return {
@@ -165,8 +179,14 @@ export async function fetchArdSearchResults(
         timestamp,
         duration: typeof item.duration === 'number' ? item.duration : undefined,
         url_website,
-        channel: item.publisher?.name || item.channel?.name || item.station?.name || undefined,
-        topic: item.topic || undefined,
+        channel:
+          item.publicationService?.name ||
+          item.show?.publisher?.name ||
+          item.publisher?.name ||
+          item.channel?.name ||
+          item.station?.name ||
+          undefined,
+        topic: item.show?.title || item.topic || undefined,
       };
     });
   } catch (error) {
@@ -194,7 +214,7 @@ export async function fetchArdSearchRawResults(
     });
 
     const data = response.data;
-    const rawResults = data?.results || data?.searchResults || data?.result?.results || [];
+    const rawResults = data?.teasers || data?.results || data?.searchResults || data?.result?.results || [];
     if (!Array.isArray(rawResults)) return [];
     return rawResults;
   } catch (error) {
