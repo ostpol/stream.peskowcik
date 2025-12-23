@@ -15,6 +15,7 @@ export interface EpisodeWithLanguage {
   base64_id: string | null;
   url_website: string;
   url_video?: string | null;
+  preview_image_url?: string | null;
   original_title: string;
   original_description: string;
   timestamp: number;
@@ -81,6 +82,7 @@ function mergeEpisodeWithOverride(entry: MediathekResult & { base64_id: string |
     base64_id: entry.base64_id,
     url_website: entry.url_website,
     url_video: entry.url_video || null,
+    preview_image_url: entry.preview_image_url || null,
     original_title: entry.title,
     original_description: entry.description,
     timestamp: entry.timestamp || 0,

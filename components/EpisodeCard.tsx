@@ -13,6 +13,7 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
   const [expanded, setExpanded] = useState(false);
   const description = episode.displayDescription || '';
   const shouldTruncate = description.length > 150;
+  const previewImageUrl = episode.preview_image_url || '';
 
   const dateStr = episode.timestamp
     ? format(new Date(episode.timestamp * 1000), 'dd.MM.yyyy')
@@ -45,7 +46,7 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
         )}
 
         {episode.url_video ? (
-          <VideoPlayer url={episode.url_video} />
+          <VideoPlayer url={episode.url_video} poster={previewImageUrl || undefined} />
         ) : (
           <a
             href={episode.url_website}
@@ -53,9 +54,20 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
             rel="noopener noreferrer"
             className="block"
           >
-            <div className="w-full aspect-video bg-slate-800 rounded flex items-center justify-center">
-              <span className="text-slate-400">Vorschau</span>
-            </div>
+            {previewImageUrl ? (
+              <div className="w-full aspect-video bg-slate-800 rounded overflow-hidden">
+                <img
+                  src={previewImageUrl}
+                  alt={`Vorschau für ${episode.displayTitle}`}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            ) : (
+              <div className="w-full aspect-video bg-slate-800 rounded flex items-center justify-center">
+                <span className="text-slate-400">Vorschau</span>
+              </div>
+            )}
           </a>
         )}
 
