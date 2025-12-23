@@ -25,8 +25,14 @@ interface EpisodeOverrideForm {
   available_until: string;
 }
 
+interface ArdSearchResponse {
+  query: string;
+  results: Record<string, unknown>[];
+}
+
 export default function AdminPage() {
   const [episodes, setEpisodes] = useState<EpisodeWithLanguage[]>([]);
+  const [searchResults, setSearchResults] = useState<ArdSearchResponse | null>(null);
   const [searchTerms, setSearchTerms] = useState<SearchTerm[]>([]);
   const [blacklistEntries, setBlacklistEntries] = useState<BlacklistEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -109,7 +115,7 @@ export default function AdminPage() {
 
   async function fetchAll() {
     setLoading(true);
-    await Promise.all([fetchEpisodes(), fetchSearchTerms(), fetchBlacklist()]);
+    await Promise.all([fetchEpisodes(), fetchSearchTerms(), fetchBlacklist(), fetchRawSearchResults()]);
     setLoading(false);
   }
 
@@ -121,6 +127,18 @@ export default function AdminPage() {
       setEpisodes(data);
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  async function fetchRawSearchResults() {
+    try {
+      const response = await fetch('/api/ard-search?query=Pěskowčik');
+      if (!response.ok) throw new Error('Failed to fetch ARD raw search results');
+      const data = await response.json();
+      setSearchResults(data);
+    } catch (error) {
+      console.error(error);
+      setSearchResults(null);
     }
   }
 

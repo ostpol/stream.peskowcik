@@ -175,6 +175,34 @@ export async function fetchArdSearchResults(
   }
 }
 
+export async function fetchArdSearchRawResults(
+  query: string,
+  pageSize: number = 50,
+  pageNumber: number = 0
+): Promise<Record<string, any>[]> {
+  try {
+    const response = await axios.get(ARD_SEARCH_API_BASE, {
+      params: {
+        query,
+        platform: 'MEDIA_THEK',
+        sortingCriteria: 'SCORE_DESC',
+        pageNumber,
+        pageSize,
+      },
+      timeout: 6000,
+      headers: ARD_COMMON_HEADERS,
+    });
+
+    const data = response.data;
+    const rawResults = data?.results || data?.searchResults || data?.result?.results || [];
+    if (!Array.isArray(rawResults)) return [];
+    return rawResults;
+  } catch (error) {
+    console.error('Error fetching ARD raw search results:', error);
+    return [];
+  }
+}
+
 export async function fetchArdEpisode(base64Id: string): Promise<MediathekResult | null> {
   try {
     const response = await axios.get(`${ARD_API_BASE}/${base64Id}`, {
