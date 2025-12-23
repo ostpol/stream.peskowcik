@@ -32,6 +32,7 @@ export interface EpisodeOverride {
   custom_title: string | null;
   custom_description: string | null;
   custom_language: string | null;
+  custom_preview_image_url: string | null;
   available_until: string | null;
   created_at: string;
   updated_at: string;
@@ -81,6 +82,7 @@ export function getDb(): Database.Database {
       custom_title TEXT,
       custom_description TEXT,
       custom_language TEXT,
+      custom_preview_image_url TEXT,
       available_until TEXT,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -139,6 +141,14 @@ export function getDb(): Database.Database {
 
     CREATE INDEX IF NOT EXISTS idx_api_cache_expires ON api_cache(expires_at);
   `);
+
+  const episodeOverrideColumns = db
+    .prepare("PRAGMA table_info('episode_overrides')")
+    .all() as Array<{ name: string }>;
+  const hasCustomPreviewImageUrl = episodeOverrideColumns.some(column => column.name === 'custom_preview_image_url');
+  if (!hasCustomPreviewImageUrl) {
+    db.exec('ALTER TABLE episode_overrides ADD COLUMN custom_preview_image_url TEXT');
+  }
 
   return db;
 }
