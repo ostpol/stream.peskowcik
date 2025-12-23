@@ -1,0 +1,1715 @@
+{
+  "id": "U2VhcmNoQ29tcGlsYXRpb25XaWRnZXQ6IGFyZFDEm3Nrb3fEjWlr",
+  "isChildContent": false,
+  "pagination": {
+    "pageNumber": 0,
+    "pageSize": 12,
+    "totalElements": 14
+  },
+  "personalized": false,
+  "links": {
+    "self": {
+      "partner": "ard",
+      "id": "U2VhcmNoQ29tcGlsYXRpb25XaWRnZXQ6IGFyZFDEm3Nrb3fEjWlr",
+      "urlId": "U2VhcmNoQ29tcGlsYXRpb25XaWRnZXQ6IGFyZFDEm3Nrb3fEjWlr",
+      "title": "SearchCompilationWidget:Pěskowčik",
+      "href": "https://api.ardmediathek.de/search-system/search/vods/ard",
+      "type": "application/vnd.ard.widget+json"
+    }
+  },
+  "size": "m",
+  "teasers": [
+    {
+      "personalized": false,
+      "availableTo": "2026-12-07T22:59:59Z",
+      "binaryFeatures": [],
+      "broadcastedOn": "2025-12-07T16:53:00Z",
+      "coreAssetType": "EPISODE",
+      "duration": 227,
+      "id": "Y3JpZDovL3JiYl83YTZjZjYyOC0wZWU2LTQxOTctYTk3OC03NDgyMGE4YmRhOThfcHVibGljYXRpb24",
+      "images": {
+        "aspect16x9": {
+          "alt": "Kito, Maja und die Kugelkiste: Vom Schlangenbesuch (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:96f5ea12af6f06bc?w={width}&ch=61df88e02cd00f2a",
+          "title": "Obersorbisch: Kito, Maja und die Kugelkiste: Vom Schlangenbesuch"
+        }
+      },
+      "isChildContent": true,
+      "isFamilyFriendly": false,
+      "longTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo wopyće hada pola dźěsća | Unser Sandmännchen (Obersorbisch) | 07.12.2025",
+      "maturityContentRating": "FSK0",
+      "mediumTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo wopyće hada pola dźěsća | Unser Sandmännchen (Obersorbisch) | 07.12.2025",
+      "playtime": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYl83YTZjZjYyOC0wZWU2LTQxOTctYTk3OC03NDgyMGE4YmRhOThfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl83YTZjZjYyOC0wZWU2LTQxOTctYTk3OC03NDgyMGE4YmRhOThfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo wopyće hada pola dźěsća | Unser Sandmännchen (Obersorbisch) | 07.12.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/teasers/rbb/items/Y3JpZDovL3JiYl83YTZjZjYyOC0wZWU2LTQxOTctYTk3OC03NDgyMGE4YmRhOThfcHVibGljYXRpb24",
+          "type": "application/vnd.ard.teaser+json",
+          "partner": "rbb"
+        },
+        "target": {
+          "id": "Y3JpZDovL3JiYl83YTZjZjYyOC0wZWU2LTQxOTctYTk3OC03NDgyMGE4YmRhOThfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl83YTZjZjYyOC0wZWU2LTQxOTctYTk3OC03NDgyMGE4YmRhOThfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo wopyće hada pola dźěsća | Unser Sandmännchen (Obersorbisch) | 07.12.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/pages/rbb/item/Y3JpZDovL3JiYl83YTZjZjYyOC0wZWU2LTQxOTctYTk3OC03NDgyMGE4YmRhOThfcHVibGljYXRpb24?devicetype=pc&embedded=true",
+          "type": "application/vnd.ard.page+json",
+          "partner": "rbb"
+        }
+      },
+      "shortTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo wopyće hada pola dźěsća | Unser Sandmännchen (Obersorbisch) | 07.12.2025",
+      "show": {
+        "id": "crid://rbb-online.de/sandmann",
+        "coremediaId": 6503982,
+        "title": "Unser Sandmännchen",
+        "publisher": {
+          "name": "rbb",
+          "logo": {
+            "title": "Logo rbb",
+            "alt": "Logo rbb",
+            "producerName": "Logo rbb",
+            "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+            "aspectRatio": "16x9"
+          },
+          "publisherType": "TV",
+          "partner": "rbb",
+          "id": "b3JnYW5pemF0aW9uX1JCQg",
+          "coreId": "urn:ard:publisher:4bd261083522aeef"
+        },
+        "self": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "http://asset-gateway-service:8080/asset-gateway/groupings/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "type": "application/vnd.ard.grouping+json"
+        },
+        "images": {
+          "16x9": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+            "aspectRatio": "16x9"
+          },
+          "16x7": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b70d64beffa1a4e2?w={width}&ch=45a5e40cba3df95a",
+            "aspectRatio": "16x7"
+          },
+          "1x1": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:73f11de7f585e8b3?w={width}&ch=50c235697cae2ccf",
+            "aspectRatio": "1x1"
+          }
+        },
+        "shortSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "synopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "longSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "modificationDate": null,
+        "assetSource": null,
+        "isChildContent": true,
+        "isFamilyFriendly": false,
+        "targetAudienceAgeMin": 3,
+        "targetAudienceAgeMax": 6,
+        "categories": null,
+        "categoryIds": null,
+        "coreAssetType": "INFINITE_SERIES",
+        "coreId": "urn:ard:show:540975de9bbeb6a7",
+        "groupingType": "SHOW",
+        "homepage": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "https://www.ardmediathek.de/sandmaennchen?isChildContent",
+          "type": null
+        },
+        "hasSeasons": false,
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ]
+      },
+      "subtitled": false,
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_content_type": "OnDemand",
+        "teaser_id": "Y3JpZDovL3JiYl83YTZjZjYyOC0wZWU2LTQxOTctYTk3OC03NDgyMGE4YmRhOThfcHVibGljYXRpb24",
+        "teaser_institution": "RBB",
+        "teaser_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+        "teaser_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo wopyće hada pola dźěsća | Unser Sandmännchen (Obersorbisch) | 07.12.2025"
+      },
+      "type": "ondemand"
+    },
+    {
+      "personalized": false,
+      "availableTo": "2026-12-14T22:59:59Z",
+      "binaryFeatures": [],
+      "broadcastedOn": "2025-12-14T16:53:00Z",
+      "coreAssetType": "EPISODE",
+      "duration": 228,
+      "id": "Y3JpZDovL3JiYl8yY2U1MWU2MS1kZDk0LTQwOWMtOGExMS04YmQ0ZjcxMjIxZGJfcHVibGljYXRpb24",
+      "images": {
+        "aspect16x9": {
+          "alt": "Kito, Maja und die Kugelkiste: Von den Irrlichtern (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:a98981818d2264f3?w={width}&ch=d4aa0eebaabf936a",
+          "title": "Obersorbisch: Kito, Maja und die Kugelkiste: Von den Irrlichtern"
+        }
+      },
+      "isChildContent": true,
+      "isFamilyFriendly": false,
+      "longTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo błudničkach a skupym kowarju | Unser Sandmännchen (Obersorbisch) | 14.12.2025",
+      "maturityContentRating": "FSK0",
+      "mediumTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo błudničkach a skupym kowarju | Unser Sandmännchen (Obersorbisch) | 14.12.2025",
+      "playtime": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYl8yY2U1MWU2MS1kZDk0LTQwOWMtOGExMS04YmQ0ZjcxMjIxZGJfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl8yY2U1MWU2MS1kZDk0LTQwOWMtOGExMS04YmQ0ZjcxMjIxZGJfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo błudničkach a skupym kowarju | Unser Sandmännchen (Obersorbisch) | 14.12.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/teasers/rbb/items/Y3JpZDovL3JiYl8yY2U1MWU2MS1kZDk0LTQwOWMtOGExMS04YmQ0ZjcxMjIxZGJfcHVibGljYXRpb24",
+          "type": "application/vnd.ard.teaser+json",
+          "partner": "rbb"
+        },
+        "target": {
+          "id": "Y3JpZDovL3JiYl8yY2U1MWU2MS1kZDk0LTQwOWMtOGExMS04YmQ0ZjcxMjIxZGJfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl8yY2U1MWU2MS1kZDk0LTQwOWMtOGExMS04YmQ0ZjcxMjIxZGJfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo błudničkach a skupym kowarju | Unser Sandmännchen (Obersorbisch) | 14.12.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/pages/rbb/item/Y3JpZDovL3JiYl8yY2U1MWU2MS1kZDk0LTQwOWMtOGExMS04YmQ0ZjcxMjIxZGJfcHVibGljYXRpb24?devicetype=pc&embedded=true",
+          "type": "application/vnd.ard.page+json",
+          "partner": "rbb"
+        }
+      },
+      "shortTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo błudničkach a skupym kowarju | Unser Sandmännchen (Obersorbisch) | 14.12.2025",
+      "show": {
+        "id": "crid://rbb-online.de/sandmann",
+        "coremediaId": 6503982,
+        "title": "Unser Sandmännchen",
+        "publisher": {
+          "name": "rbb",
+          "logo": {
+            "title": "Logo rbb",
+            "alt": "Logo rbb",
+            "producerName": "Logo rbb",
+            "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+            "aspectRatio": "16x9"
+          },
+          "publisherType": "TV",
+          "partner": "rbb",
+          "id": "b3JnYW5pemF0aW9uX1JCQg",
+          "coreId": "urn:ard:publisher:4bd261083522aeef"
+        },
+        "self": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "http://asset-gateway-service:8080/asset-gateway/groupings/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "type": "application/vnd.ard.grouping+json"
+        },
+        "images": {
+          "16x9": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+            "aspectRatio": "16x9"
+          },
+          "16x7": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b70d64beffa1a4e2?w={width}&ch=45a5e40cba3df95a",
+            "aspectRatio": "16x7"
+          },
+          "1x1": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:73f11de7f585e8b3?w={width}&ch=50c235697cae2ccf",
+            "aspectRatio": "1x1"
+          }
+        },
+        "shortSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "synopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "longSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "modificationDate": null,
+        "assetSource": null,
+        "isChildContent": true,
+        "isFamilyFriendly": false,
+        "targetAudienceAgeMin": 3,
+        "targetAudienceAgeMax": 6,
+        "categories": null,
+        "categoryIds": null,
+        "coreAssetType": "INFINITE_SERIES",
+        "coreId": "urn:ard:show:540975de9bbeb6a7",
+        "groupingType": "SHOW",
+        "homepage": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "https://www.ardmediathek.de/sandmaennchen?isChildContent",
+          "type": null
+        },
+        "hasSeasons": false,
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ]
+      },
+      "subtitled": false,
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_content_type": "OnDemand",
+        "teaser_id": "Y3JpZDovL3JiYl8yY2U1MWU2MS1kZDk0LTQwOWMtOGExMS04YmQ0ZjcxMjIxZGJfcHVibGljYXRpb24",
+        "teaser_institution": "RBB",
+        "teaser_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+        "teaser_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo błudničkach a skupym kowarju | Unser Sandmännchen (Obersorbisch) | 14.12.2025"
+      },
+      "type": "ondemand"
+    },
+    {
+      "personalized": false,
+      "availableTo": "2026-11-16T22:59:59Z",
+      "binaryFeatures": [],
+      "broadcastedOn": "2025-11-16T16:53:00Z",
+      "coreAssetType": "EPISODE",
+      "duration": 227,
+      "id": "Y3JpZDovL3JiYl85YjgyNjg0ZC0yZTQ0LTRiMDMtYWEyZi01MDgwMDE2MWZjNTdfcHVibGljYXRpb24",
+      "images": {
+        "aspect16x9": {
+          "alt": "Kito, Maja und die Kugelkiste: Von den Fröschen (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:8691e756315af2c1?w={width}&ch=35d576543227690b",
+          "title": "Obersorbisch: Kito, Maja und die Kugelkiste: Von den Fröschen"
+        }
+      },
+      "isChildContent": true,
+      "isFamilyFriendly": false,
+      "longTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo žabach a žabjacym rěblu | Unser Sandmännchen (Obersorbisch) | 02.11.2025",
+      "maturityContentRating": "FSK0",
+      "mediumTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo žabach a žabjacym rěblu | Unser Sandmännchen (Obersorbisch) | 02.11.2025",
+      "playtime": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYl85YjgyNjg0ZC0yZTQ0LTRiMDMtYWEyZi01MDgwMDE2MWZjNTdfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl85YjgyNjg0ZC0yZTQ0LTRiMDMtYWEyZi01MDgwMDE2MWZjNTdfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo žabach a žabjacym rěblu | Unser Sandmännchen (Obersorbisch) | 02.11.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/teasers/rbb/items/Y3JpZDovL3JiYl85YjgyNjg0ZC0yZTQ0LTRiMDMtYWEyZi01MDgwMDE2MWZjNTdfcHVibGljYXRpb24",
+          "type": "application/vnd.ard.teaser+json",
+          "partner": "rbb"
+        },
+        "target": {
+          "id": "Y3JpZDovL3JiYl85YjgyNjg0ZC0yZTQ0LTRiMDMtYWEyZi01MDgwMDE2MWZjNTdfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl85YjgyNjg0ZC0yZTQ0LTRiMDMtYWEyZi01MDgwMDE2MWZjNTdfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo žabach a žabjacym rěblu | Unser Sandmännchen (Obersorbisch) | 02.11.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/pages/rbb/item/Y3JpZDovL3JiYl85YjgyNjg0ZC0yZTQ0LTRiMDMtYWEyZi01MDgwMDE2MWZjNTdfcHVibGljYXRpb24?devicetype=pc&embedded=true",
+          "type": "application/vnd.ard.page+json",
+          "partner": "rbb"
+        }
+      },
+      "shortTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo žabach a žabjacym rěblu | Unser Sandmännchen (Obersorbisch) | 02.11.2025",
+      "show": {
+        "id": "crid://rbb-online.de/sandmann",
+        "coremediaId": 6503982,
+        "title": "Unser Sandmännchen",
+        "publisher": {
+          "name": "rbb",
+          "logo": {
+            "title": "Logo rbb",
+            "alt": "Logo rbb",
+            "producerName": "Logo rbb",
+            "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+            "aspectRatio": "16x9"
+          },
+          "publisherType": "TV",
+          "partner": "rbb",
+          "id": "b3JnYW5pemF0aW9uX1JCQg",
+          "coreId": "urn:ard:publisher:4bd261083522aeef"
+        },
+        "self": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "http://asset-gateway-service:8080/asset-gateway/groupings/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "type": "application/vnd.ard.grouping+json"
+        },
+        "images": {
+          "16x9": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+            "aspectRatio": "16x9"
+          },
+          "16x7": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b70d64beffa1a4e2?w={width}&ch=45a5e40cba3df95a",
+            "aspectRatio": "16x7"
+          },
+          "1x1": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:73f11de7f585e8b3?w={width}&ch=50c235697cae2ccf",
+            "aspectRatio": "1x1"
+          }
+        },
+        "shortSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "synopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "longSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "modificationDate": null,
+        "assetSource": null,
+        "isChildContent": true,
+        "isFamilyFriendly": false,
+        "targetAudienceAgeMin": 3,
+        "targetAudienceAgeMax": 6,
+        "categories": null,
+        "categoryIds": null,
+        "coreAssetType": "INFINITE_SERIES",
+        "coreId": "urn:ard:show:540975de9bbeb6a7",
+        "groupingType": "SHOW",
+        "homepage": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "https://www.ardmediathek.de/sandmaennchen?isChildContent",
+          "type": null
+        },
+        "hasSeasons": false,
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ]
+      },
+      "subtitled": false,
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_content_type": "OnDemand",
+        "teaser_id": "Y3JpZDovL3JiYl85YjgyNjg0ZC0yZTQ0LTRiMDMtYWEyZi01MDgwMDE2MWZjNTdfcHVibGljYXRpb24",
+        "teaser_institution": "RBB",
+        "teaser_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+        "teaser_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo žabach a žabjacym rěblu | Unser Sandmännchen (Obersorbisch) | 02.11.2025"
+      },
+      "type": "ondemand"
+    },
+    {
+      "personalized": false,
+      "availableTo": "2026-12-28T22:59:59Z",
+      "binaryFeatures": [],
+      "broadcastedOn": "2025-12-28T16:53:00Z",
+      "coreAssetType": "EPISODE",
+      "duration": 222,
+      "id": "Y3JpZDovL3JiYl8yMzIyOWY3Yi1lYjhmLTQyZjctYWE2Yy04NGEwNThiZmU0YjVfcHVibGljYXRpb24",
+      "images": {
+        "aspect16x9": {
+          "alt": "Kito, Maja und die Kugelkiste: Vom Pumphut (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b3e8c3b351d4b164?w={width}&ch=f52826fe23c88795",
+          "title": "Obersorbisch: Kito, Maja und die Kugelkiste: Vom Pumphut"
+        }
+      },
+      "isChildContent": true,
+      "isFamilyFriendly": false,
+      "longTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo Pumpoće kiž je wětřik kuzłał | Unser Sandmännchen (Obersorbisch) | 28.12.2025",
+      "maturityContentRating": "FSK0",
+      "mediumTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo Pumpoće kiž je wětřik kuzłał | Unser Sandmännchen (Obersorbisch) | 28.12.2025",
+      "playtime": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYl8yMzIyOWY3Yi1lYjhmLTQyZjctYWE2Yy04NGEwNThiZmU0YjVfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl8yMzIyOWY3Yi1lYjhmLTQyZjctYWE2Yy04NGEwNThiZmU0YjVfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo Pumpoće kiž je wětřik kuzłał | Unser Sandmännchen (Obersorbisch) | 28.12.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/teasers/rbb/items/Y3JpZDovL3JiYl8yMzIyOWY3Yi1lYjhmLTQyZjctYWE2Yy04NGEwNThiZmU0YjVfcHVibGljYXRpb24",
+          "type": "application/vnd.ard.teaser+json",
+          "partner": "rbb"
+        },
+        "target": {
+          "id": "Y3JpZDovL3JiYl8yMzIyOWY3Yi1lYjhmLTQyZjctYWE2Yy04NGEwNThiZmU0YjVfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl8yMzIyOWY3Yi1lYjhmLTQyZjctYWE2Yy04NGEwNThiZmU0YjVfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo Pumpoće kiž je wětřik kuzłał | Unser Sandmännchen (Obersorbisch) | 28.12.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/pages/rbb/item/Y3JpZDovL3JiYl8yMzIyOWY3Yi1lYjhmLTQyZjctYWE2Yy04NGEwNThiZmU0YjVfcHVibGljYXRpb24?devicetype=pc&embedded=true",
+          "type": "application/vnd.ard.page+json",
+          "partner": "rbb"
+        }
+      },
+      "shortTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo Pumpoće kiž je wětřik kuzłał | Unser Sandmännchen (Obersorbisch) | 28.12.2025",
+      "show": {
+        "id": "crid://rbb-online.de/sandmann",
+        "coremediaId": 6503982,
+        "title": "Unser Sandmännchen",
+        "publisher": {
+          "name": "rbb",
+          "logo": {
+            "title": "Logo rbb",
+            "alt": "Logo rbb",
+            "producerName": "Logo rbb",
+            "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+            "aspectRatio": "16x9"
+          },
+          "publisherType": "TV",
+          "partner": "rbb",
+          "id": "b3JnYW5pemF0aW9uX1JCQg",
+          "coreId": "urn:ard:publisher:4bd261083522aeef"
+        },
+        "self": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "http://asset-gateway-service:8080/asset-gateway/groupings/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "type": "application/vnd.ard.grouping+json"
+        },
+        "images": {
+          "16x9": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+            "aspectRatio": "16x9"
+          },
+          "16x7": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b70d64beffa1a4e2?w={width}&ch=45a5e40cba3df95a",
+            "aspectRatio": "16x7"
+          },
+          "1x1": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:73f11de7f585e8b3?w={width}&ch=50c235697cae2ccf",
+            "aspectRatio": "1x1"
+          }
+        },
+        "shortSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "synopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "longSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "modificationDate": null,
+        "assetSource": null,
+        "isChildContent": true,
+        "isFamilyFriendly": false,
+        "targetAudienceAgeMin": 3,
+        "targetAudienceAgeMax": 6,
+        "categories": null,
+        "categoryIds": null,
+        "coreAssetType": "INFINITE_SERIES",
+        "coreId": "urn:ard:show:540975de9bbeb6a7",
+        "groupingType": "SHOW",
+        "homepage": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "https://www.ardmediathek.de/sandmaennchen?isChildContent",
+          "type": null
+        },
+        "hasSeasons": false,
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ]
+      },
+      "subtitled": false,
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_content_type": "OnDemand",
+        "teaser_id": "Y3JpZDovL3JiYl8yMzIyOWY3Yi1lYjhmLTQyZjctYWE2Yy04NGEwNThiZmU0YjVfcHVibGljYXRpb24",
+        "teaser_institution": "RBB",
+        "teaser_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+        "teaser_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo Pumpoće kiž je wětřik kuzłał | Unser Sandmännchen (Obersorbisch) | 28.12.2025"
+      },
+      "type": "ondemand"
+    },
+    {
+      "personalized": false,
+      "availableTo": "2026-11-30T22:59:59Z",
+      "binaryFeatures": [],
+      "broadcastedOn": "2025-11-30T16:53:00Z",
+      "coreAssetType": "EPISODE",
+      "duration": 229,
+      "id": "Y3JpZDovL3JiYl9lNGVmM2ZhZS0zYmE5LTQwMGMtOGY2OC1iM2VmY2VjMzk4MTNfcHVibGljYXRpb24",
+      "images": {
+        "aspect16x9": {
+          "alt": "Kito, Maja und die Kugelkiste: Von den Lutken (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:f08854567e3625d9?w={width}&ch=9ad80af0f031b581",
+          "title": "Obersorbisch: Kito, Maja und die Kugelkiste: Von den Lutken"
+        }
+      },
+      "isChildContent": true,
+      "isFamilyFriendly": false,
+      "longTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo lutkach kiž chcychu chlěb pjec | Unser Sandmännchen (Obersorbisch) | 30.11.2025",
+      "maturityContentRating": "FSK0",
+      "mediumTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo lutkach kiž chcychu chlěb pjec | Unser Sandmännchen (Obersorbisch) | 30.11.2025",
+      "playtime": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYl9lNGVmM2ZhZS0zYmE5LTQwMGMtOGY2OC1iM2VmY2VjMzk4MTNfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl9lNGVmM2ZhZS0zYmE5LTQwMGMtOGY2OC1iM2VmY2VjMzk4MTNfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo lutkach kiž chcychu chlěb pjec | Unser Sandmännchen (Obersorbisch) | 30.11.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/teasers/rbb/items/Y3JpZDovL3JiYl9lNGVmM2ZhZS0zYmE5LTQwMGMtOGY2OC1iM2VmY2VjMzk4MTNfcHVibGljYXRpb24",
+          "type": "application/vnd.ard.teaser+json",
+          "partner": "rbb"
+        },
+        "target": {
+          "id": "Y3JpZDovL3JiYl9lNGVmM2ZhZS0zYmE5LTQwMGMtOGY2OC1iM2VmY2VjMzk4MTNfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl9lNGVmM2ZhZS0zYmE5LTQwMGMtOGY2OC1iM2VmY2VjMzk4MTNfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo lutkach kiž chcychu chlěb pjec | Unser Sandmännchen (Obersorbisch) | 30.11.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/pages/rbb/item/Y3JpZDovL3JiYl9lNGVmM2ZhZS0zYmE5LTQwMGMtOGY2OC1iM2VmY2VjMzk4MTNfcHVibGljYXRpb24?devicetype=pc&embedded=true",
+          "type": "application/vnd.ard.page+json",
+          "partner": "rbb"
+        }
+      },
+      "shortTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo lutkach kiž chcychu chlěb pjec | Unser Sandmännchen (Obersorbisch) | 30.11.2025",
+      "show": {
+        "id": "crid://rbb-online.de/sandmann",
+        "coremediaId": 6503982,
+        "title": "Unser Sandmännchen",
+        "publisher": {
+          "name": "rbb",
+          "logo": {
+            "title": "Logo rbb",
+            "alt": "Logo rbb",
+            "producerName": "Logo rbb",
+            "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+            "aspectRatio": "16x9"
+          },
+          "publisherType": "TV",
+          "partner": "rbb",
+          "id": "b3JnYW5pemF0aW9uX1JCQg",
+          "coreId": "urn:ard:publisher:4bd261083522aeef"
+        },
+        "self": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "http://asset-gateway-service:8080/asset-gateway/groupings/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "type": "application/vnd.ard.grouping+json"
+        },
+        "images": {
+          "16x9": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+            "aspectRatio": "16x9"
+          },
+          "16x7": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b70d64beffa1a4e2?w={width}&ch=45a5e40cba3df95a",
+            "aspectRatio": "16x7"
+          },
+          "1x1": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:73f11de7f585e8b3?w={width}&ch=50c235697cae2ccf",
+            "aspectRatio": "1x1"
+          }
+        },
+        "shortSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "synopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "longSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "modificationDate": null,
+        "assetSource": null,
+        "isChildContent": true,
+        "isFamilyFriendly": false,
+        "targetAudienceAgeMin": 3,
+        "targetAudienceAgeMax": 6,
+        "categories": null,
+        "categoryIds": null,
+        "coreAssetType": "INFINITE_SERIES",
+        "coreId": "urn:ard:show:540975de9bbeb6a7",
+        "groupingType": "SHOW",
+        "homepage": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "https://www.ardmediathek.de/sandmaennchen?isChildContent",
+          "type": null
+        },
+        "hasSeasons": false,
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ]
+      },
+      "subtitled": false,
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_content_type": "OnDemand",
+        "teaser_id": "Y3JpZDovL3JiYl9lNGVmM2ZhZS0zYmE5LTQwMGMtOGY2OC1iM2VmY2VjMzk4MTNfcHVibGljYXRpb24",
+        "teaser_institution": "RBB",
+        "teaser_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+        "teaser_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo lutkach kiž chcychu chlěb pjec | Unser Sandmännchen (Obersorbisch) | 30.11.2025"
+      },
+      "type": "ondemand"
+    },
+    {
+      "personalized": false,
+      "availableTo": "2026-11-02T22:59:59Z",
+      "binaryFeatures": [
+        "UT"
+      ],
+      "broadcastedOn": "2025-11-02T16:53:00Z",
+      "coreAssetType": "EPISODE",
+      "duration": 221,
+      "id": "Y3JpZDovL3JiYl8zZDIxODZiYi00YWU3LTQwNDQtOTYyMC1lNGQ4Yzg4MzYzMzVfcHVibGljYXRpb24",
+      "images": {
+        "aspect16x9": {
+          "alt": "Pěskowčik: Kito Maja und die Kugelkiste: Von der wilden Frau (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:2fff841c3d2d0363?w={width}&ch=716549997c1237ec",
+          "title": "Kito Maja und die Kugelkiste: Von der wilden Frau 02.11.2025"
+        }
+      },
+      "isChildContent": true,
+      "isFamilyFriendly": false,
+      "longTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźiwjej žonje a złotym lisću | Unser Sandmännchen (Obersorbisch) | 02.11.2025",
+      "maturityContentRating": "FSK0",
+      "mediumTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźiwjej žonje a złotym lisću | Unser Sandmännchen (Obersorbisch) | 02.11.2025",
+      "playtime": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYl8zZDIxODZiYi00YWU3LTQwNDQtOTYyMC1lNGQ4Yzg4MzYzMzVfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl8zZDIxODZiYi00YWU3LTQwNDQtOTYyMC1lNGQ4Yzg4MzYzMzVfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźiwjej žonje a złotym lisću | Unser Sandmännchen (Obersorbisch) | 02.11.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/teasers/rbb/items/Y3JpZDovL3JiYl8zZDIxODZiYi00YWU3LTQwNDQtOTYyMC1lNGQ4Yzg4MzYzMzVfcHVibGljYXRpb24",
+          "type": "application/vnd.ard.teaser+json",
+          "partner": "rbb"
+        },
+        "target": {
+          "id": "Y3JpZDovL3JiYl8zZDIxODZiYi00YWU3LTQwNDQtOTYyMC1lNGQ4Yzg4MzYzMzVfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl8zZDIxODZiYi00YWU3LTQwNDQtOTYyMC1lNGQ4Yzg4MzYzMzVfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźiwjej žonje a złotym lisću | Unser Sandmännchen (Obersorbisch) | 02.11.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/pages/rbb/item/Y3JpZDovL3JiYl8zZDIxODZiYi00YWU3LTQwNDQtOTYyMC1lNGQ4Yzg4MzYzMzVfcHVibGljYXRpb24?devicetype=pc&embedded=true",
+          "type": "application/vnd.ard.page+json",
+          "partner": "rbb"
+        }
+      },
+      "shortTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźiwjej žonje a złotym lisću | Unser Sandmännchen (Obersorbisch) | 02.11.2025",
+      "show": {
+        "id": "crid://rbb-online.de/sandmann",
+        "coremediaId": 6503982,
+        "title": "Unser Sandmännchen",
+        "publisher": {
+          "name": "rbb",
+          "logo": {
+            "title": "Logo rbb",
+            "alt": "Logo rbb",
+            "producerName": "Logo rbb",
+            "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+            "aspectRatio": "16x9"
+          },
+          "publisherType": "TV",
+          "partner": "rbb",
+          "id": "b3JnYW5pemF0aW9uX1JCQg",
+          "coreId": "urn:ard:publisher:4bd261083522aeef"
+        },
+        "self": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "http://asset-gateway-service:8080/asset-gateway/groupings/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "type": "application/vnd.ard.grouping+json"
+        },
+        "images": {
+          "16x9": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+            "aspectRatio": "16x9"
+          },
+          "16x7": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b70d64beffa1a4e2?w={width}&ch=45a5e40cba3df95a",
+            "aspectRatio": "16x7"
+          },
+          "1x1": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:73f11de7f585e8b3?w={width}&ch=50c235697cae2ccf",
+            "aspectRatio": "1x1"
+          }
+        },
+        "shortSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "synopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "longSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "modificationDate": null,
+        "assetSource": null,
+        "isChildContent": true,
+        "isFamilyFriendly": false,
+        "targetAudienceAgeMin": 3,
+        "targetAudienceAgeMax": 6,
+        "categories": null,
+        "categoryIds": null,
+        "coreAssetType": "INFINITE_SERIES",
+        "coreId": "urn:ard:show:540975de9bbeb6a7",
+        "groupingType": "SHOW",
+        "homepage": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "https://www.ardmediathek.de/sandmaennchen?isChildContent",
+          "type": null
+        },
+        "hasSeasons": false,
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ]
+      },
+      "subtitled": true,
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_content_type": "OnDemand",
+        "teaser_id": "Y3JpZDovL3JiYl8zZDIxODZiYi00YWU3LTQwNDQtOTYyMC1lNGQ4Yzg4MzYzMzVfcHVibGljYXRpb24",
+        "teaser_institution": "RBB",
+        "teaser_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+        "teaser_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźiwjej žonje a złotym lisću | Unser Sandmännchen (Obersorbisch) | 02.11.2025"
+      },
+      "type": "ondemand"
+    },
+    {
+      "personalized": false,
+      "availableTo": "2026-11-23T22:59:59Z",
+      "binaryFeatures": [],
+      "broadcastedOn": "2025-11-23T16:53:00Z",
+      "coreAssetType": "EPISODE",
+      "duration": 228,
+      "id": "Y3JpZDovL3JiYl9jMDVkNzg5MC1iZjUxLTQxY2EtYTE3My0xMjYzNGViYWJjNmRfcHVibGljYXRpb24",
+      "images": {
+        "aspect16x9": {
+          "alt": "Kito, Maja und die Kugelkiste: Von der Mittagsfrau (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:7379dd2cacc5b0ab?w={width}&ch=0ccfaa4b68a977c8",
+          "title": "Obersorbisch: Kito, Maja und die Kugelkiste: Von der Mittagsfrau"
+        }
+      },
+      "isChildContent": true,
+      "isFamilyFriendly": false,
+      "longTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo připołdnicy kiž chcyše stawizničku słyšeć  | Unser Sandmännchen (Obersorbisch) | 23.11.2025",
+      "maturityContentRating": "FSK0",
+      "mediumTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo připołdnicy kiž chcyše stawizničku słyšeć  | Unser Sandmännchen (Obersorbisch) | 23.11.2025",
+      "playtime": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYl9jMDVkNzg5MC1iZjUxLTQxY2EtYTE3My0xMjYzNGViYWJjNmRfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl9jMDVkNzg5MC1iZjUxLTQxY2EtYTE3My0xMjYzNGViYWJjNmRfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo připołdnicy kiž chcyše stawizničku słyšeć  | Unser Sandmännchen (Obersorbisch) | 23.11.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/teasers/rbb/items/Y3JpZDovL3JiYl9jMDVkNzg5MC1iZjUxLTQxY2EtYTE3My0xMjYzNGViYWJjNmRfcHVibGljYXRpb24",
+          "type": "application/vnd.ard.teaser+json",
+          "partner": "rbb"
+        },
+        "target": {
+          "id": "Y3JpZDovL3JiYl9jMDVkNzg5MC1iZjUxLTQxY2EtYTE3My0xMjYzNGViYWJjNmRfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl9jMDVkNzg5MC1iZjUxLTQxY2EtYTE3My0xMjYzNGViYWJjNmRfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo připołdnicy kiž chcyše stawizničku słyšeć  | Unser Sandmännchen (Obersorbisch) | 23.11.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/pages/rbb/item/Y3JpZDovL3JiYl9jMDVkNzg5MC1iZjUxLTQxY2EtYTE3My0xMjYzNGViYWJjNmRfcHVibGljYXRpb24?devicetype=pc&embedded=true",
+          "type": "application/vnd.ard.page+json",
+          "partner": "rbb"
+        }
+      },
+      "shortTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo připołdnicy kiž chcyše stawizničku słyšeć  | Unser Sandmännchen (Obersorbisch) | 23.11.2025",
+      "show": {
+        "id": "crid://rbb-online.de/sandmann",
+        "coremediaId": 6503982,
+        "title": "Unser Sandmännchen",
+        "publisher": {
+          "name": "rbb",
+          "logo": {
+            "title": "Logo rbb",
+            "alt": "Logo rbb",
+            "producerName": "Logo rbb",
+            "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+            "aspectRatio": "16x9"
+          },
+          "publisherType": "TV",
+          "partner": "rbb",
+          "id": "b3JnYW5pemF0aW9uX1JCQg",
+          "coreId": "urn:ard:publisher:4bd261083522aeef"
+        },
+        "self": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "http://asset-gateway-service:8080/asset-gateway/groupings/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "type": "application/vnd.ard.grouping+json"
+        },
+        "images": {
+          "16x9": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+            "aspectRatio": "16x9"
+          },
+          "16x7": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b70d64beffa1a4e2?w={width}&ch=45a5e40cba3df95a",
+            "aspectRatio": "16x7"
+          },
+          "1x1": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:73f11de7f585e8b3?w={width}&ch=50c235697cae2ccf",
+            "aspectRatio": "1x1"
+          }
+        },
+        "shortSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "synopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "longSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "modificationDate": null,
+        "assetSource": null,
+        "isChildContent": true,
+        "isFamilyFriendly": false,
+        "targetAudienceAgeMin": 3,
+        "targetAudienceAgeMax": 6,
+        "categories": null,
+        "categoryIds": null,
+        "coreAssetType": "INFINITE_SERIES",
+        "coreId": "urn:ard:show:540975de9bbeb6a7",
+        "groupingType": "SHOW",
+        "homepage": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "https://www.ardmediathek.de/sandmaennchen?isChildContent",
+          "type": null
+        },
+        "hasSeasons": false,
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ]
+      },
+      "subtitled": false,
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_content_type": "OnDemand",
+        "teaser_id": "Y3JpZDovL3JiYl9jMDVkNzg5MC1iZjUxLTQxY2EtYTE3My0xMjYzNGViYWJjNmRfcHVibGljYXRpb24",
+        "teaser_institution": "RBB",
+        "teaser_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+        "teaser_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo připołdnicy kiž chcyše stawizničku słyšeć  | Unser Sandmännchen (Obersorbisch) | 23.11.2025"
+      },
+      "type": "ondemand"
+    },
+    {
+      "personalized": false,
+      "availableTo": "2026-11-09T22:59:59Z",
+      "binaryFeatures": [],
+      "broadcastedOn": "2025-11-09T16:53:00Z",
+      "coreAssetType": "EPISODE",
+      "duration": 226,
+      "id": "Y3JpZDovL3JiYl9mYzNiN2RiMy01MjcwLTQ2MTMtOGJiOS1kY2Q3ZTJiZWMwMWZfcHVibGljYXRpb24",
+      "images": {
+        "aspect16x9": {
+          "alt": "Kito, Maja und die Kugelkiste: Vom Schlangenkönig (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:c2e57bfac031d964?w={width}&ch=79493237808a88ff",
+          "title": "Obersorbisch: Kito, Maja und die Kugelkiste: Vom Schlangenkönig"
+        }
+      },
+      "isChildContent": true,
+      "isFamilyFriendly": false,
+      "longTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo hadźacym kralu a jeho złoćanej krónje | Unser Sandmännchen (Obersorbisch) | 09.11.2025",
+      "maturityContentRating": "FSK0",
+      "mediumTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo hadźacym kralu a jeho złoćanej krónje | Unser Sandmännchen (Obersorbisch) | 09.11.2025",
+      "playtime": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYl9mYzNiN2RiMy01MjcwLTQ2MTMtOGJiOS1kY2Q3ZTJiZWMwMWZfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl9mYzNiN2RiMy01MjcwLTQ2MTMtOGJiOS1kY2Q3ZTJiZWMwMWZfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo hadźacym kralu a jeho złoćanej krónje | Unser Sandmännchen (Obersorbisch) | 09.11.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/teasers/rbb/items/Y3JpZDovL3JiYl9mYzNiN2RiMy01MjcwLTQ2MTMtOGJiOS1kY2Q3ZTJiZWMwMWZfcHVibGljYXRpb24",
+          "type": "application/vnd.ard.teaser+json",
+          "partner": "rbb"
+        },
+        "target": {
+          "id": "Y3JpZDovL3JiYl9mYzNiN2RiMy01MjcwLTQ2MTMtOGJiOS1kY2Q3ZTJiZWMwMWZfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl9mYzNiN2RiMy01MjcwLTQ2MTMtOGJiOS1kY2Q3ZTJiZWMwMWZfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo hadźacym kralu a jeho złoćanej krónje | Unser Sandmännchen (Obersorbisch) | 09.11.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/pages/rbb/item/Y3JpZDovL3JiYl9mYzNiN2RiMy01MjcwLTQ2MTMtOGJiOS1kY2Q3ZTJiZWMwMWZfcHVibGljYXRpb24?devicetype=pc&embedded=true",
+          "type": "application/vnd.ard.page+json",
+          "partner": "rbb"
+        }
+      },
+      "shortTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo hadźacym kralu a jeho złoćanej krónje | Unser Sandmännchen (Obersorbisch) | 09.11.2025",
+      "show": {
+        "id": "crid://rbb-online.de/sandmann",
+        "coremediaId": 6503982,
+        "title": "Unser Sandmännchen",
+        "publisher": {
+          "name": "rbb",
+          "logo": {
+            "title": "Logo rbb",
+            "alt": "Logo rbb",
+            "producerName": "Logo rbb",
+            "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+            "aspectRatio": "16x9"
+          },
+          "publisherType": "TV",
+          "partner": "rbb",
+          "id": "b3JnYW5pemF0aW9uX1JCQg",
+          "coreId": "urn:ard:publisher:4bd261083522aeef"
+        },
+        "self": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "http://asset-gateway-service:8080/asset-gateway/groupings/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "type": "application/vnd.ard.grouping+json"
+        },
+        "images": {
+          "16x9": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+            "aspectRatio": "16x9"
+          },
+          "16x7": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b70d64beffa1a4e2?w={width}&ch=45a5e40cba3df95a",
+            "aspectRatio": "16x7"
+          },
+          "1x1": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:73f11de7f585e8b3?w={width}&ch=50c235697cae2ccf",
+            "aspectRatio": "1x1"
+          }
+        },
+        "shortSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "synopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "longSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "modificationDate": null,
+        "assetSource": null,
+        "isChildContent": true,
+        "isFamilyFriendly": false,
+        "targetAudienceAgeMin": 3,
+        "targetAudienceAgeMax": 6,
+        "categories": null,
+        "categoryIds": null,
+        "coreAssetType": "INFINITE_SERIES",
+        "coreId": "urn:ard:show:540975de9bbeb6a7",
+        "groupingType": "SHOW",
+        "homepage": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "https://www.ardmediathek.de/sandmaennchen?isChildContent",
+          "type": null
+        },
+        "hasSeasons": false,
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ]
+      },
+      "subtitled": false,
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_content_type": "OnDemand",
+        "teaser_id": "Y3JpZDovL3JiYl9mYzNiN2RiMy01MjcwLTQ2MTMtOGJiOS1kY2Q3ZTJiZWMwMWZfcHVibGljYXRpb24",
+        "teaser_institution": "RBB",
+        "teaser_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+        "teaser_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo hadźacym kralu a jeho złoćanej krónje | Unser Sandmännchen (Obersorbisch) | 09.11.2025"
+      },
+      "type": "ondemand"
+    },
+    {
+      "personalized": false,
+      "availableTo": "2026-10-19T21:59:59Z",
+      "binaryFeatures": [
+        "UT"
+      ],
+      "broadcastedOn": "2025-10-19T15:53:00Z",
+      "coreAssetType": "EPISODE",
+      "duration": 225,
+      "id": "Y3JpZDovL3JiYl84ZDhlNDllOS0yNTJlLTQxNTUtYTRjYy03NGUwY2Y4NGU4M2RfcHVibGljYXRpb24",
+      "images": {
+        "aspect16x9": {
+          "alt": "Pěskowčik: Kito Maja und die Kugelkiste Vom Riesen Sprejnik und der Spree (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:2c3ebd5689901b45?w={width}&ch=7584aae136dae31c",
+          "title": "Kito Maja und die Kugelkiste Vom Riesen Sprejnik und der Spree | 19.10.2025"
+        }
+      },
+      "isChildContent": true,
+      "isFamilyFriendly": false,
+      "longTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo hobrje Sprjewniku a kak so Sprjewja wužórli | Unser Sandmännchen (Obersorbisch) | 19.10.2025",
+      "maturityContentRating": "FSK0",
+      "mediumTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo hobrje Sprjewniku a kak so Sprjewja wužórli | Unser Sandmännchen (Obersorbisch) | 19.10.2025",
+      "playtime": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYl84ZDhlNDllOS0yNTJlLTQxNTUtYTRjYy03NGUwY2Y4NGU4M2RfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl84ZDhlNDllOS0yNTJlLTQxNTUtYTRjYy03NGUwY2Y4NGU4M2RfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo hobrje Sprjewniku a kak so Sprjewja wužórli | Unser Sandmännchen (Obersorbisch) | 19.10.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/teasers/rbb/items/Y3JpZDovL3JiYl84ZDhlNDllOS0yNTJlLTQxNTUtYTRjYy03NGUwY2Y4NGU4M2RfcHVibGljYXRpb24",
+          "type": "application/vnd.ard.teaser+json",
+          "partner": "rbb"
+        },
+        "target": {
+          "id": "Y3JpZDovL3JiYl84ZDhlNDllOS0yNTJlLTQxNTUtYTRjYy03NGUwY2Y4NGU4M2RfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl84ZDhlNDllOS0yNTJlLTQxNTUtYTRjYy03NGUwY2Y4NGU4M2RfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo hobrje Sprjewniku a kak so Sprjewja wužórli | Unser Sandmännchen (Obersorbisch) | 19.10.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/pages/rbb/item/Y3JpZDovL3JiYl84ZDhlNDllOS0yNTJlLTQxNTUtYTRjYy03NGUwY2Y4NGU4M2RfcHVibGljYXRpb24?devicetype=pc&embedded=true",
+          "type": "application/vnd.ard.page+json",
+          "partner": "rbb"
+        }
+      },
+      "shortTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo hobrje Sprjewniku a kak so Sprjewja wužórli | Unser Sandmännchen (Obersorbisch) | 19.10.2025",
+      "show": {
+        "id": "crid://rbb-online.de/sandmann",
+        "coremediaId": 6503982,
+        "title": "Unser Sandmännchen",
+        "publisher": {
+          "name": "rbb",
+          "logo": {
+            "title": "Logo rbb",
+            "alt": "Logo rbb",
+            "producerName": "Logo rbb",
+            "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+            "aspectRatio": "16x9"
+          },
+          "publisherType": "TV",
+          "partner": "rbb",
+          "id": "b3JnYW5pemF0aW9uX1JCQg",
+          "coreId": "urn:ard:publisher:4bd261083522aeef"
+        },
+        "self": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "http://asset-gateway-service:8080/asset-gateway/groupings/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "type": "application/vnd.ard.grouping+json"
+        },
+        "images": {
+          "16x9": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+            "aspectRatio": "16x9"
+          },
+          "16x7": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b70d64beffa1a4e2?w={width}&ch=45a5e40cba3df95a",
+            "aspectRatio": "16x7"
+          },
+          "1x1": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:73f11de7f585e8b3?w={width}&ch=50c235697cae2ccf",
+            "aspectRatio": "1x1"
+          }
+        },
+        "shortSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "synopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "longSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "modificationDate": null,
+        "assetSource": null,
+        "isChildContent": true,
+        "isFamilyFriendly": false,
+        "targetAudienceAgeMin": 3,
+        "targetAudienceAgeMax": 6,
+        "categories": null,
+        "categoryIds": null,
+        "coreAssetType": "INFINITE_SERIES",
+        "coreId": "urn:ard:show:540975de9bbeb6a7",
+        "groupingType": "SHOW",
+        "homepage": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "https://www.ardmediathek.de/sandmaennchen?isChildContent",
+          "type": null
+        },
+        "hasSeasons": false,
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ]
+      },
+      "subtitled": true,
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_content_type": "OnDemand",
+        "teaser_id": "Y3JpZDovL3JiYl84ZDhlNDllOS0yNTJlLTQxNTUtYTRjYy03NGUwY2Y4NGU4M2RfcHVibGljYXRpb24",
+        "teaser_institution": "RBB",
+        "teaser_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+        "teaser_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo hobrje Sprjewniku a kak so Sprjewja wužórli | Unser Sandmännchen (Obersorbisch) | 19.10.2025"
+      },
+      "type": "ondemand"
+    },
+    {
+      "personalized": false,
+      "availableTo": "2026-10-05T21:59:59Z",
+      "binaryFeatures": [
+        "UT"
+      ],
+      "broadcastedOn": "2025-10-05T15:53:00Z",
+      "coreAssetType": "EPISODE",
+      "duration": 229,
+      "id": "Y3JpZDovL3JiYl8xYzI0MTNiZC1lMWZjLTRlOTQtYWNkNy1lNDE3ZDViNjBiMTNfcHVibGljYXRpb24",
+      "images": {
+        "aspect16x9": {
+          "alt": "Pěskowčik: Kito, Maja und die Kugelkiste: VOM DRACHEN und wie man ihn wieder loswerden kann (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:90ff74e1d00fc1f8?w={width}&ch=a1636ed805e9b695",
+          "title": "Kito, Maja und die Kugelkiste: VOM DRACHEN und wie man ihn wieder loswerden kann (Obersorbisch)"
+        }
+      },
+      "isChildContent": true,
+      "isFamilyFriendly": false,
+      "longTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo zmiju a kak jeho zaso wotbudźeš | Unser Sandmännchen (Obersorbisch) | 05.10.2025",
+      "maturityContentRating": "FSK0",
+      "mediumTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo zmiju a kak jeho zaso wotbudźeš | Unser Sandmännchen (Obersorbisch) | 05.10.2025",
+      "playtime": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYl8xYzI0MTNiZC1lMWZjLTRlOTQtYWNkNy1lNDE3ZDViNjBiMTNfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl8xYzI0MTNiZC1lMWZjLTRlOTQtYWNkNy1lNDE3ZDViNjBiMTNfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo zmiju a kak jeho zaso wotbudźeš | Unser Sandmännchen (Obersorbisch) | 05.10.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/teasers/rbb/items/Y3JpZDovL3JiYl8xYzI0MTNiZC1lMWZjLTRlOTQtYWNkNy1lNDE3ZDViNjBiMTNfcHVibGljYXRpb24",
+          "type": "application/vnd.ard.teaser+json",
+          "partner": "rbb"
+        },
+        "target": {
+          "id": "Y3JpZDovL3JiYl8xYzI0MTNiZC1lMWZjLTRlOTQtYWNkNy1lNDE3ZDViNjBiMTNfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl8xYzI0MTNiZC1lMWZjLTRlOTQtYWNkNy1lNDE3ZDViNjBiMTNfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo zmiju a kak jeho zaso wotbudźeš | Unser Sandmännchen (Obersorbisch) | 05.10.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/pages/rbb/item/Y3JpZDovL3JiYl8xYzI0MTNiZC1lMWZjLTRlOTQtYWNkNy1lNDE3ZDViNjBiMTNfcHVibGljYXRpb24?devicetype=pc&embedded=true",
+          "type": "application/vnd.ard.page+json",
+          "partner": "rbb"
+        }
+      },
+      "shortTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo zmiju a kak jeho zaso wotbudźeš | Unser Sandmännchen (Obersorbisch) | 05.10.2025",
+      "show": {
+        "id": "crid://rbb-online.de/sandmann",
+        "coremediaId": 6503982,
+        "title": "Unser Sandmännchen",
+        "publisher": {
+          "name": "rbb",
+          "logo": {
+            "title": "Logo rbb",
+            "alt": "Logo rbb",
+            "producerName": "Logo rbb",
+            "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+            "aspectRatio": "16x9"
+          },
+          "publisherType": "TV",
+          "partner": "rbb",
+          "id": "b3JnYW5pemF0aW9uX1JCQg",
+          "coreId": "urn:ard:publisher:4bd261083522aeef"
+        },
+        "self": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "http://asset-gateway-service:8080/asset-gateway/groupings/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "type": "application/vnd.ard.grouping+json"
+        },
+        "images": {
+          "16x9": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+            "aspectRatio": "16x9"
+          },
+          "16x7": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b70d64beffa1a4e2?w={width}&ch=45a5e40cba3df95a",
+            "aspectRatio": "16x7"
+          },
+          "1x1": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:73f11de7f585e8b3?w={width}&ch=50c235697cae2ccf",
+            "aspectRatio": "1x1"
+          }
+        },
+        "shortSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "synopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "longSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "modificationDate": null,
+        "assetSource": null,
+        "isChildContent": true,
+        "isFamilyFriendly": false,
+        "targetAudienceAgeMin": 3,
+        "targetAudienceAgeMax": 6,
+        "categories": null,
+        "categoryIds": null,
+        "coreAssetType": "INFINITE_SERIES",
+        "coreId": "urn:ard:show:540975de9bbeb6a7",
+        "groupingType": "SHOW",
+        "homepage": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "https://www.ardmediathek.de/sandmaennchen?isChildContent",
+          "type": null
+        },
+        "hasSeasons": false,
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ]
+      },
+      "subtitled": true,
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_content_type": "OnDemand",
+        "teaser_id": "Y3JpZDovL3JiYl8xYzI0MTNiZC1lMWZjLTRlOTQtYWNkNy1lNDE3ZDViNjBiMTNfcHVibGljYXRpb24",
+        "teaser_institution": "RBB",
+        "teaser_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+        "teaser_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo zmiju a kak jeho zaso wotbudźeš | Unser Sandmännchen (Obersorbisch) | 05.10.2025"
+      },
+      "type": "ondemand"
+    },
+    {
+      "personalized": false,
+      "availableTo": "2026-12-21T22:59:59Z",
+      "binaryFeatures": [],
+      "broadcastedOn": "2025-12-21T16:53:00Z",
+      "coreAssetType": "EPISODE",
+      "duration": 221,
+      "id": "Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24",
+      "images": {
+        "aspect16x9": {
+          "alt": "Kito, Maja und die Kugelkiste: Von den Nixenkindern (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:13187bad3244046c?w={width}&ch=56c4d04a408d1ec7",
+          "title": "Kito, Maja und die Kugelkiste: Von den Nixenkindern"
+        }
+      },
+      "isChildContent": true,
+      "isFamilyFriendly": false,
+      "longTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+      "maturityContentRating": "FSK0",
+      "mediumTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+      "playtime": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/teasers/rbb/items/Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24",
+          "type": "application/vnd.ard.teaser+json",
+          "partner": "rbb"
+        },
+        "target": {
+          "id": "Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/pages/rbb/item/Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24?devicetype=pc&embedded=true",
+          "type": "application/vnd.ard.page+json",
+          "partner": "rbb"
+        }
+      },
+      "shortTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+      "show": {
+        "id": "crid://rbb-online.de/sandmann",
+        "coremediaId": 6503982,
+        "title": "Unser Sandmännchen",
+        "publisher": {
+          "name": "rbb",
+          "logo": {
+            "title": "Logo rbb",
+            "alt": "Logo rbb",
+            "producerName": "Logo rbb",
+            "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+            "aspectRatio": "16x9"
+          },
+          "publisherType": "TV",
+          "partner": "rbb",
+          "id": "b3JnYW5pemF0aW9uX1JCQg",
+          "coreId": "urn:ard:publisher:4bd261083522aeef"
+        },
+        "self": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "http://asset-gateway-service:8080/asset-gateway/groupings/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "type": "application/vnd.ard.grouping+json"
+        },
+        "images": {
+          "16x9": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+            "aspectRatio": "16x9"
+          },
+          "16x7": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b70d64beffa1a4e2?w={width}&ch=45a5e40cba3df95a",
+            "aspectRatio": "16x7"
+          },
+          "1x1": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:73f11de7f585e8b3?w={width}&ch=50c235697cae2ccf",
+            "aspectRatio": "1x1"
+          }
+        },
+        "shortSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "synopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "longSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "modificationDate": null,
+        "assetSource": null,
+        "isChildContent": true,
+        "isFamilyFriendly": false,
+        "targetAudienceAgeMin": 3,
+        "targetAudienceAgeMax": 6,
+        "categories": null,
+        "categoryIds": null,
+        "coreAssetType": "INFINITE_SERIES",
+        "coreId": "urn:ard:show:540975de9bbeb6a7",
+        "groupingType": "SHOW",
+        "homepage": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "https://www.ardmediathek.de/sandmaennchen?isChildContent",
+          "type": null
+        },
+        "hasSeasons": false,
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ]
+      },
+      "subtitled": false,
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_content_type": "OnDemand",
+        "teaser_id": "Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24",
+        "teaser_institution": "RBB",
+        "teaser_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+        "teaser_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025"
+      },
+      "type": "ondemand"
+    },
+    {
+      "personalized": false,
+      "availableTo": "2026-10-26T22:59:59Z",
+      "binaryFeatures": [
+        "UT"
+      ],
+      "broadcastedOn": "2025-10-26T16:53:00Z",
+      "coreAssetType": "EPISODE",
+      "duration": 228,
+      "id": "Y3JpZDovL3JiYl8xZjJlZmQ2Ni05NDg4LTQ0MmEtYWIzNC01YjIwM2ExMTdhMmJfcHVibGljYXRpb24",
+      "images": {
+        "aspect16x9": {
+          "alt": "Pěskowčik: Kito Maja und die Kugelkiste: Vom Wassermann und wie er helfen wollte (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:87e1f7ca1fde61fc?w={width}&ch=f7e05df1f3bc357b",
+          "title": "Kito Maja und die Kugelkiste: Vom Wassermann und wie er helfen wollte 26.10.2025"
+        }
+      },
+      "isChildContent": true,
+      "isFamilyFriendly": false,
+      "longTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo wódnym mužu a kak je pomhać chcył | Unser Sandmännchen (Obersorbisch) | 26.10.2025",
+      "maturityContentRating": "FSK0",
+      "mediumTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo wódnym mužu a kak je pomhać chcył | Unser Sandmännchen (Obersorbisch) | 26.10.2025",
+      "playtime": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYl8xZjJlZmQ2Ni05NDg4LTQ0MmEtYWIzNC01YjIwM2ExMTdhMmJfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl8xZjJlZmQ2Ni05NDg4LTQ0MmEtYWIzNC01YjIwM2ExMTdhMmJfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo wódnym mužu a kak je pomhać chcył | Unser Sandmännchen (Obersorbisch) | 26.10.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/teasers/rbb/items/Y3JpZDovL3JiYl8xZjJlZmQ2Ni05NDg4LTQ0MmEtYWIzNC01YjIwM2ExMTdhMmJfcHVibGljYXRpb24",
+          "type": "application/vnd.ard.teaser+json",
+          "partner": "rbb"
+        },
+        "target": {
+          "id": "Y3JpZDovL3JiYl8xZjJlZmQ2Ni05NDg4LTQ0MmEtYWIzNC01YjIwM2ExMTdhMmJfcHVibGljYXRpb24",
+          "urlId": "Y3JpZDovL3JiYl8xZjJlZmQ2Ni05NDg4LTQ0MmEtYWIzNC01YjIwM2ExMTdhMmJfcHVibGljYXRpb24",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo wódnym mužu a kak je pomhać chcył | Unser Sandmännchen (Obersorbisch) | 26.10.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/pages/rbb/item/Y3JpZDovL3JiYl8xZjJlZmQ2Ni05NDg4LTQ0MmEtYWIzNC01YjIwM2ExMTdhMmJfcHVibGljYXRpb24?devicetype=pc&embedded=true",
+          "type": "application/vnd.ard.page+json",
+          "partner": "rbb"
+        }
+      },
+      "shortTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo wódnym mužu a kak je pomhać chcył | Unser Sandmännchen (Obersorbisch) | 26.10.2025",
+      "show": {
+        "id": "crid://rbb-online.de/sandmann",
+        "coremediaId": 6503982,
+        "title": "Unser Sandmännchen",
+        "publisher": {
+          "name": "rbb",
+          "logo": {
+            "title": "Logo rbb",
+            "alt": "Logo rbb",
+            "producerName": "Logo rbb",
+            "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+            "aspectRatio": "16x9"
+          },
+          "publisherType": "TV",
+          "partner": "rbb",
+          "id": "b3JnYW5pemF0aW9uX1JCQg",
+          "coreId": "urn:ard:publisher:4bd261083522aeef"
+        },
+        "self": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "http://asset-gateway-service:8080/asset-gateway/groupings/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "type": "application/vnd.ard.grouping+json"
+        },
+        "images": {
+          "16x9": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+            "aspectRatio": "16x9"
+          },
+          "16x7": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:b70d64beffa1a4e2?w={width}&ch=45a5e40cba3df95a",
+            "aspectRatio": "16x7"
+          },
+          "1x1": {
+            "title": "Logo: Unser Sandmännchen",
+            "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+            "producerName": "rbb",
+            "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:73f11de7f585e8b3?w={width}&ch=50c235697cae2ccf",
+            "aspectRatio": "1x1"
+          }
+        },
+        "shortSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "synopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "longSynopsis": "Seit über 65 Jahren begleitet das Sandmännchen Kinder und Familien am Abend – mit liebevollen Gute-Nacht-Geschichten, die Ruhe bringen und das Einschlafen erleichtern. Jeden Tag schauen rund 1 Million Kinder (und ihre Eltern) zu, wenn der Sandmann den Tag beendet. In der ARD Mediathek gibt es die beliebten Videos kostenlos – jederzeit abrufbar, auch mobil. Das Sandmännchen ist ein Familienprogramm für Jung und Alt – ein Abendritual, das Generationen verbindet.",
+        "modificationDate": null,
+        "assetSource": null,
+        "isChildContent": true,
+        "isFamilyFriendly": false,
+        "targetAudienceAgeMin": 3,
+        "targetAudienceAgeMax": 6,
+        "categories": null,
+        "categoryIds": null,
+        "coreAssetType": "INFINITE_SERIES",
+        "coreId": "urn:ard:show:540975de9bbeb6a7",
+        "groupingType": "SHOW",
+        "homepage": {
+          "id": null,
+          "title": "Unser Sandmännchen",
+          "href": "https://www.ardmediathek.de/sandmaennchen?isChildContent",
+          "type": null
+        },
+        "hasSeasons": false,
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ]
+      },
+      "subtitled": true,
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_content_type": "OnDemand",
+        "teaser_id": "Y3JpZDovL3JiYl8xZjJlZmQ2Ni05NDg4LTQ0MmEtYWIzNC01YjIwM2ExMTdhMmJfcHVibGljYXRpb24",
+        "teaser_institution": "RBB",
+        "teaser_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+        "teaser_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo wódnym mužu a kak je pomhać chcył | Unser Sandmännchen (Obersorbisch) | 26.10.2025"
+      },
+      "type": "ondemand"
+    }
+  ],
+  "topResults": [],
+  "title": "SearchCompilationWidget:Pěskowčik",
+  "titleVisible": false,
+  "type": "gridlist"
+}
