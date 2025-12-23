@@ -159,7 +159,41 @@ function findFullHdMp4Url(data: unknown): string | undefined {
   return (result as string | undefined) || fallback;
 }
 
+function normalizePreviewImageUrl(url: string, width: number): string {
+  if (url.includes('{width}')) {
+    return url.replace('{width}', String(width));
+  }
+  if (url.includes('w=')) {
+    return url.replace(/([?&]w=)(\d+)/, `$1${width}`);
+  }
+  return url;
+}
+
+function findPreviewImageInArray(images: unknown): string | null {
+  if (!Array.isArray(images)) return null;
+  const candidates = images.filter(image => image && typeof image === 'object') as Array<Record<string, any>>;
+  const previewCandidate = candidates.find(image => image.kind === 'preview' && typeof image.url === 'string');
+  if (previewCandidate?.url) return previewCandidate.url;
+  const aspectCandidate = candidates.find(image => image.aspectRatio === '16x9' && typeof image.url === 'string');
+  if (aspectCandidate?.url) return aspectCandidate.url;
+  const firstCandidate = candidates.find(image => typeof image.url === 'string');
+  return firstCandidate?.url || null;
+}
+
 function resolvePreviewImageUrl(item: Record<string, any>, width = PREVIEW_IMAGE_WIDTH): string | null {
+  const arrayCandidates = [
+    item?.images,
+    item?.meta?.images,
+    item?.mediaCollection?.meta?.images,
+    item?.mediaCollection?.embedded?.meta?.images,
+  ];
+  for (const images of arrayCandidates) {
+    const candidateUrl = findPreviewImageInArray(images);
+    if (candidateUrl) {
+      return normalizePreviewImageUrl(candidateUrl, width);
+    }
+  }
+
   const candidate =
     item?.images?.aspect16x9?.src ||
     item?.teaserImage?.images?.aspect16x9?.src ||
@@ -167,7 +201,7 @@ function resolvePreviewImageUrl(item: Record<string, any>, width = PREVIEW_IMAGE
     null;
 
   if (typeof candidate !== 'string' || candidate.trim().length === 0) return null;
-  return candidate.replace('{width}', String(width));
+  return normalizePreviewImageUrl(candidate, width);
 }
 
 export async function fetchArdSearchResults(
