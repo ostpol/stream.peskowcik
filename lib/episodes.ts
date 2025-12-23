@@ -1,15 +1,16 @@
 import { getDb, Episode } from './db';
-import { 
-  fetchMediathekResults, 
-  fetchArdEpisode, 
+import {
+  fetchArdEpisode,
+  fetchArdSearchResults,
   extractBase64Id,
   isSorbianEpisode,
   detectLanguage,
-  MediathekResult 
+  MediathekResult,
 } from './api-client';
 import { getKeywordsAsArray } from './keywords';
 import { getAllLanguageRules } from './language-rules';
 import { isBlacklisted } from './blacklist';
+import { getSearchTermsAsArray } from './search-terms';
 
 export interface EpisodeWithLanguage extends Episode {
   language?: string | null;
@@ -205,65 +206,83 @@ export async function syncEpisodesFromAPI(): Promise<number> {
   
   // Get keywords from database
   const keywords = await getKeywordsAsArray();
+  const searchTerms = await getSearchTermsAsArray();
+  const effectiveTerms = searchTerms.length > 0
+    ? searchTerms
+    : ['Pěskowčik', 'Naš pěskowy'];
   
   // Fetch episodes from API
-  const pageSize = 120;
+  const pageSize = 50;
   const maxResults = 15;
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - 120); // Last 120 days
   
-  let offset = 0;
   const seenUrls = new Set<string>();
   
-  while (synced < maxResults) {
-    const results = await fetchMediathekResults('Unser Sandmännchen', null, pageSize, offset);
-    
-    if (results.length === 0) break;
-    
-    for (const entry of results) {
-      if (synced >= maxResults) break;
-      
-      const entryDate = new Date(entry.timestamp * 1000);
-      if (entryDate < cutoffDate) {
-        // Reached cutoff, stop fetching more pages
-        return synced;
+  for (const term of effectiveTerms) {
+    let pageNumber = 0;
+    while (synced < maxResults) {
+      const results = await fetchArdSearchResults(term, pageSize, pageNumber);
+
+      if (results.length === 0) break;
+
+      for (const entry of results) {
+        if (synced >= maxResults) break;
+
+        if (entry.timestamp) {
+          const entryDate = new Date(entry.timestamp * 1000);
+          if (entryDate < cutoffDate) {
+            continue;
+          }
+        }
+
+        if (!(await isSorbianEpisode(entry, keywords))) continue;
+
+        // Check if blacklisted
+        if (isBlacklisted(entry.title, entry.url_website)) {
+          continue;
+        }
+
+        const url = entry.url_website || '';
+        if (!url) continue;
+
+        // Skip duplicates
+        if (seenUrls.has(url)) continue;
+        seenUrls.add(url);
+
+        // Check if already exists
+        const existing = db.prepare('SELECT id FROM episodes WHERE url_website = ?').get(url);
+        if (existing) continue;
+
+        // Extract base64 ID if available
+        const base64Id = extractBase64Id(url);
+        let episodeData: MediathekResult | null = null;
+        if (base64Id) {
+          episodeData = await fetchArdEpisode(base64Id);
+        }
+
+        const source = episodeData || entry;
+
+        // Create episode
+        await createOrUpdateEpisode(url, {
+          base64_id: base64Id,
+          url_video: source.url_video || null,
+          original_title: source.title,
+          original_description: source.description,
+          timestamp: source.timestamp,
+          duration: source.duration || null,
+          channel: source.channel || null,
+          is_manual: 0,
+        });
+
+        synced++;
       }
-      
-      if (!(await isSorbianEpisode(entry, keywords))) continue;
-      
-      // Check if blacklisted
-      if (isBlacklisted(entry.title, entry.url_website)) {
-        continue;
-      }
-      
-      // Skip duplicates
-      if (seenUrls.has(entry.url_website)) continue;
-      seenUrls.add(entry.url_website);
-      
-      // Check if already exists
-      const existing = db.prepare('SELECT id FROM episodes WHERE url_website = ?').get(entry.url_website);
-      if (existing) continue;
-      
-      // Extract base64 ID if available
-      const base64Id = extractBase64Id(entry.url_website);
-      
-      // Create episode
-      await createOrUpdateEpisode(entry.url_website, {
-        base64_id: base64Id,
-        url_video: entry.url_video || null,
-        original_title: entry.title,
-        original_description: entry.description,
-        timestamp: entry.timestamp,
-        duration: entry.duration || null,
-        channel: entry.channel || null,
-        is_manual: 0,
-      });
-      
-      synced++;
+
+      if (results.length < pageSize) break;
+      pageNumber += 1;
     }
-    
-    if (results.length < pageSize) break;
-    offset += pageSize;
+
+    if (synced >= maxResults) break;
   }
   
   return synced;
