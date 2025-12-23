@@ -26,8 +26,11 @@ interface EpisodeOverrideForm {
 }
 
 interface ArdSearchResponse {
-  query: string;
-  results: Record<string, unknown>[];
+  queries: string[];
+  results: Array<{
+    query: string;
+    results: Record<string, unknown>[];
+  }>;
 }
 
 export default function AdminPage() {
@@ -132,7 +135,7 @@ export default function AdminPage() {
 
   async function fetchRawSearchResults() {
     try {
-      const response = await fetch('/api/ard-search?query=Pěskowčik');
+      const response = await fetch('/api/ard-search');
       if (!response.ok) throw new Error('Failed to fetch ARD raw search results');
       const data = await response.json();
       setSearchResults(data);
@@ -396,7 +399,7 @@ export default function AdminPage() {
         {!loading && activeTab === 'ard-raw' && (
           <section className="space-y-6">
             <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <h2 className="text-lg font-semibold mb-2">ARD Suchtreffer (Pěskowčik)</h2>
+              <h2 className="text-lg font-semibold mb-2">ARD Suchtreffer</h2>
               <p className="text-sm text-slate-400 mb-4">
                 Rohdaten aus der ARD-Suche. Diese Liste zeigt alle Metadaten pro Treffer.
               </p>
@@ -405,16 +408,27 @@ export default function AdminPage() {
               ) : searchResults.results.length === 0 ? (
                 <p className="text-sm text-rose-300">Keine Suchtreffer gefunden.</p>
               ) : (
-                <div className="space-y-3">
-                  {searchResults.results.map((result, index) => (
-                    <details key={`${searchResults.query}-${index}`} className="border border-slate-800 rounded-lg">
-                      <summary className="cursor-pointer px-3 py-2 text-sm text-emerald-200">
-                        Treffer #{index + 1}
-                      </summary>
-                      <pre className="px-3 pb-3 text-xs text-slate-300 whitespace-pre-wrap break-words">
-                        {JSON.stringify(result, null, 2)}
-                      </pre>
-                    </details>
+                <div className="space-y-6">
+                  {searchResults.results.map(group => (
+                    <div key={group.query} className="space-y-3">
+                      <div className="text-sm text-emerald-200 font-semibold">
+                        Suchbegriff: {group.query}
+                      </div>
+                      {group.results.length === 0 ? (
+                        <p className="text-sm text-rose-300">Keine Treffer für diesen Suchbegriff.</p>
+                      ) : (
+                        group.results.map((result, index) => (
+                          <details key={`${group.query}-${index}`} className="border border-slate-800 rounded-lg">
+                            <summary className="cursor-pointer px-3 py-2 text-sm text-emerald-200">
+                              Treffer #{index + 1}
+                            </summary>
+                            <pre className="px-3 pb-3 text-xs text-slate-300 whitespace-pre-wrap break-words">
+                              {JSON.stringify(result, null, 2)}
+                            </pre>
+                          </details>
+                        ))
+                      )}
+                    </div>
                   ))}
                 </div>
               )}
