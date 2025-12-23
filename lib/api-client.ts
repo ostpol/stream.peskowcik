@@ -31,6 +31,35 @@ const ARD_COMMON_HEADERS = {
 };
 const PREVIEW_IMAGE_WIDTH = 640;
 
+function extractSearchTeasers(data: Record<string, any>): Record<string, any>[] {
+  const candidates: Array<unknown> = [
+    data?.teasers,
+    data?.results,
+    data?.searchResults,
+    data?.searchResults?.teasers,
+    data?.result?.results,
+    data?.result?.teasers,
+    data?.result?.searchResults,
+  ];
+
+  if (Array.isArray(data?.widgets)) {
+    for (const widget of data.widgets) {
+      if (widget?.teasers) {
+        candidates.push(widget.teasers);
+      }
+    }
+  }
+
+  for (const candidate of candidates) {
+    if (Array.isArray(candidate)) return candidate;
+    if (candidate && typeof candidate === 'object' && Array.isArray((candidate as any).items)) {
+      return (candidate as any).items;
+    }
+  }
+
+  return [];
+}
+
 function toTimestamp(value: string | number | null | undefined): number {
   if (!value) return 0;
   if (typeof value === 'number') return Math.floor(value / (value > 10_000_000_000 ? 1000 : 1));
@@ -160,7 +189,7 @@ export async function fetchArdSearchResults(
     });
 
     const data = response.data;
-    const rawResults = data?.teasers || data?.results || data?.searchResults || data?.result?.results || [];
+    const rawResults = extractSearchTeasers(data);
     if (!Array.isArray(rawResults)) return [];
 
     return rawResults.map((item: Record<string, any>) => {
@@ -229,7 +258,7 @@ export async function fetchArdSearchRawResults(
     });
 
     const data = response.data;
-    const rawResults = data?.teasers || data?.results || data?.searchResults || data?.result?.results || [];
+    const rawResults = extractSearchTeasers(data);
     if (!Array.isArray(rawResults)) return [];
     return rawResults;
   } catch (error) {
