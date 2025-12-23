@@ -481,6 +481,21 @@ export default function AdminPage() {
                             <span className="text-rose-300">Nicht vorhanden</span>
                           )}
                         </div>
+                        <div>
+                          <span className="text-slate-400">Preview URL:</span>{' '}
+                          {episode.preview_image_url ? (
+                            <a
+                              className="text-emerald-300 break-all"
+                              href={episode.preview_image_url}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {episode.preview_image_url}
+                            </a>
+                          ) : (
+                            <span className="text-rose-300">Nicht vorhanden</span>
+                          )}
+                        </div>
                         <div className="flex flex-wrap gap-4 text-slate-400">
                           <span>Timestamp: {episode.timestamp || 0}</span>
                           <span>Dauer: {episode.duration ?? '—'}</span>
