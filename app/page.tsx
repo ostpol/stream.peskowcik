@@ -132,7 +132,7 @@ export default function Home() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-emerald-500/10 border border-emerald-400/40 rounded-lg p-4 mb-6">
+        {/* <div className="bg-emerald-500/10 border border-emerald-400/40 rounded-lg p-4 mb-6">
           <p className="text-emerald-200">
             Diese App befindet sich noch im Aufbau und in der Entwicklung
           </p>
@@ -145,7 +145,7 @@ export default function Home() {
           <p>
             Diese App nutzt die ARD Mediathek API, um sorbischsprachige Sandmännchen‑Folgen zu finden und anzuzeigen.
           </p>
-        </div>
+        </div> */}
 
         {loading && (
           <div className="text-center py-12">
