@@ -12,7 +12,6 @@ export interface MediathekResult {
   topic?: string;
 }
 
-
 const ARD_API_BASE = 'https://api.ardmediathek.de/page-gateway/pages/ard/item';
 const ARD_SEARCH_API_BASE = 'https://api.ardmediathek.de/search-system/search/vods/ard';
 
@@ -72,6 +71,46 @@ function resolveArdUrl(item: Record<string, any>, base64Id: string | null): stri
   return getArdVideoUrl(base64Id) || '';
 }
 
+function findFullHdMp4Url(data: unknown): string | undefined {
+  const visited = new Set<unknown>();
+  let fallback: string | undefined;
+
+  const visit = (node: unknown) => {
+    if (!node || typeof node !== 'object') return;
+    if (visited.has(node)) return;
+    visited.add(node);
+
+    if (Array.isArray(node)) {
+      for (const entry of node) {
+        const result = visit(entry);
+        if (result) return result;
+      }
+      return;
+    }
+
+    const record = node as Record<string, any>;
+    const candidate = typeof record.url === 'string' ? record.url : typeof record._stream === 'string' ? record._stream : undefined;
+    const forcedLabel = typeof record.forcedLabel === 'string' ? record.forcedLabel : undefined;
+    const height = typeof record._height === 'number' ? record._height : undefined;
+    const quality = typeof record._quality === 'string' ? record._quality : undefined;
+
+    if (candidate && candidate.endsWith('.mp4')) {
+      if (forcedLabel === 'Full HD' || height === 1080 || quality === 'avc1080') {
+        return candidate;
+      }
+      if (!fallback) fallback = candidate;
+    }
+
+    for (const value of Object.values(record)) {
+      const result = visit(value);
+      if (result) return result;
+    }
+  };
+
+  const result = visit(data);
+  return (result as string | undefined) || fallback;
+}
+
 export async function fetchArdSearchResults(
   query: string,
   pageSize: number = 50,
@@ -129,6 +168,10 @@ export async function fetchArdEpisode(base64Id: string): Promise<MediathekResult
   try {
     const response = await axios.get(`${ARD_API_BASE}/${base64Id}`, {
       timeout: 6000,
+      params: {
+        embedded: false,
+        mcV6: true,
+      },
     });
     
     const data = response.data;
@@ -150,25 +193,7 @@ export async function fetchArdEpisode(base64Id: string): Promise<MediathekResult
         }
       }
       
-      let urlVideo: string | undefined;
-      try {
-        const mediaArray = widget.mediaCollection.embedded?._mediaArray;
-        if (mediaArray && mediaArray.length > 0) {
-          const streamArray = mediaArray[0]._mediaStreamArray || [];
-          // Prefer 720p, fallback to first
-          let chosen = streamArray.find((s: any) => 
-            s._height === 720 || s._quality === 'avc720' || s._quality === 3
-          );
-          if (!chosen && streamArray.length > 0) {
-            chosen = streamArray[0];
-          }
-          if (chosen) {
-            urlVideo = chosen._stream;
-          }
-        }
-      } catch (e) {
-        // ignore
-      }
+      const urlVideo = findFullHdMp4Url(widget.mediaCollection) || findFullHdMp4Url(widget);
       
       return {
         title,
