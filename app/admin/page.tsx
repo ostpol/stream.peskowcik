@@ -25,8 +25,14 @@ interface EpisodeOverrideForm {
   available_until: string;
 }
 
+interface ArdSearchResponse {
+  query: string;
+  results: Record<string, unknown>[];
+}
+
 export default function AdminPage() {
   const [episodes, setEpisodes] = useState<EpisodeWithLanguage[]>([]);
+  const [searchResults, setSearchResults] = useState<ArdSearchResponse | null>(null);
   const [searchTerms, setSearchTerms] = useState<SearchTerm[]>([]);
   const [blacklistEntries, setBlacklistEntries] = useState<BlacklistEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -109,7 +115,7 @@ export default function AdminPage() {
 
   async function fetchAll() {
     setLoading(true);
-    await Promise.all([fetchEpisodes(), fetchSearchTerms(), fetchBlacklist()]);
+    await Promise.all([fetchEpisodes(), fetchSearchTerms(), fetchBlacklist(), fetchRawSearchResults()]);
     setLoading(false);
   }
 
@@ -121,6 +127,18 @@ export default function AdminPage() {
       setEpisodes(data);
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  async function fetchRawSearchResults() {
+    try {
+      const response = await fetch('/api/ard-search?query=Pěskowčik');
+      if (!response.ok) throw new Error('Failed to fetch ARD raw search results');
+      const data = await response.json();
+      setSearchResults(data);
+    } catch (error) {
+      console.error(error);
+      setSearchResults(null);
     }
   }
 
@@ -370,97 +388,176 @@ export default function AdminPage() {
         {loading && <p className="text-slate-400">Lade Daten…</p>}
 
         {!loading && activeTab === 'episodes' && (
-          <section className="space-y-4">
-            {episodes.map(episode => (
-              <div key={episode.url_website} className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                  <div>
-                    <h2 className="text-lg font-semibold">{episode.displayTitle}</h2>
-                    <p className="text-sm text-slate-400">{episode.displayLanguage} · {episode.url_website}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {episode.override_id && (
-                      <span className="text-xs uppercase tracking-wide text-emerald-300 border border-emerald-400/40 px-2 py-1 rounded-full">
-                        Override aktiv
-                      </span>
-                    )}
-                    <button
-                      onClick={() => startOverrideEdit(episode)}
-                      className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700"
-                    >
-                      Bearbeiten
-                    </button>
-                    {episode.override_id && (
-                      <button
-                        onClick={() => deleteOverride(episode.override_id)}
-                        className="px-3 py-1.5 bg-rose-500/10 text-rose-300 border border-rose-500/40 rounded-lg hover:bg-rose-500/20"
-                      >
-                        Override löschen
-                      </button>
-                    )}
-                  </div>
+          <section className="space-y-6">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+              <h2 className="text-lg font-semibold mb-2">ARD Suchtreffer (Pěskowčik)</h2>
+              <p className="text-sm text-slate-400 mb-4">
+                Rohdaten aus der ARD-Suche. Diese Liste zeigt alle Metadaten pro Treffer.
+              </p>
+              {!searchResults ? (
+                <p className="text-sm text-rose-300">Suchergebnisse konnten nicht geladen werden.</p>
+              ) : searchResults.results.length === 0 ? (
+                <p className="text-sm text-rose-300">Keine Suchtreffer gefunden.</p>
+              ) : (
+                <div className="space-y-3">
+                  {searchResults.results.map((result, index) => (
+                    <details key={`${searchResults.query}-${index}`} className="border border-slate-800 rounded-lg">
+                      <summary className="cursor-pointer px-3 py-2 text-sm text-emerald-200">
+                        Treffer #{index + 1}
+                      </summary>
+                      <pre className="px-3 pb-3 text-xs text-slate-300 whitespace-pre-wrap break-words">
+                        {JSON.stringify(result, null, 2)}
+                      </pre>
+                    </details>
+                  ))}
                 </div>
+              )}
+            </div>
 
-                {editingUrl === episode.url_website && (
-                  <div className="mt-4 grid gap-3">
-                    <div>
-                      <label className="block text-sm text-slate-300 mb-1">Custom Titel</label>
-                      <input
-                        value={overrideForm.custom_title}
-                        onChange={(event) => setOverrideForm({ ...overrideForm, custom_title: event.target.value })}
-                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-slate-300 mb-1">Custom Beschreibung</label>
-                      <textarea
-                        value={overrideForm.custom_description}
-                        onChange={(event) => setOverrideForm({ ...overrideForm, custom_description: event.target.value })}
-                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
-                        rows={3}
-                      />
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-sm text-slate-300 mb-1">Custom Sprache</label>
-                        <select
-                          value={overrideForm.custom_language}
-                          onChange={(event) => setOverrideForm({ ...overrideForm, custom_language: event.target.value })}
-                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
-                        >
-                          <option value="">Auto</option>
-                          <option value="Obersorbisch">Obersorbisch</option>
-                          <option value="Niedersorbisch">Niedersorbisch</option>
-                        </select>
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+              <h2 className="text-lg font-semibold mb-2">Gefundene Episoden (API)</h2>
+              <p className="text-sm text-slate-400 mb-4">
+                Alle Episoden aus der API inklusive Metadaten und MP4-URL. Ist diese Liste leer, liefert die API aktuell
+                keine Treffer.
+              </p>
+              {episodes.length === 0 ? (
+                <p className="text-sm text-rose-300">Keine Episoden gefunden.</p>
+              ) : (
+                <div className="space-y-3">
+                  {episodes.map(episode => (
+                    <div key={`raw-${episode.url_website}`} className="border border-slate-800 rounded-lg p-3 bg-slate-950/40">
+                      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
+                        <div>
+                          <h3 className="font-semibold">{episode.original_title || episode.displayTitle}</h3>
+                          <p className="text-xs text-slate-400">{episode.original_description || 'Keine Beschreibung'}</p>
+                        </div>
+                        <div className="text-xs text-slate-400">
+                          <div>Sprache: {episode.displayLanguage}</div>
+                          <div>Kanal: {episode.channel || '—'}</div>
+                          <div>Basis-ID: {episode.base64_id || '—'}</div>
+                        </div>
                       </div>
+                      <div className="mt-3 grid gap-2 text-xs text-slate-300">
+                        <div>
+                          <span className="text-slate-400">Website:</span>{' '}
+                          <a className="text-emerald-300 break-all" href={episode.url_website} target="_blank" rel="noreferrer">
+                            {episode.url_website}
+                          </a>
+                        </div>
+                        <div>
+                          <span className="text-slate-400">MP4 URL:</span>{' '}
+                          {episode.url_video ? (
+                            <a className="text-emerald-300 break-all" href={episode.url_video} target="_blank" rel="noreferrer">
+                              {episode.url_video}
+                            </a>
+                          ) : (
+                            <span className="text-rose-300">Nicht vorhanden</span>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-4 text-slate-400">
+                          <span>Timestamp: {episode.timestamp || 0}</span>
+                          <span>Dauer: {episode.duration ?? '—'}</span>
+                          <span>Verfügbar bis: {episode.available_until || '—'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-4">
+              {episodes.map(episode => (
+                <div key={episode.url_website} className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                    <div>
+                      <h2 className="text-lg font-semibold">{episode.displayTitle}</h2>
+                      <p className="text-sm text-slate-400">{episode.displayLanguage} · {episode.url_website}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {episode.override_id && (
+                        <span className="text-xs uppercase tracking-wide text-emerald-300 border border-emerald-400/40 px-2 py-1 rounded-full">
+                          Override aktiv
+                        </span>
+                      )}
+                      <button
+                        onClick={() => startOverrideEdit(episode)}
+                        className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700"
+                      >
+                        Bearbeiten
+                      </button>
+                      {episode.override_id && (
+                        <button
+                          onClick={() => deleteOverride(episode.override_id)}
+                          className="px-3 py-1.5 bg-rose-500/10 text-rose-300 border border-rose-500/40 rounded-lg hover:bg-rose-500/20"
+                        >
+                          Override löschen
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {editingUrl === episode.url_website && (
+                    <div className="mt-4 grid gap-3">
                       <div>
-                        <label className="block text-sm text-slate-300 mb-1">Verfügbar bis</label>
+                        <label className="block text-sm text-slate-300 mb-1">Custom Titel</label>
                         <input
-                          type="date"
-                          value={overrideForm.available_until}
-                          onChange={(event) => setOverrideForm({ ...overrideForm, available_until: event.target.value })}
+                          value={overrideForm.custom_title}
+                          onChange={(event) => setOverrideForm({ ...overrideForm, custom_title: event.target.value })}
                           className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
                         />
                       </div>
+                      <div>
+                        <label className="block text-sm text-slate-300 mb-1">Custom Beschreibung</label>
+                        <textarea
+                          value={overrideForm.custom_description}
+                          onChange={(event) => setOverrideForm({ ...overrideForm, custom_description: event.target.value })}
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                          rows={3}
+                        />
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-sm text-slate-300 mb-1">Custom Sprache</label>
+                          <select
+                            value={overrideForm.custom_language}
+                            onChange={(event) => setOverrideForm({ ...overrideForm, custom_language: event.target.value })}
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                          >
+                            <option value="">Auto</option>
+                            <option value="Obersorbisch">Obersorbisch</option>
+                            <option value="Niedersorbisch">Niedersorbisch</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm text-slate-300 mb-1">Verfügbar bis</label>
+                          <input
+                            type="date"
+                            value={overrideForm.available_until}
+                            onChange={(event) => setOverrideForm({ ...overrideForm, available_until: event.target.value })}
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => saveOverride(episode.url_website)}
+                          className="px-4 py-2 bg-emerald-400 text-slate-950 rounded-lg hover:bg-emerald-300"
+                        >
+                          Speichern
+                        </button>
+                        <button
+                          onClick={() => setEditingUrl(null)}
+                          className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700"
+                        >
+                          Abbrechen
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => saveOverride(episode.url_website)}
-                        className="px-4 py-2 bg-emerald-400 text-slate-950 rounded-lg hover:bg-emerald-300"
-                      >
-                        Speichern
-                      </button>
-                      <button
-                        onClick={() => setEditingUrl(null)}
-                        className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700"
-                      >
-                        Abbrechen
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              ))}
+            </div>
           </section>
         )}
 
