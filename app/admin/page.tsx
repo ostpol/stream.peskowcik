@@ -390,31 +390,6 @@ export default function AdminPage() {
         {!loading && activeTab === 'episodes' && (
           <section className="space-y-6">
             <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-              <h2 className="text-lg font-semibold mb-2">ARD Suchtreffer (Pěskowčik)</h2>
-              <p className="text-sm text-slate-400 mb-4">
-                Rohdaten aus der ARD-Suche. Diese Liste zeigt alle Metadaten pro Treffer.
-              </p>
-              {!searchResults ? (
-                <p className="text-sm text-rose-300">Suchergebnisse konnten nicht geladen werden.</p>
-              ) : searchResults.results.length === 0 ? (
-                <p className="text-sm text-rose-300">Keine Suchtreffer gefunden.</p>
-              ) : (
-                <div className="space-y-3">
-                  {searchResults.results.map((result, index) => (
-                    <details key={`${searchResults.query}-${index}`} className="border border-slate-800 rounded-lg">
-                      <summary className="cursor-pointer px-3 py-2 text-sm text-emerald-200">
-                        Treffer #{index + 1}
-                      </summary>
-                      <pre className="px-3 pb-3 text-xs text-slate-300 whitespace-pre-wrap break-words">
-                        {JSON.stringify(result, null, 2)}
-                      </pre>
-                    </details>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
               <h2 className="text-lg font-semibold mb-2">Gefundene Episoden (API)</h2>
               <p className="text-sm text-slate-400 mb-4">
                 Alle Episoden aus der API inklusive Metadaten und MP4-URL. Ist diese Liste leer, liefert die API aktuell
