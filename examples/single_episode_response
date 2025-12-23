@@ -1,0 +1,398 @@
+{
+  "personalized": false,
+  "widgets": [
+    {
+      "binaryFeatures": [],
+      "embeddable": true,
+      "isChildContent": true,
+      "mediaCollection": {
+        "embedded": {
+          "id": "urn:ard:publication:77b959de6f674548",
+          "isGeoBlocked": false,
+          "meta": {
+            "availableToDateTime": "2026-12-21T22:59:59Z",
+            "broadcastedOnDateTime": "2025-11-09T16:00:00Z",
+            "clipSourceName": "rbb",
+            "durationSeconds": 221,
+            "images": [
+              {
+                "alt": "Kito, Maja und die Kugelkiste: Von den Nixenkindern (Quelle: rbb)",
+                "aspectRatio": "16x9",
+                "imageSourceName": "rbb",
+                "kind": "preview",
+                "title": "Kito, Maja und die Kugelkiste: Von den Nixenkindern",
+                "url": "https://api.ardmediathek.de/image-service/images/urn:ard:image:13187bad3244046c?w=960&ch=56c4d04a408d1ec7"
+              }
+            ],
+            "maturityContentRating": {
+              "age": 0,
+              "isBlocked": false,
+              "kind": "other"
+            },
+            "publicationService": {
+              "id": "ard",
+              "name": "rbb",
+              "partner": "rbb"
+            },
+            "seriesTitle": "Unser Sandmännchen",
+            "synopsis": "Dźěsći wódneho muža nawróćitej so přepozdźe domoj a njepřińdźetej wjace do swojeho hata. Zo pak by so jimaj to do schadźenja słónca šłachćiło, dyrbitej tři hódančka wuhódać.",
+            "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025"
+          },
+          "pluginData": {
+            "recommendation@all": {
+              "isAutoplay": true,
+              "timerSeconds": 10,
+              "url": "https://api.ardmediathek.de/page-gateway/compilations/ard/recommendations?contextItemId=Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24"
+            },
+            "trackingAgf@all": {
+              "appId": "PA02DC09C-B8D3-4098-87D2-2C023682D6D5",
+              "clipData": {
+                "assetid": "urn_ard_publication_77b959de6f674548",
+                "length": "221",
+                "nol_c0": "p0,0",
+                "nol_c10": "p10,rbb",
+                "nol_c12": "p12,Content",
+                "nol_c15": "p15,",
+                "nol_c16": "p16,",
+                "nol_c18": "p18,N",
+                "nol_c19": "p19,rbb",
+                "nol_c2": "p2,Y",
+                "nol_c5": "p5,ARD Mediathek",
+                "nol_c7": "p7,rbb_1f8dd12b-0287-4cc8-8dc3-91012b6f8a76",
+                "nol_c9": "p9,Unser Sandmännchen_Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025_21.12.2025 16:53",
+                "program": "Unser Sandmännchen",
+                "title": "rbb_Unser Sandmännchen_Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025_21.12.2025 16:53",
+                "type": "content"
+              },
+              "tracker": "AGF"
+            },
+            "trackingAti@all": {
+              "config": {
+                "site": 511893
+              },
+              "isEnabled": true,
+              "richMedia": {
+                "broadcastMode": "clip",
+                "duration": "221",
+                "mediaLabel": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025__15420505__",
+                "mediaLevel2": "{richMediaLevelTwo}",
+                "mediaTheme1": "Rundfunk Berlin-Brandenburg",
+                "mediaTheme2": "rbb",
+                "mediaTheme3": "Unser Sandmännchen",
+                "mediaType": "video",
+                "playerId": "urn:ard:publication:77b959de6f674548",
+                "refreshDuration": {
+                  "0": 5,
+                  "1": 12,
+                  "12": 15,
+                  "18": 30
+                }
+              },
+              "tracker": "ATI"
+            },
+            "trackingPiano@all": {
+              "avContent": {
+                "av_broadcasting_type": "OnDemand",
+                "av_content": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+                "av_content_duration": 221000,
+                "av_content_id": "urn:ard:publication:77b959de6f674548",
+                "av_content_type": "video",
+                "av_institution": "RBB",
+                "av_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+                "av_publisher": "rbb",
+                "av_publisher_id": "urn:ard:publisher:34416602d3c39ecb",
+                "av_show": "Unser Sandmännchen",
+                "av_show_id": "urn:ard:show:540975de9bbeb6a7"
+              },
+              "config": {
+                "events": [
+                  "av.error",
+                  "av.speed",
+                  "av.quality",
+                  "av.jumpmark",
+                  "av.share",
+                  "av.playermode",
+                  "av.subtitle",
+                  "av.language",
+                  "av.audiodescription",
+                  "av.signlanguage",
+                  "av.volume.mute"
+                ],
+                "site": 634408
+              },
+              "isEnabled": true
+            }
+          },
+          "streams": [
+            {
+              "kind": "main",
+              "kindName": "Normal",
+              "media": [
+                {
+                  "aspectRatio": "16:9",
+                  "audios": [
+                    {
+                      "kind": "standard",
+                      "languageCode": "deu"
+                    }
+                  ],
+                  "forcedLabel": "SD 480p",
+                  "hasEmbeddedSubtitles": false,
+                  "isAdaptiveQualitySelectable": false,
+                  "isHbbtv": false,
+                  "isHighDynamicRange": false,
+                  "isProtocolRelative": false,
+                  "maxHResolutionPx": 960,
+                  "maxVResolutionPx": 540,
+                  "mimeType": "video/mp4",
+                  "subtitles": [],
+                  "url": "https://rbbmediapmdp-a.akamaihd.net/content/fe/78/fe787836-3594-48be-a989-824bc7d4c76d/fe787836-3594-48be-a989-824bc7d4c76d_hd1080-avc540.mp4",
+                  "videoCodec": "H.264"
+                },
+                {
+                  "aspectRatio": "16:9",
+                  "audios": [
+                    {
+                      "kind": "standard",
+                      "languageCode": "deu"
+                    }
+                  ],
+                  "forcedLabel": "Auto",
+                  "hasEmbeddedSubtitles": false,
+                  "isAdaptiveQualitySelectable": false,
+                  "isHbbtv": false,
+                  "isHighDynamicRange": false,
+                  "isProtocolRelative": false,
+                  "maxHResolutionPx": 1920,
+                  "maxVResolutionPx": 1080,
+                  "mimeType": "application/vnd.apple.mpegurl",
+                  "subtitles": [],
+                  "url": "https://rbbvod.akamaized.net/i/content/fe/78/fe787836-3594-48be-a989-824bc7d4c76d/fe787836-3594-48be-a989-824bc7d4c76d_,hd1080-avc360,hd1080-avc270,hd1080-avc540,hd1080-avc720,hd1080-avc1080,.mp4.csmil/master.m3u8",
+                  "videoCodec": "H.264"
+                },
+                {
+                  "aspectRatio": "16:9",
+                  "audios": [
+                    {
+                      "kind": "standard",
+                      "languageCode": "deu"
+                    }
+                  ],
+                  "forcedLabel": "Full HD",
+                  "hasEmbeddedSubtitles": false,
+                  "isAdaptiveQualitySelectable": false,
+                  "isHbbtv": false,
+                  "isHighDynamicRange": false,
+                  "isProtocolRelative": false,
+                  "maxHResolutionPx": 1920,
+                  "maxVResolutionPx": 1080,
+                  "mimeType": "video/mp4",
+                  "subtitles": [],
+                  "url": "https://rbbmediapmdp-a.akamaihd.net/content/fe/78/fe787836-3594-48be-a989-824bc7d4c76d/fe787836-3594-48be-a989-824bc7d4c76d_hd1080-avc1080.mp4",
+                  "videoCodec": "H.264"
+                },
+                {
+                  "aspectRatio": "16:9",
+                  "audios": [
+                    {
+                      "kind": "standard",
+                      "languageCode": "deu"
+                    }
+                  ],
+                  "forcedLabel": "HD Ready",
+                  "hasEmbeddedSubtitles": false,
+                  "isAdaptiveQualitySelectable": false,
+                  "isHbbtv": false,
+                  "isHighDynamicRange": false,
+                  "isProtocolRelative": false,
+                  "maxHResolutionPx": 1280,
+                  "maxVResolutionPx": 720,
+                  "mimeType": "video/mp4",
+                  "subtitles": [],
+                  "url": "https://rbbmediapmdp-a.akamaihd.net/content/fe/78/fe787836-3594-48be-a989-824bc7d4c76d/fe787836-3594-48be-a989-824bc7d4c76d_hd1080-avc720.mp4",
+                  "videoCodec": "H.264"
+                },
+                {
+                  "aspectRatio": "16:9",
+                  "audios": [
+                    {
+                      "kind": "standard",
+                      "languageCode": "deu"
+                    }
+                  ],
+                  "forcedLabel": "SD",
+                  "hasEmbeddedSubtitles": false,
+                  "isAdaptiveQualitySelectable": false,
+                  "isHbbtv": false,
+                  "isHighDynamicRange": false,
+                  "isProtocolRelative": false,
+                  "maxHResolutionPx": 640,
+                  "maxVResolutionPx": 360,
+                  "mimeType": "video/mp4",
+                  "subtitles": [],
+                  "url": "https://rbbmediapmdp-a.akamaihd.net/content/fe/78/fe787836-3594-48be-a989-824bc7d4c76d/fe787836-3594-48be-a989-824bc7d4c76d_hd1080-avc360.mp4",
+                  "videoCodec": "H.264"
+                }
+              ],
+              "videoLanguageCode": ""
+            }
+          ],
+          "subtitles": []
+        },
+        "href": "https://api.ardmediathek.de/page-gateway/mediacollectionv6/Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24?isTv=false"
+      },
+      "personalized": false,
+      "playerConfig": null,
+      "availableTo": "2026-12-21T22:59:59Z",
+      "blockedByFsk": false,
+      "broadcastedOn": "2025-12-21T16:53:00Z",
+      "geoblocked": false,
+      "id": "Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24",
+      "image": {
+        "alt": "Kito, Maja und die Kugelkiste: Von den Nixenkindern (Quelle: rbb)",
+        "producerName": "rbb",
+        "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:13187bad3244046c?w={width}&ch=56c4d04a408d1ec7",
+        "title": "Kito, Maja und die Kugelkiste: Von den Nixenkindern"
+      },
+      "maturityContentRating": "FSK0",
+      "pagination": null,
+      "publicationService": {
+        "name": "rbb",
+        "logo": {
+          "title": "Logo rbb",
+          "alt": "Logo rbb",
+          "producerName": "Logo rbb",
+          "src": "https://api.ardmediathek.de/image-service/image-collections/urn:ard:image-collection:2213972a8d101de1/16x9?w={width}",
+          "aspectRatio": "16x9"
+        },
+        "publisherType": "TV",
+        "partner": "rbb",
+        "id": "b3JnYW5pemF0aW9uX1JCQg",
+        "coreId": "urn:ard:publisher:34416602d3c39ecb"
+      },
+      "links": {
+        "self": {
+          "id": "player_on_demand_widget_ard",
+          "urlId": "player_on_demand_widget_ard",
+          "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+          "href": "https://api.ardmediathek.de/page-gateway/widgets/ard/editorials/player_on_demand_widget_ard/item/Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24?pageNumber=0&pageSize=100&embedded=false&mcV6=true",
+          "type": "application/vnd.ard.widget+json",
+          "partner": "ard"
+        }
+      },
+      "show": {
+        "id": "Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+        "title": "Unser Sandmännchen",
+        "image": {
+          "alt": "Logo: Unser Sandmännchen (Quelle: rbb)",
+          "producerName": "rbb",
+          "src": "https://api.ardmediathek.de/image-service/images/urn:ard:image:efad13ed623a3995?w={width}&ch=7d94d5fd2bfcb1d2",
+          "title": "Logo: Unser Sandmännchen"
+        },
+        "availableSeasons": null,
+        "binaryFeatures": [
+          "UT",
+          "DGS"
+        ],
+        "isChildContent": true,
+        "coreAssetType": "INFINITE_SERIES"
+      },
+      "synopsis": "Dźěsći wódneho muža nawróćitej so přepozdźe domoj a njepřińdźetej wjace do swojeho hata. Zo pak by so jimaj to do schadźenja słónca šłachćiło, dyrbitej tři hódančka wuhódać.",
+      "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+      "trackingPiano": {
+        "teaser_recommended": false,
+        "widget_id": "player_on_demand_widget_ard",
+        "widget_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+        "widget_typ": "player_ondemand"
+      },
+      "type": "player_ondemand"
+    },
+    {
+      "compilationType": "itemsOfShow",
+      "isChildContent": false,
+      "pagination": {
+        "pageNumber": 0,
+        "pageSize": 24,
+        "totalElements": null
+      },
+      "personalized": false,
+      "teasers": [],
+      "userVisibility": "ALWAYS",
+      "aZContent": false,
+      "id": "Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+      "links": {
+        "self": {
+          "id": "Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "urlId": "Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+          "title": "Unser Sandmännchen",
+          "href": "https://api.ardmediathek.de/page-gateway/widgets/ard/asset/Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4?excludedAssetIds=Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24&pageNumber=0&pageSize=24&embedded=false&seasoned=false&seasonNumber=&withAudiodescription=false&withOriginalWithSubtitle=false&withOriginalversion=false&single=false",
+          "type": "application/vnd.ard.widget+json",
+          "partner": "ard"
+        }
+      },
+      "size": "m",
+      "swipeable": true,
+      "title": "Unser Sandmännchen",
+      "titleVisible": true,
+      "trackingPiano": {
+        "teaser_recommended": false,
+        "widget_id": "Y3JpZDovL3JiYi1vbmxpbmUuZGUvc2FuZG1hbm4",
+        "widget_title": "Unser Sandmännchen",
+        "widget_typ": "gridlist"
+      },
+      "type": "gridlist"
+    }
+  ],
+  "coreAssetType": "EPISODE",
+  "fskRating": "FSK0",
+  "id": "player_ondemand-page-ard",
+  "isChildContent": true,
+  "isFamilyFriendly": false,
+  "links": {
+    "self": {
+      "id": "player_ondemand-page-ard",
+      "urlId": "player_ondemand-page-ard",
+      "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+      "href": "https://api.ardmediathek.de/page-gateway/pages/ard/item/Y3JpZDovL3JiYl8xZjhkZDEyYi0wMjg3LTRjYzgtOGRjMy05MTAxMmI2ZjhhNzZfcHVibGljYXRpb24?embedded=false&mcV6=true",
+      "type": "application/vnd.ard.page+json",
+      "partner": "ard"
+    }
+  },
+  "targetAudienceAgeMax": 6,
+  "targetAudienceAgeMin": 3,
+  "title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+  "tracking": {
+    "aggregationLevelId": 38,
+    "chapter2": "Player",
+    "chapter3": "Unser Sandmännchen",
+    "environmentId": 511893,
+    "pageTitle": "Mediathek/Player/Unser Sandmännchen/Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025/15420505/20251221_1653",
+    "szmType": "CP",
+    "atiCustomVars": {
+      "clipTitle": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+      "mediaType": "video",
+      "lra": "RBB",
+      "channel": "rbb",
+      "show": "Unser Sandmännchen",
+      "contentTypes": "",
+      "mediaDistributionType": 1,
+      "contentId": 15420505,
+      "metadataId": "crid://rbb_1f8dd12b-0287-4cc8-8dc3-91012b6f8a76_publication",
+      "clipLength": 221
+    }
+  },
+  "trackingPiano": {
+    "page_chapter1": "Player",
+    "page_content_id": "urn:ard:publication:77b959de6f674548",
+    "page_content_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+    "page_id": "player_ondemand-page-ard",
+    "page_institution": "RBB",
+    "page_institution_id": "urn:ard:institution:6fd2ea6b797a605b",
+    "page_publisher": "rbb",
+    "page_publisher_id": "urn:ard:publisher:34416602d3c39ecb",
+    "page_show": "Unser Sandmännchen",
+    "page_show_id": "urn:ard:show:540975de9bbeb6a7",
+    "page_title": "Pěskowčik: Kito, Maja a potajna křinja: Wo dźěsćomaj wódneho muža a kak stej na reje šłoj | Unser Sandmännchen (Obersorbisch) | 21.12.2025",
+    "site": "634408"
+  }
+}
