@@ -4,9 +4,10 @@ import { useEffect, useRef } from 'react';
 
 interface VideoPlayerProps {
   url: string;
+  poster?: string | null;
 }
 
-export default function VideoPlayer({ url }: VideoPlayerProps) {
+export default function VideoPlayer({ url, poster }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<any>(null);
 
@@ -48,6 +49,7 @@ export default function VideoPlayer({ url }: VideoPlayerProps) {
         controls
         preload="none"
         playsInline
+        poster={poster || undefined}
         className="w-full h-auto rounded"
       >
         Dein Browser unterstützt das Video-Tag nicht.
@@ -55,4 +57,3 @@ export default function VideoPlayer({ url }: VideoPlayerProps) {
     </div>
   );
 }
-

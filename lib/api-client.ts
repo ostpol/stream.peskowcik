@@ -8,6 +8,7 @@ export interface MediathekResult {
   size?: number;
   url_website: string;
   url_video?: string;
+  preview_image_url?: string | null;
   channel?: string;
   topic?: string;
 }
@@ -28,6 +29,7 @@ const ARD_COMMON_HEADERS = {
   'user-agent':
     'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36 Edg/143.0.0.0',
 };
+const PREVIEW_IMAGE_WIDTH = 640;
 
 function toTimestamp(value: string | number | null | undefined): number {
   if (!value) return 0;
@@ -128,6 +130,17 @@ function findFullHdMp4Url(data: unknown): string | undefined {
   return (result as string | undefined) || fallback;
 }
 
+function resolvePreviewImageUrl(item: Record<string, any>, width = PREVIEW_IMAGE_WIDTH): string | null {
+  const candidate =
+    item?.images?.aspect16x9?.src ||
+    item?.teaserImage?.images?.aspect16x9?.src ||
+    item?.image?.src ||
+    null;
+
+  if (typeof candidate !== 'string' || candidate.trim().length === 0) return null;
+  return candidate.replace('{width}', String(width));
+}
+
 export async function fetchArdSearchResults(
   query: string,
   pageSize: number = 50,
@@ -173,12 +186,14 @@ export async function fetchArdSearchResults(
           item.availableTo
       );
       const url_website = resolveArdUrl(item, base64Id);
+      const preview_image_url = resolvePreviewImageUrl(item);
       return {
         title,
         description,
         timestamp,
         duration: typeof item.duration === 'number' ? item.duration : undefined,
         url_website,
+        preview_image_url,
         channel:
           item.publicationService?.name ||
           item.show?.publisher?.name ||
@@ -259,6 +274,7 @@ export async function fetchArdEpisode(base64Id: string): Promise<MediathekResult
       }
       
       const urlVideo = findFullHdMp4Url(widget.mediaCollection) || findFullHdMp4Url(widget);
+      const previewImageUrl = resolvePreviewImageUrl(widget) || resolvePreviewImageUrl(data);
       
       return {
         title,
@@ -267,6 +283,7 @@ export async function fetchArdEpisode(base64Id: string): Promise<MediathekResult
         duration: widget.duration || undefined,
         url_website: `https://www.ardmediathek.de/video/${base64Id}`,
         url_video: urlVideo,
+        preview_image_url: previewImageUrl,
         channel: widget.publisher?.name || 'RBB',
         topic: 'Unser Sandmännchen',
       };
