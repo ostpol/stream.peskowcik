@@ -8,7 +8,7 @@ export async function GET() {
     
     const channelTitle = 'Pěskowčik – Stream Now!';
     const channelLink = 'https://www.sandmann.de';
-    const channelDescription = 'RSS‑Feed mit sorbischsprachigen Folgen aus der MediathekViewWeb‑API';
+    const channelDescription = 'RSS‑Feed mit sorbischsprachigen Folgen aus der ARD Mediathek API';
     
     const items = episodes.map(ep => {
       const title = escapeXml(ep.displayTitle);
@@ -69,4 +69,3 @@ function escapeXml(str: string): string {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 }
-

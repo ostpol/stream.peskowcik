@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSearchTerm, getAllSearchTerms } from '@/lib/search-terms';
+import { getAdminFromRequest } from '@/lib/auth';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const session = getAdminFromRequest(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const terms = await getAllSearchTerms();
     return NextResponse.json(terms);
@@ -15,6 +21,11 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const session = getAdminFromRequest(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { term } = body;

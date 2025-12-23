@@ -19,7 +19,7 @@ Successfully ported the Stream Peskowcik application from Python/Streamlit to a 
 - Timestamps and metadata tracking
 
 ### ✅ API Integration
-- Ported all MediathekViewWeb API integration from Python
+- Ported all ARD Mediathek API integration from Python
 - ARD Mediathek episode fetching
 - Base64 ID extraction
 - Sorbian episode detection
@@ -62,7 +62,7 @@ Successfully ported the Stream Peskowcik application from Python/Streamlit to a 
 
 ## Features Preserved
 
-- ✅ Episode fetching from MediathekViewWeb API
+- ✅ Episode fetching from ARD Mediathek API
 - ✅ Sorbian episode filtering
 - ✅ Language detection (Obersorbisch/Niedersorbisch)
 - ✅ Video playback (MP4 and HLS)
@@ -138,7 +138,7 @@ Successfully ported the Stream Peskowcik application from Python/Streamlit to a 
 - `lib/episodes.ts` - Episode business logic
 
 ### Scripts
-- `scripts/seed.ts` - Database seeding script
+- (removed) Database seeding scripts were retired in favor of API-driven fetching
 
 ### Documentation
 - `ANALYSIS.md` - Codebase analysis
@@ -150,14 +150,14 @@ Successfully ported the Stream Peskowcik application from Python/Streamlit to a 
 ## Testing Checklist
 
 - [ ] Install dependencies: `npm install`
-- [ ] Seed database: `npm run db:seed`
+- [ ] Configure admin credentials (`ADMIN_USERNAME`, `ADMIN_PASSWORD`)
 - [ ] Start dev server: `npm run dev`
 - [ ] Verify homepage loads
 - [ ] Verify admin panel loads
-- [ ] Test episode editing in admin
+- [ ] Test episode overrides in admin
 - [ ] Test RSS feed generation
 - [ ] Test video playback
-- [ ] Test API sync functionality
+- [ ] Test ARD API proxy fetching
 
 ## Deployment Notes
 
@@ -175,4 +175,3 @@ Recommended deployment platforms:
 ## Conclusion
 
 The port is complete and functional. All core features from the original Python/Streamlit application have been preserved, with significant improvements in architecture, maintainability, and user experience. The new backend database system enables easy management of custom episode metadata without code changes.
-

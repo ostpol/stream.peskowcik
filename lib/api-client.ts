@@ -213,7 +213,7 @@ export function extractBase64Id(url: string): string | null {
 }
 
 // Helper to check if string is Sorbian episode
-// This function can be called with optional keywords array for database-backed keywords
+// Optional keywords array can override the default keyword list
 export async function isSorbianEpisode(
   entry: MediathekResult,
   keywords?: string[]

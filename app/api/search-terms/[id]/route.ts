@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { deleteSearchTerm, getSearchTermById, updateSearchTerm } from '@/lib/search-terms';
+import { getAdminFromRequest } from '@/lib/auth';
 
-export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  const session = getAdminFromRequest(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const id = Number(params.id);
     if (Number.isNaN(id)) {
@@ -29,6 +35,11 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+  const session = getAdminFromRequest(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const id = Number(params.id);
     if (Number.isNaN(id)) {
@@ -71,7 +82,12 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   }
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const session = getAdminFromRequest(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const id = Number(params.id);
     if (Number.isNaN(id)) {

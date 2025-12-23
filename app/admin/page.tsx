@@ -1,28 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { EpisodeWithLanguage } from '@/lib/episodes';
-
-interface Keyword {
-  id?: number;
-  keyword: string;
-  created_at?: string;
-  updated_at?: string;
-}
 
 interface SearchTerm {
   id?: number;
   term: string;
-  created_at?: string;
-  updated_at?: string;
-}
-
-interface LanguageRule {
-  id?: number;
-  pattern: string;
-  language: string;
-  priority: number;
-  is_active: number;
   created_at?: string;
   updated_at?: string;
 }
@@ -35,274 +18,174 @@ interface BlacklistEntry {
   updated_at?: string;
 }
 
-interface ManualSeed {
-  id?: number;
-  kind: 'base64' | 'url';
-  value: string;
-  custom_title?: string | null;
-  custom_description?: string | null;
-  custom_date?: string | null;
-  custom_language?: string | null;
-  available_until?: string | null;
-  created_at?: string;
-  updated_at?: string;
+interface EpisodeOverrideForm {
+  custom_title: string;
+  custom_description: string;
+  custom_language: string;
+  available_until: string;
 }
 
 export default function AdminPage() {
   const [episodes, setEpisodes] = useState<EpisodeWithLanguage[]>([]);
-  const [keywords, setKeywords] = useState<Keyword[]>([]);
   const [searchTerms, setSearchTerms] = useState<SearchTerm[]>([]);
-  const [languageRules, setLanguageRules] = useState<LanguageRule[]>([]);
   const [blacklistEntries, setBlacklistEntries] = useState<BlacklistEntry[]>([]);
-  const [manualSeeds, setManualSeeds] = useState<ManualSeed[]>([]);
   const [loading, setLoading] = useState(true);
-  const [keywordsLoading, setKeywordsLoading] = useState(true);
-  const [searchTermsLoading, setSearchTermsLoading] = useState(true);
-  const [rulesLoading, setRulesLoading] = useState(true);
-  const [blacklistLoading, setBlacklistLoading] = useState(true);
-  const [manualSeedsLoading, setManualSeedsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'episodes' | 'keywords' | 'search-terms' | 'language-rules' | 'blacklist' | 'manual-seeds'>('episodes');
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingKeywordId, setEditingKeywordId] = useState<number | null>(null);
-  const [editingSearchTermId, setEditingSearchTermId] = useState<number | null>(null);
-  const [editingRuleId, setEditingRuleId] = useState<number | null>(null);
-  const [editForm, setEditForm] = useState({
+  const [authLoading, setAuthLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [user, setUser] = useState<{ username: string } | null>(null);
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'episodes' | 'search-terms' | 'blacklist'>('episodes');
+  const [editingUrl, setEditingUrl] = useState<string | null>(null);
+  const [overrideForm, setOverrideForm] = useState<EpisodeOverrideForm>({
     custom_title: '',
     custom_description: '',
     custom_language: '',
+    available_until: '',
   });
-  const [keywordForm, setKeywordForm] = useState({
-    keyword: '',
-  });
-  const [searchTermForm, setSearchTermForm] = useState({
-    term: '',
-  });
-  const [ruleForm, setRuleForm] = useState({
-    pattern: '',
-    language: 'Obersorbisch',
-    priority: 0,
-    is_active: true,
-  });
-  const [blacklistForm, setBlacklistForm] = useState({
-    pattern: '',
-    type: 'title' as 'title' | 'url',
-  });
-  const [newKeyword, setNewKeyword] = useState('');
   const [newSearchTerm, setNewSearchTerm] = useState('');
+  const [editingSearchTermId, setEditingSearchTermId] = useState<number | null>(null);
+  const [editingSearchTerm, setEditingSearchTerm] = useState('');
+  const [newBlacklist, setNewBlacklist] = useState({ pattern: '', type: 'title' as 'title' | 'url' });
   const [editingBlacklistId, setEditingBlacklistId] = useState<number | null>(null);
-  const [editingManualSeedId, setEditingManualSeedId] = useState<number | null>(null);
-  const [newManualSeed, setNewManualSeed] = useState({
-    kind: 'url' as 'base64' | 'url',
-    value: '',
-    custom_title: '',
-    custom_description: '',
-    custom_date: '',
-    custom_language: '',
-    available_until: '',
-  });
-  const [manualSeedForm, setManualSeedForm] = useState({
-    kind: 'url' as 'base64' | 'url',
-    value: '',
-    custom_title: '',
-    custom_description: '',
-    custom_date: '',
-    custom_language: '',
-    available_until: '',
-  });
+  const [editingBlacklist, setEditingBlacklist] = useState({ pattern: '', type: 'title' as 'title' | 'url' });
 
   useEffect(() => {
-    fetchEpisodes();
-    fetchKeywords();
-    fetchSearchTerms();
-    fetchLanguageRules();
-    fetchBlacklist();
-    fetchManualSeeds();
+    checkSession();
   }, []);
+
+  useEffect(() => {
+    if (authenticated) {
+      fetchAll();
+    }
+  }, [authenticated]);
+
+  async function checkSession() {
+    try {
+      setAuthLoading(true);
+      const response = await fetch('/api/auth/session');
+      const data = await response.json();
+      if (data.authenticated) {
+        setAuthenticated(true);
+        setUser(data.user);
+      } else {
+        setAuthenticated(false);
+        setUser(null);
+      }
+    } catch (error) {
+      console.error(error);
+      setAuthenticated(false);
+    } finally {
+      setAuthLoading(false);
+    }
+  }
+
+  async function handleLogin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoginError(null);
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginForm),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Login fehlgeschlagen');
+      }
+      setAuthenticated(true);
+      setUser(data.user);
+      setLoginForm({ username: '', password: '' });
+    } catch (error) {
+      setLoginError(error instanceof Error ? error.message : 'Login fehlgeschlagen');
+    }
+  }
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    setAuthenticated(false);
+    setUser(null);
+  }
+
+  async function fetchAll() {
+    setLoading(true);
+    await Promise.all([fetchEpisodes(), fetchSearchTerms(), fetchBlacklist()]);
+    setLoading(false);
+  }
 
   async function fetchEpisodes() {
     try {
-      setLoading(true);
       const response = await fetch('/api/episodes?includeUnavailable=true');
       if (!response.ok) throw new Error('Failed to fetch episodes');
       const data = await response.json();
       setEpisodes(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function fetchKeywords() {
-    try {
-      setKeywordsLoading(true);
-      const response = await fetch('/api/keywords');
-      if (!response.ok) throw new Error('Failed to fetch keywords');
-      const data = await response.json();
-      setKeywords(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setKeywordsLoading(false);
+    } catch (error) {
+      console.error(error);
     }
   }
 
   async function fetchSearchTerms() {
     try {
-      setSearchTermsLoading(true);
       const response = await fetch('/api/search-terms');
       if (!response.ok) throw new Error('Failed to fetch search terms');
       const data = await response.json();
       setSearchTerms(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setSearchTermsLoading(false);
-    }
-  }
-
-  async function fetchLanguageRules() {
-    try {
-      setRulesLoading(true);
-      const response = await fetch('/api/language-rules');
-      if (!response.ok) throw new Error('Failed to fetch language rules');
-      const data = await response.json();
-      setLanguageRules(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setRulesLoading(false);
+    } catch (error) {
+      console.error(error);
     }
   }
 
   async function fetchBlacklist() {
     try {
-      setBlacklistLoading(true);
       const response = await fetch('/api/blacklist');
       if (!response.ok) throw new Error('Failed to fetch blacklist');
       const data = await response.json();
       setBlacklistEntries(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setBlacklistLoading(false);
+    } catch (error) {
+      console.error(error);
     }
   }
 
-  async function fetchManualSeeds() {
-    try {
-      setManualSeedsLoading(true);
-      const response = await fetch('/api/manual-seeds');
-      if (!response.ok) throw new Error('Failed to fetch manual seeds');
-      const data = await response.json();
-      setManualSeeds(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setManualSeedsLoading(false);
-    }
-  }
-
-  async function handleUpdate(id: number) {
-    try {
-      const response = await fetch(`/api/episodes/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editForm),
-      });
-      if (!response.ok) throw new Error('Failed to update');
-      await fetchEpisodes();
-      setEditingId(null);
-      setEditForm({ custom_title: '', custom_description: '', custom_language: '' });
-    } catch (err) {
-      console.error(err);
-      alert('Fehler beim Aktualisieren');
-    }
-  }
-
-  async function handleDelete(id: number) {
-    if (!confirm('Möchten Sie diese Episode wirklich löschen?')) return;
-    try {
-      const response = await fetch(`/api/episodes/${id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to delete');
-      await fetchEpisodes();
-    } catch (err) {
-      console.error(err);
-      alert('Fehler beim Löschen');
-    }
-  }
-
-  function startEdit(episode: EpisodeWithLanguage) {
-    setEditingId(episode.id!);
-    setEditForm({
+  function startOverrideEdit(episode: EpisodeWithLanguage) {
+    setEditingUrl(episode.url_website);
+    setOverrideForm({
       custom_title: episode.custom_title || '',
       custom_description: episode.custom_description || '',
       custom_language: episode.custom_language || '',
+      available_until: episode.available_until || '',
     });
   }
 
-  async function handleCreateKeyword() {
-    if (!newKeyword.trim()) return;
+  async function saveOverride(url: string) {
     try {
-      const response = await fetch('/api/keywords', {
+      const response = await fetch('/api/episode-overrides', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ keyword: newKeyword.trim() }),
+        body: JSON.stringify({ url_website: url, ...overrideForm }),
       });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create keyword');
-      }
-      setNewKeyword('');
-      await fetchKeywords();
-    } catch (err) {
-      console.error(err);
-      alert(err instanceof Error ? err.message : 'Fehler beim Erstellen');
+      if (!response.ok) throw new Error('Failed to save override');
+      await fetchEpisodes();
+      setEditingUrl(null);
+    } catch (error) {
+      console.error(error);
+      alert('Fehler beim Speichern der Overrides');
     }
   }
 
-  async function handleUpdateKeyword(id: number) {
+  async function deleteOverride(id: number | null | undefined) {
+    if (!id) return;
+    if (!confirm('Override wirklich löschen?')) return;
     try {
-      const response = await fetch(`/api/keywords/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ keyword: keywordForm.keyword.trim() }),
-      });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to update keyword');
-      }
-      await fetchKeywords();
-      setEditingKeywordId(null);
-      setKeywordForm({ keyword: '' });
-    } catch (err) {
-      console.error(err);
-      alert(err instanceof Error ? err.message : 'Fehler beim Aktualisieren');
-    }
-  }
-
-  async function handleDeleteKeyword(id: number) {
-    if (!confirm('Möchten Sie dieses Schlüsselwort wirklich löschen?')) return;
-    try {
-      const response = await fetch(`/api/keywords/${id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to delete keyword');
-      await fetchKeywords();
-    } catch (err) {
-      console.error(err);
+      const response = await fetch(`/api/episode-overrides/${id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to delete override');
+      await fetchEpisodes();
+    } catch (error) {
+      console.error(error);
       alert('Fehler beim Löschen');
     }
   }
 
-  function startEditKeyword(keyword: Keyword) {
-    setEditingKeywordId(keyword.id!);
-    setKeywordForm({ keyword: keyword.keyword });
-  }
-
-  async function handleCreateSearchTerm() {
+  async function addSearchTerm() {
     if (!newSearchTerm.trim()) return;
     try {
       const response = await fetch('/api/search-terms', {
@@ -310,1368 +193,428 @@ export default function AdminPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ term: newSearchTerm.trim() }),
       });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create search term');
-      }
+      if (!response.ok) throw new Error('Failed to create search term');
       setNewSearchTerm('');
       await fetchSearchTerms();
-    } catch (err) {
-      console.error(err);
-      alert(err instanceof Error ? err.message : 'Fehler beim Erstellen');
+    } catch (error) {
+      console.error(error);
+      alert('Fehler beim Hinzufügen des Suchbegriffs');
     }
   }
 
-  async function handleUpdateSearchTerm(id: number) {
+  async function updateSearchTerm(id: number) {
     try {
       const response = await fetch(`/api/search-terms/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ term: searchTermForm.term.trim() }),
+        body: JSON.stringify({ term: editingSearchTerm.trim() }),
       });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to update search term');
-      }
-      await fetchSearchTerms();
+      if (!response.ok) throw new Error('Failed to update search term');
       setEditingSearchTermId(null);
-      setSearchTermForm({ term: '' });
-    } catch (err) {
-      console.error(err);
-      alert(err instanceof Error ? err.message : 'Fehler beim Aktualisieren');
+      setEditingSearchTerm('');
+      await fetchSearchTerms();
+    } catch (error) {
+      console.error(error);
+      alert('Fehler beim Aktualisieren');
     }
   }
 
-  async function handleDeleteSearchTerm(id: number) {
-    if (!confirm('Möchten Sie diesen Suchbegriff wirklich löschen?')) return;
+  async function deleteSearchTerm(id: number) {
+    if (!confirm('Suchbegriff wirklich löschen?')) return;
     try {
-      const response = await fetch(`/api/search-terms/${id}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(`/api/search-terms/${id}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Failed to delete search term');
       await fetchSearchTerms();
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       alert('Fehler beim Löschen');
     }
   }
 
-  function startEditSearchTerm(term: SearchTerm) {
-    setEditingSearchTermId(term.id!);
-    setSearchTermForm({ term: term.term });
-  }
-
-  async function handleCreateLanguageRule() {
-    if (!ruleForm.pattern.trim()) return;
-    try {
-      const response = await fetch('/api/language-rules', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pattern: ruleForm.pattern.trim(),
-          language: ruleForm.language,
-          priority: ruleForm.priority,
-          is_active: ruleForm.is_active,
-        }),
-      });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create language rule');
-      }
-      setRuleForm({ pattern: '', language: 'Obersorbisch', priority: 0, is_active: true });
-      await fetchLanguageRules();
-    } catch (err) {
-      console.error(err);
-      alert(err instanceof Error ? err.message : 'Fehler beim Erstellen');
-    }
-  }
-
-  async function handleUpdateLanguageRule(id: number) {
-    try {
-      const response = await fetch(`/api/language-rules/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pattern: ruleForm.pattern.trim(),
-          language: ruleForm.language,
-          priority: ruleForm.priority,
-          is_active: ruleForm.is_active,
-        }),
-      });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to update language rule');
-      }
-      await fetchLanguageRules();
-      setEditingRuleId(null);
-      setRuleForm({ pattern: '', language: 'Obersorbisch', priority: 0, is_active: true });
-    } catch (err) {
-      console.error(err);
-      alert(err instanceof Error ? err.message : 'Fehler beim Aktualisieren');
-    }
-  }
-
-  async function handleDeleteLanguageRule(id: number) {
-    if (!confirm('Möchten Sie diese Sprachregel wirklich löschen?')) return;
-    try {
-      const response = await fetch(`/api/language-rules/${id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to delete language rule');
-      await fetchLanguageRules();
-    } catch (err) {
-      console.error(err);
-      alert('Fehler beim Löschen');
-    }
-  }
-
-  function startEditLanguageRule(rule: LanguageRule) {
-    setEditingRuleId(rule.id!);
-    setRuleForm({
-      pattern: rule.pattern,
-      language: rule.language,
-      priority: rule.priority,
-      is_active: rule.is_active === 1,
-    });
-  }
-
-  async function handleClearAllEpisodes() {
-    if (!confirm('Möchten Sie wirklich ALLE Episoden löschen? Diese Aktion kann nicht rückgängig gemacht werden!')) {
-      return;
-    }
-    try {
-      const response = await fetch('/api/episodes/clear', {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to clear episodes');
-      const data = await response.json();
-      alert(`Erfolgreich ${data.deleted} Episode(n) gelöscht.`);
-      await fetchEpisodes();
-    } catch (err) {
-      console.error(err);
-      alert('Fehler beim Löschen aller Episoden');
-    }
-  }
-
-  async function handleCreateBlacklistEntry() {
-    if (!blacklistForm.pattern.trim()) return;
+  async function addBlacklistEntry() {
+    if (!newBlacklist.pattern.trim()) return;
     try {
       const response = await fetch('/api/blacklist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          pattern: blacklistForm.pattern.trim(),
-          type: blacklistForm.type,
+          pattern: newBlacklist.pattern.trim(),
+          type: newBlacklist.type,
         }),
       });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create blacklist entry');
-      }
-      setBlacklistForm({ pattern: '', type: 'title' });
+      if (!response.ok) throw new Error('Failed to create blacklist entry');
+      setNewBlacklist({ pattern: '', type: 'title' });
       await fetchBlacklist();
-    } catch (err) {
-      console.error(err);
-      alert(err instanceof Error ? err.message : 'Fehler beim Erstellen');
+    } catch (error) {
+      console.error(error);
+      alert('Fehler beim Hinzufügen zur Blacklist');
     }
   }
 
-  async function handleUpdateBlacklistEntry(id: number) {
+  async function updateBlacklistEntry(id: number) {
     try {
       const response = await fetch(`/api/blacklist/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pattern: blacklistForm.pattern.trim(),
-          type: blacklistForm.type,
-        }),
+        body: JSON.stringify(editingBlacklist),
       });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to update blacklist entry');
-      }
-      await fetchBlacklist();
+      if (!response.ok) throw new Error('Failed to update blacklist entry');
       setEditingBlacklistId(null);
-      setBlacklistForm({ pattern: '', type: 'title' });
-    } catch (err) {
-      console.error(err);
-      alert(err instanceof Error ? err.message : 'Fehler beim Aktualisieren');
+      await fetchBlacklist();
+    } catch (error) {
+      console.error(error);
+      alert('Fehler beim Aktualisieren');
     }
   }
 
-  async function handleDeleteBlacklistEntry(id: number) {
-    if (!confirm('Möchten Sie diesen Blacklist-Eintrag wirklich löschen?')) return;
+  async function deleteBlacklistEntry(id: number) {
+    if (!confirm('Blacklist-Eintrag wirklich löschen?')) return;
     try {
-      const response = await fetch(`/api/blacklist/${id}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(`/api/blacklist/${id}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Failed to delete blacklist entry');
       await fetchBlacklist();
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       alert('Fehler beim Löschen');
     }
   }
 
-  function startEditBlacklistEntry(entry: BlacklistEntry) {
-    setEditingBlacklistId(entry.id!);
-    setBlacklistForm({
-      pattern: entry.pattern,
-      type: entry.type,
-    });
+  const totalOverrides = useMemo(() => episodes.filter(ep => ep.override_id).length, [episodes]);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">
+        <p>Authentifizierung wird geprüft…</p>
+      </div>
+    );
   }
 
-  async function handleCreateManualSeed() {
-    if (!newManualSeed.value.trim()) return;
-    try {
-      const response = await fetch('/api/manual-seeds', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          kind: newManualSeed.kind,
-          value: newManualSeed.value.trim(),
-          custom_title: newManualSeed.custom_title || null,
-          custom_description: newManualSeed.custom_description || null,
-          custom_date: newManualSeed.custom_date || null,
-          custom_language: newManualSeed.custom_language || null,
-          available_until: newManualSeed.available_until || null,
-        }),
-      });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create manual seed');
-      }
-      setNewManualSeed({
-        kind: 'url',
-        value: '',
-        custom_title: '',
-        custom_description: '',
-        custom_date: '',
-        custom_language: '',
-        available_until: '',
-      });
-      await fetchManualSeeds();
-    } catch (err) {
-      console.error(err);
-      alert(err instanceof Error ? err.message : 'Fehler beim Erstellen');
-    }
-  }
-
-  function startEditManualSeed(seed: ManualSeed) {
-    setEditingManualSeedId(seed.id!);
-    setManualSeedForm({
-      kind: seed.kind,
-      value: seed.value,
-      custom_title: seed.custom_title || '',
-      custom_description: seed.custom_description || '',
-      custom_date: seed.custom_date || '',
-      custom_language: seed.custom_language || '',
-      available_until: seed.available_until || '',
-    });
-  }
-
-  async function handleUpdateManualSeed(id: number) {
-    try {
-      const response = await fetch(`/api/manual-seeds/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          kind: manualSeedForm.kind,
-          value: manualSeedForm.value.trim(),
-          custom_title: manualSeedForm.custom_title || null,
-          custom_description: manualSeedForm.custom_description || null,
-          custom_date: manualSeedForm.custom_date || null,
-          custom_language: manualSeedForm.custom_language || null,
-          available_until: manualSeedForm.available_until || null,
-        }),
-      });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to update manual seed');
-      }
-      await fetchManualSeeds();
-      setEditingManualSeedId(null);
-      setManualSeedForm({
-        kind: 'url',
-        value: '',
-        custom_title: '',
-        custom_description: '',
-        custom_date: '',
-        custom_language: '',
-        available_until: '',
-      });
-    } catch (err) {
-      console.error(err);
-      alert(err instanceof Error ? err.message : 'Fehler beim Aktualisieren');
-    }
-  }
-
-  async function handleDeleteManualSeed(id: number) {
-    if (!confirm('Möchten Sie diesen Seed wirklich löschen?')) return;
-    try {
-      const response = await fetch(`/api/manual-seeds/${id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to delete manual seed');
-      await fetchManualSeeds();
-    } catch (err) {
-      console.error(err);
-      alert('Fehler beim Löschen');
-    }
-  }
-
-  async function handleSeedManualEpisodes() {
-    try {
-      const response = await fetch('/api/manual-seeds/seed', {
-        method: 'POST',
-      });
-      if (!response.ok) throw new Error('Failed to seed manual episodes');
-      const result = await response.json();
-      alert(`Manuelles Seeding abgeschlossen: ${result.seeded} erstellt, ${result.failed} fehlgeschlagen.`);
-      await fetchEpisodes();
-    } catch (err) {
-      console.error(err);
-      alert('Fehler beim manuellen Seeding');
-    }
+  if (!authenticated) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center px-4">
+        <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-lg">
+          <h1 className="text-2xl font-semibold mb-2">Admin Login</h1>
+          <p className="text-sm text-slate-400 mb-6">
+            Verwende die in der Umgebung hinterlegten Admin-Zugangsdaten.
+          </p>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1" htmlFor="username">Benutzername</label>
+              <input
+                id="username"
+                value={loginForm.username}
+                onChange={(event) => setLoginForm({ ...loginForm, username: event.target.value })}
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1" htmlFor="password">Passwort</label>
+              <input
+                id="password"
+                type="password"
+                value={loginForm.password}
+                onChange={(event) => setLoginForm({ ...loginForm, password: event.target.value })}
+                className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
+              />
+            </div>
+            {loginError && <p className="text-sm text-rose-400">{loginError}</p>}
+            <button
+              type="submit"
+              className="w-full py-2 bg-emerald-500 text-slate-950 font-semibold rounded-lg hover:bg-emerald-400 transition"
+            >
+              Anmelden
+            </button>
+          </form>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-6 text-gray-900 dark:text-white">
-          Admin Panel
-        </h1>
-
-        <div className="mb-6 space-x-4">
-          <button
-            onClick={() => {
-              if (activeTab === 'episodes') fetchEpisodes();
-              else if (activeTab === 'keywords') fetchKeywords();
-              else if (activeTab === 'search-terms') fetchSearchTerms();
-              else if (activeTab === 'language-rules') fetchLanguageRules();
-              else if (activeTab === 'blacklist') fetchBlacklist();
-              else if (activeTab === 'manual-seeds') fetchManualSeeds();
-            }}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
-          >
-            {activeTab === 'episodes' && 'Episoden aktualisieren'}
-            {activeTab === 'keywords' && 'Schlüsselwörter aktualisieren'}
-            {activeTab === 'search-terms' && 'Suchbegriffe aktualisieren'}
-            {activeTab === 'language-rules' && 'Sprachregeln aktualisieren'}
-            {activeTab === 'blacklist' && 'Blacklist aktualisieren'}
-            {activeTab === 'manual-seeds' && 'Manuelle Seeds aktualisieren'}
-          </button>
-          {activeTab === 'episodes' && (
-            <>
-              <button
-                onClick={async () => {
-                  try {
-                    const response = await fetch('/api/episodes?sync=true');
-                    if (!response.ok) throw new Error('Failed to sync');
-                    const result = await response.json();
-                    alert(`Erfolgreich ${result.synced} Episode(n) synchronisiert.`);
-                    await fetchEpisodes();
-                  } catch (err) {
-                    console.error(err);
-                    alert('Fehler beim Synchronisieren');
-                  }
-                }}
-                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg"
-              >
-                Von API synchronisieren
-              </button>
-              <button
-                onClick={handleClearAllEpisodes}
-                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg"
-              >
-                Alle Episoden löschen
-              </button>
-            </>
-          )}
-          {activeTab === 'manual-seeds' && (
+    <div className="min-h-screen bg-slate-950 text-slate-100">
+      <header className="border-b border-slate-800 bg-slate-950">
+        <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-semibold">Admin Dashboard</h1>
+            <p className="text-sm text-slate-400">Eingeloggt als {user?.username}</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-slate-400">Overrides aktiv: {totalOverrides}</span>
             <button
-              onClick={handleSeedManualEpisodes}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg"
+              onClick={handleLogout}
+              className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700"
             >
-              Manuelles Seeding starten
+              Logout
             </button>
-          )}
-          <a
-            href="/"
-            className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg inline-block"
-          >
-            Zur Hauptseite
-          </a>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        <div className="flex flex-wrap gap-3 mb-8">
+          {(['episodes', 'search-terms', 'blacklist'] as const).map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-full border ${
+                activeTab === tab
+                  ? 'bg-emerald-400 text-slate-950 border-emerald-300'
+                  : 'border-slate-700 text-slate-300 hover:border-slate-500'
+              }`}
+            >
+              {tab === 'episodes' ? 'Episode Overrides' : tab === 'search-terms' ? 'Suchbegriffe' : 'Blacklist'}
+            </button>
+          ))}
         </div>
 
-        <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
-          <nav className="flex space-x-8">
-            <button
-              onClick={() => setActiveTab('episodes')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'episodes'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-              }`}
-            >
-              Episoden
-            </button>
-            <button
-              onClick={() => setActiveTab('keywords')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'keywords'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-              }`}
-            >
-              Schlüsselwörter
-            </button>
-            <button
-              onClick={() => setActiveTab('search-terms')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'search-terms'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-              }`}
-            >
-              Suchbegriffe
-            </button>
-            <button
-              onClick={() => setActiveTab('language-rules')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'language-rules'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-              }`}
-            >
-              Sprachregeln
-            </button>
-            <button
-              onClick={() => setActiveTab('blacklist')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'blacklist'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-              }`}
-            >
-              Blacklist
-            </button>
-            <button
-              onClick={() => setActiveTab('manual-seeds')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'manual-seeds'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-              }`}
-            >
-              Manuelle Seeds
-            </button>
-          </nav>
-        </div>
+        {loading && <p className="text-slate-400">Lade Daten…</p>}
 
-        {activeTab === 'keywords' && (
-          <div className="mb-6">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                Neues Schlüsselwort hinzufügen
-              </h2>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newKeyword}
-                  onChange={(e) => setNewKeyword(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleCreateKeyword()}
-                  placeholder="Schlüsselwort eingeben..."
-                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                />
-                <button
-                  onClick={handleCreateKeyword}
-                  className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg"
-                >
-                  Hinzufügen
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'keywords' && (
-          <>
-            {keywordsLoading ? (
-              <p className="text-gray-600 dark:text-gray-400">Lade Schlüsselwörter…</p>
-            ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Schlüsselwort
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Aktionen
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {keywords.map(keyword => (
-                      <tr key={keyword.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingKeywordId === keyword.id ? (
-                            <input
-                              type="text"
-                              value={keywordForm.keyword}
-                              onChange={(e) => setKeywordForm({ keyword: e.target.value })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                            />
-                          ) : (
-                            <div className="text-sm font-medium text-gray-900 dark:text-white">
-                              {keyword.keyword}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          {editingKeywordId === keyword.id ? (
-                            <div className="space-x-2">
-                              <button
-                                onClick={() => handleUpdateKeyword(keyword.id!)}
-                                className="text-green-600 hover:text-green-900 dark:text-green-400"
-                              >
-                                Speichern
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setEditingKeywordId(null);
-                                  setKeywordForm({ keyword: '' });
-                                }}
-                                className="text-gray-600 hover:text-gray-900 dark:text-gray-400"
-                              >
-                                Abbrechen
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="space-x-2">
-                              <button
-                                onClick={() => startEditKeyword(keyword)}
-                                className="text-blue-600 hover:text-blue-900 dark:text-blue-400"
-                              >
-                                Bearbeiten
-                              </button>
-                              <button
-                                onClick={() => handleDeleteKeyword(keyword.id!)}
-                                className="text-red-600 hover:text-red-900 dark:text-red-400"
-                              >
-                                Löschen
-                              </button>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </>
-        )}
-
-        {activeTab === 'search-terms' && (
-          <div className="mb-6">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                Neuen Suchbegriff hinzufügen
-              </h2>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newSearchTerm}
-                  onChange={(e) => setNewSearchTerm(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleCreateSearchTerm()}
-                  placeholder="Suchbegriff eingeben..."
-                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                />
-                <button
-                  onClick={handleCreateSearchTerm}
-                  className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg"
-                >
-                  Hinzufügen
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'search-terms' && (
-          <>
-            {searchTermsLoading ? (
-              <p className="text-gray-600 dark:text-gray-400">Lade Suchbegriffe…</p>
-            ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Suchbegriff
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Aktionen
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {searchTerms.map(term => (
-                      <tr key={term.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingSearchTermId === term.id ? (
-                            <input
-                              type="text"
-                              value={searchTermForm.term}
-                              onChange={(e) => setSearchTermForm({ term: e.target.value })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                            />
-                          ) : (
-                            <div className="text-sm font-medium text-gray-900 dark:text-white">
-                              {term.term}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          {editingSearchTermId === term.id ? (
-                            <div className="space-x-2">
-                              <button
-                                onClick={() => handleUpdateSearchTerm(term.id!)}
-                                className="text-green-600 hover:text-green-900 dark:text-green-400"
-                              >
-                                Speichern
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setEditingSearchTermId(null);
-                                  setSearchTermForm({ term: '' });
-                                }}
-                                className="text-gray-600 hover:text-gray-900 dark:text-gray-400"
-                              >
-                                Abbrechen
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="space-x-2">
-                              <button
-                                onClick={() => startEditSearchTerm(term)}
-                                className="text-blue-600 hover:text-blue-900 dark:text-blue-400"
-                              >
-                                Bearbeiten
-                              </button>
-                              <button
-                                onClick={() => handleDeleteSearchTerm(term.id!)}
-                                className="text-red-600 hover:text-red-900 dark:text-red-400"
-                              >
-                                Löschen
-                              </button>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </>
-        )}
-
-        {activeTab === 'language-rules' && (
-          <div className="mb-6">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                Neue Sprachregel hinzufügen
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <input
-                  type="text"
-                  value={ruleForm.pattern}
-                  onChange={(e) => setRuleForm({ ...ruleForm, pattern: e.target.value })}
-                  placeholder="Muster (z.B. 'niedersorbisch')"
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                />
-                <select
-                  value={ruleForm.language}
-                  onChange={(e) => setRuleForm({ ...ruleForm, language: e.target.value })}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                >
-                  <option value="Obersorbisch">Obersorbisch</option>
-                  <option value="Niedersorbisch">Niedersorbisch</option>
-                </select>
-                <input
-                  type="number"
-                  value={ruleForm.priority}
-                  onChange={(e) => setRuleForm({ ...ruleForm, priority: parseInt(e.target.value) || 0 })}
-                  placeholder="Priorität (niedrigere = früher)"
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                />
-                <div className="flex items-center gap-2">
-                  <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                    <input
-                      type="checkbox"
-                      checked={ruleForm.is_active}
-                      onChange={(e) => setRuleForm({ ...ruleForm, is_active: e.target.checked })}
-                      className="rounded"
-                    />
-                    Aktiv
-                  </label>
-                  <button
-                    onClick={handleCreateLanguageRule}
-                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg"
-                  >
-                    Hinzufügen
-                  </button>
+        {!loading && activeTab === 'episodes' && (
+          <section className="space-y-4">
+            {episodes.map(episode => (
+              <div key={episode.url_website} className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                  <div>
+                    <h2 className="text-lg font-semibold">{episode.displayTitle}</h2>
+                    <p className="text-sm text-slate-400">{episode.displayLanguage} · {episode.url_website}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {episode.override_id && (
+                      <span className="text-xs uppercase tracking-wide text-emerald-300 border border-emerald-400/40 px-2 py-1 rounded-full">
+                        Override aktiv
+                      </span>
+                    )}
+                    <button
+                      onClick={() => startOverrideEdit(episode)}
+                      className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700"
+                    >
+                      Bearbeiten
+                    </button>
+                    {episode.override_id && (
+                      <button
+                        onClick={() => deleteOverride(episode.override_id)}
+                        className="px-3 py-1.5 bg-rose-500/10 text-rose-300 border border-rose-500/40 rounded-lg hover:bg-rose-500/20"
+                      >
+                        Override löschen
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        )}
 
-        {activeTab === 'language-rules' && (
-          <>
-            {rulesLoading ? (
-              <p className="text-gray-600 dark:text-gray-400">Lade Sprachregeln…</p>
-            ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Muster
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Sprache
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Priorität
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Aktionen
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {languageRules.map(rule => (
-                      <tr key={rule.id} className={rule.is_active === 0 ? 'opacity-50' : ''}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingRuleId === rule.id ? (
-                            <input
-                              type="text"
-                              value={ruleForm.pattern}
-                              onChange={(e) => setRuleForm({ ...ruleForm, pattern: e.target.value })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                            />
-                          ) : (
-                            <div className="text-sm font-medium text-gray-900 dark:text-white">
-                              {rule.pattern}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingRuleId === rule.id ? (
-                            <select
-                              value={ruleForm.language}
-                              onChange={(e) => setRuleForm({ ...ruleForm, language: e.target.value })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                            >
-                              <option value="Obersorbisch">Obersorbisch</option>
-                              <option value="Niedersorbisch">Niedersorbisch</option>
-                            </select>
-                          ) : (
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {rule.language}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingRuleId === rule.id ? (
-                            <input
-                              type="number"
-                              value={ruleForm.priority}
-                              onChange={(e) => setRuleForm({ ...ruleForm, priority: parseInt(e.target.value) || 0 })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                            />
-                          ) : (
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {rule.priority}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingRuleId === rule.id ? (
-                            <label className="flex items-center gap-2 text-sm">
-                              <input
-                                type="checkbox"
-                                checked={ruleForm.is_active}
-                                onChange={(e) => setRuleForm({ ...ruleForm, is_active: e.target.checked })}
-                                className="rounded"
-                              />
-                              Aktiv
-                            </label>
-                          ) : (
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {rule.is_active === 1 ? '✓ Aktiv' : '✗ Inaktiv'}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          {editingRuleId === rule.id ? (
-                            <div className="space-x-2">
-                              <button
-                                onClick={() => handleUpdateLanguageRule(rule.id!)}
-                                className="text-green-600 hover:text-green-900 dark:text-green-400"
-                              >
-                                Speichern
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setEditingRuleId(null);
-                                  setRuleForm({ pattern: '', language: 'Obersorbisch', priority: 0, is_active: true });
-                                }}
-                                className="text-gray-600 hover:text-gray-900 dark:text-gray-400"
-                              >
-                                Abbrechen
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="space-x-2">
-                              <button
-                                onClick={() => startEditLanguageRule(rule)}
-                                className="text-blue-600 hover:text-blue-900 dark:text-blue-400"
-                              >
-                                Bearbeiten
-                              </button>
-                              <button
-                                onClick={() => handleDeleteLanguageRule(rule.id!)}
-                                className="text-red-600 hover:text-red-900 dark:text-red-400"
-                              >
-                                Löschen
-                              </button>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </>
-        )}
-
-        {activeTab === 'episodes' && (
-          <>
-            {loading ? (
-              <p className="text-gray-600 dark:text-gray-400">Lade Episoden…</p>
-            ) : (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Titel
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Sprache
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Datum
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Aktionen
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {episodes.map(episode => (
-                  <tr key={episode.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingId === episode.id ? (
-                        <input
-                          type="text"
-                          value={editForm.custom_title}
-                          onChange={(e) => setEditForm({ ...editForm, custom_title: e.target.value })}
-                          className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                          placeholder={episode.original_title || 'Titel'}
-                        />
-                      ) : (
-                        <div className="text-sm font-medium text-gray-900 dark:text-white">
-                          {episode.displayTitle}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {editingId === episode.id ? (
+                {editingUrl === episode.url_website && (
+                  <div className="mt-4 grid gap-3">
+                    <div>
+                      <label className="block text-sm text-slate-300 mb-1">Custom Titel</label>
+                      <input
+                        value={overrideForm.custom_title}
+                        onChange={(event) => setOverrideForm({ ...overrideForm, custom_title: event.target.value })}
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-slate-300 mb-1">Custom Beschreibung</label>
+                      <textarea
+                        value={overrideForm.custom_description}
+                        onChange={(event) => setOverrideForm({ ...overrideForm, custom_description: event.target.value })}
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                        rows={3}
+                      />
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-sm text-slate-300 mb-1">Custom Sprache</label>
                         <select
-                          value={editForm.custom_language}
-                          onChange={(e) => setEditForm({ ...editForm, custom_language: e.target.value })}
-                          className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
+                          value={overrideForm.custom_language}
+                          onChange={(event) => setOverrideForm({ ...overrideForm, custom_language: event.target.value })}
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
                         >
                           <option value="">Auto</option>
                           <option value="Obersorbisch">Obersorbisch</option>
                           <option value="Niedersorbisch">Niedersorbisch</option>
                         </select>
-                      ) : (
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {episode.displayLanguage}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                      {episode.timestamp
-                        ? new Date(episode.timestamp * 1000).toLocaleDateString('de-DE')
-                        : '—'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      {editingId === episode.id ? (
-                        <div className="space-x-2">
-                          <button
-                            onClick={() => handleUpdate(episode.id!)}
-                            className="text-green-600 hover:text-green-900 dark:text-green-400"
-                          >
-                            Speichern
-                          </button>
-                          <button
-                            onClick={() => {
-                              setEditingId(null);
-                              setEditForm({ custom_title: '', custom_description: '', custom_language: '' });
-                            }}
-                            className="text-gray-600 hover:text-gray-900 dark:text-gray-400"
-                          >
-                            Abbrechen
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="space-x-2">
-                          <button
-                            onClick={() => startEdit(episode)}
-                            className="text-blue-600 hover:text-blue-900 dark:text-blue-400"
-                          >
-                            Bearbeiten
-                          </button>
-                          <button
-                            onClick={() => handleDelete(episode.id!)}
-                            className="text-red-600 hover:text-red-900 dark:text-red-400"
-                          >
-                            Löschen
-                          </button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-          </>
+                      </div>
+                      <div>
+                        <label className="block text-sm text-slate-300 mb-1">Verfügbar bis</label>
+                        <input
+                          type="date"
+                          value={overrideForm.available_until}
+                          onChange={(event) => setOverrideForm({ ...overrideForm, available_until: event.target.value })}
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => saveOverride(episode.url_website)}
+                        className="px-4 py-2 bg-emerald-400 text-slate-950 rounded-lg hover:bg-emerald-300"
+                      >
+                        Speichern
+                      </button>
+                      <button
+                        onClick={() => setEditingUrl(null)}
+                        className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg hover:bg-slate-700"
+                      >
+                        Abbrechen
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </section>
         )}
 
-        {activeTab === 'blacklist' && (
-          <div className="mb-6">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                Neuen Blacklist-Eintrag hinzufügen
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {!loading && activeTab === 'search-terms' && (
+          <section className="space-y-4">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+              <h2 className="text-lg font-semibold mb-2">ARD API Suchbegriffe</h2>
+              <p className="text-sm text-slate-400 mb-4">
+                Diese Begriffe werden für die ARD API Anfrage verwendet.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
-                  type="text"
-                  value={blacklistForm.pattern}
-                  onChange={(e) => setBlacklistForm({ ...blacklistForm, pattern: e.target.value })}
-                  placeholder="Muster (z.B. 'unwanted title' oder 'mdr.de/video-123')"
-                  className="md:col-span-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                  value={newSearchTerm}
+                  onChange={(event) => setNewSearchTerm(event.target.value)}
+                  className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                  placeholder="Neuer Suchbegriff"
                 />
-                <select
-                  value={blacklistForm.type}
-                  onChange={(e) => setBlacklistForm({ ...blacklistForm, type: e.target.value as 'title' | 'url' })}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                >
-                  <option value="title">Titel</option>
-                  <option value="url">URL</option>
-                </select>
                 <button
-                  onClick={handleCreateBlacklistEntry}
-                  className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg"
+                  onClick={addSearchTerm}
+                  className="px-4 py-2 bg-emerald-400 text-slate-950 rounded-lg hover:bg-emerald-300"
                 >
                   Hinzufügen
                 </button>
               </div>
             </div>
-          </div>
-        )}
 
-        {activeTab === 'blacklist' && (
-          <>
-            {blacklistLoading ? (
-              <p className="text-gray-600 dark:text-gray-400">Lade Blacklist…</p>
-            ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Muster
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Typ
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Aktionen
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {blacklistEntries.map(entry => (
-                      <tr key={entry.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingBlacklistId === entry.id ? (
-                            <input
-                              type="text"
-                              value={blacklistForm.pattern}
-                              onChange={(e) => setBlacklistForm({ ...blacklistForm, pattern: e.target.value })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                            />
-                          ) : (
-                            <div className="text-sm font-medium text-gray-900 dark:text-white">
-                              {entry.pattern}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingBlacklistId === entry.id ? (
-                            <select
-                              value={blacklistForm.type}
-                              onChange={(e) => setBlacklistForm({ ...blacklistForm, type: e.target.value as 'title' | 'url' })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                            >
-                              <option value="title">Titel</option>
-                              <option value="url">URL</option>
-                            </select>
-                          ) : (
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {entry.type === 'title' ? 'Titel' : 'URL'}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          {editingBlacklistId === entry.id ? (
-                            <div className="space-x-2">
-                              <button
-                                onClick={() => handleUpdateBlacklistEntry(entry.id!)}
-                                className="text-green-600 hover:text-green-900 dark:text-green-400"
-                              >
-                                Speichern
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setEditingBlacklistId(null);
-                                  setBlacklistForm({ pattern: '', type: 'title' });
-                                }}
-                                className="text-gray-600 hover:text-gray-900 dark:text-gray-400"
-                              >
-                                Abbrechen
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="space-x-2">
-                              <button
-                                onClick={() => startEditBlacklistEntry(entry)}
-                                className="text-blue-600 hover:text-blue-900 dark:text-blue-400"
-                              >
-                                Bearbeiten
-                              </button>
-                              <button
-                                onClick={() => handleDeleteBlacklistEntry(entry.id!)}
-                                className="text-red-600 hover:text-red-900 dark:text-red-400"
-                              >
-                                Löschen
-                              </button>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </>
-        )}
-
-        {activeTab === 'manual-seeds' && (
-          <div className="mb-6">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                Manuellen Seed hinzufügen
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
-                <select
-                  value={newManualSeed.kind}
-                  onChange={(e) => setNewManualSeed({ ...newManualSeed, kind: e.target.value as 'base64' | 'url' })}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                >
-                  <option value="url">URL</option>
-                  <option value="base64">Base64-ID</option>
-                </select>
-                <input
-                  type="text"
-                  value={newManualSeed.value}
-                  onChange={(e) => setNewManualSeed({ ...newManualSeed, value: e.target.value })}
-                  placeholder="URL oder Base64-ID"
-                  className="md:col-span-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                />
-                <input
-                  type="text"
-                  value={newManualSeed.custom_title}
-                  onChange={(e) => setNewManualSeed({ ...newManualSeed, custom_title: e.target.value })}
-                  placeholder="Titel (optional)"
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                />
-                <input
-                  type="text"
-                  value={newManualSeed.custom_description}
-                  onChange={(e) => setNewManualSeed({ ...newManualSeed, custom_description: e.target.value })}
-                  placeholder="Beschreibung (optional)"
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                />
-                <input
-                  type="date"
-                  value={newManualSeed.custom_date}
-                  onChange={(e) => setNewManualSeed({ ...newManualSeed, custom_date: e.target.value })}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                  aria-label="Datum (optional)"
-                />
-                <select
-                  value={newManualSeed.custom_language}
-                  onChange={(e) => setNewManualSeed({ ...newManualSeed, custom_language: e.target.value })}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                >
-                  <option value="">Sprache (optional)</option>
-                  <option value="Obersorbisch">Obersorbisch</option>
-                  <option value="Niedersorbisch">Niedersorbisch</option>
-                </select>
-                <input
-                  type="date"
-                  value={newManualSeed.available_until}
-                  onChange={(e) => setNewManualSeed({ ...newManualSeed, available_until: e.target.value })}
-                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-                  aria-label="Verfügbar bis (optional)"
-                />
-                <div className="md:col-span-8 flex justify-end">
+            {searchTerms.map(term => (
+              <div key={term.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                {editingSearchTermId === term.id ? (
+                  <input
+                    value={editingSearchTerm}
+                    onChange={(event) => setEditingSearchTerm(event.target.value)}
+                    className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                  />
+                ) : (
+                  <span className="text-slate-200">{term.term}</span>
+                )}
+                <div className="flex gap-2">
+                  {editingSearchTermId === term.id ? (
+                    <button
+                      onClick={() => updateSearchTerm(term.id!)}
+                      className="px-3 py-1.5 bg-emerald-400 text-slate-950 rounded-lg"
+                    >
+                      Speichern
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setEditingSearchTermId(term.id!);
+                        setEditingSearchTerm(term.term);
+                      }}
+                      className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg"
+                    >
+                      Bearbeiten
+                    </button>
+                  )}
                   <button
-                    onClick={handleCreateManualSeed}
-                    className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg"
+                    onClick={() => deleteSearchTerm(term.id!)}
+                    className="px-3 py-1.5 bg-rose-500/10 text-rose-300 border border-rose-500/40 rounded-lg"
                   >
-                    Hinzufügen
+                    Löschen
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
+            ))}
+          </section>
         )}
 
-        {activeTab === 'manual-seeds' && (
-          <>
-            {manualSeedsLoading ? (
-              <p className="text-gray-600 dark:text-gray-400">Lade manuelle Seeds…</p>
-            ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Typ
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Wert
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Titel
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Beschreibung
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Datum
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Sprache
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Verfügbar bis
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                        Aktionen
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    {manualSeeds.map(seed => (
-                      <tr key={seed.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingManualSeedId === seed.id ? (
-                            <select
-                              value={manualSeedForm.kind}
-                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, kind: e.target.value as 'base64' | 'url' })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                            >
-                              <option value="url">URL</option>
-                              <option value="base64">Base64-ID</option>
-                            </select>
-                          ) : (
-                            <div className="text-sm font-medium text-gray-900 dark:text-white">
-                              {seed.kind === 'url' ? 'URL' : 'Base64-ID'}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingManualSeedId === seed.id ? (
-                            <input
-                              type="text"
-                              value={manualSeedForm.value}
-                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, value: e.target.value })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                            />
-                          ) : (
-                            <div className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs">
-                              {seed.value}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingManualSeedId === seed.id ? (
-                            <input
-                              type="text"
-                              value={manualSeedForm.custom_title}
-                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, custom_title: e.target.value })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                              placeholder="Optional"
-                            />
-                          ) : (
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {seed.custom_title || '—'}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingManualSeedId === seed.id ? (
-                            <input
-                              type="text"
-                              value={manualSeedForm.custom_description}
-                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, custom_description: e.target.value })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                              placeholder="Optional"
-                            />
-                          ) : (
-                            <div className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs">
-                              {seed.custom_description || '—'}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingManualSeedId === seed.id ? (
-                            <input
-                              type="date"
-                              value={manualSeedForm.custom_date}
-                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, custom_date: e.target.value })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                            />
-                          ) : (
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {seed.custom_date || '—'}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingManualSeedId === seed.id ? (
-                            <select
-                              value={manualSeedForm.custom_language}
-                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, custom_language: e.target.value })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                            >
-                              <option value="">—</option>
-                              <option value="Obersorbisch">Obersorbisch</option>
-                              <option value="Niedersorbisch">Niedersorbisch</option>
-                            </select>
-                          ) : (
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {seed.custom_language || '—'}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {editingManualSeedId === seed.id ? (
-                            <input
-                              type="date"
-                              value={manualSeedForm.available_until}
-                              onChange={(e) => setManualSeedForm({ ...manualSeedForm, available_until: e.target.value })}
-                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
-                            />
-                          ) : (
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {seed.available_until || '—'}
-                            </div>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          {editingManualSeedId === seed.id ? (
-                            <div className="space-x-2">
-                              <button
-                                onClick={() => handleUpdateManualSeed(seed.id!)}
-                                className="text-green-600 hover:text-green-900 dark:text-green-400"
-                              >
-                                Speichern
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setEditingManualSeedId(null);
-                                  setManualSeedForm({
-                                    kind: 'url',
-                                    value: '',
-                                    custom_title: '',
-                                    custom_description: '',
-                                    custom_date: '',
-                                    custom_language: '',
-                                    available_until: '',
-                                  });
-                                }}
-                                className="text-gray-600 hover:text-gray-900 dark:text-gray-400"
-                              >
-                                Abbrechen
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="space-x-2">
-                              <button
-                                onClick={() => startEditManualSeed(seed)}
-                                className="text-blue-600 hover:text-blue-900 dark:text-blue-400"
-                              >
-                                Bearbeiten
-                              </button>
-                              <button
-                                onClick={() => handleDeleteManualSeed(seed.id!)}
-                                className="text-red-600 hover:text-red-900 dark:text-red-400"
-                              >
-                                Löschen
-                              </button>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+        {!loading && activeTab === 'blacklist' && (
+          <section className="space-y-4">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+              <h2 className="text-lg font-semibold mb-2">Blacklist</h2>
+              <p className="text-sm text-slate-400 mb-4">
+                Sperre Episoden anhand von Titel- oder URL-Mustern.
+              </p>
+              <div className="grid md:grid-cols-3 gap-2">
+                <input
+                  value={newBlacklist.pattern}
+                  onChange={(event) => setNewBlacklist({ ...newBlacklist, pattern: event.target.value })}
+                  className="md:col-span-2 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                  placeholder="Muster"
+                />
+                <select
+                  value={newBlacklist.type}
+                  onChange={(event) => setNewBlacklist({ ...newBlacklist, type: event.target.value as 'title' | 'url' })}
+                  className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                >
+                  <option value="title">Titel</option>
+                  <option value="url">URL</option>
+                </select>
               </div>
-            )}
-          </>
+              <button
+                onClick={addBlacklistEntry}
+                className="mt-3 px-4 py-2 bg-emerald-400 text-slate-950 rounded-lg hover:bg-emerald-300"
+              >
+                Hinzufügen
+              </button>
+            </div>
+
+            {blacklistEntries.map(entry => (
+              <div key={entry.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                {editingBlacklistId === entry.id ? (
+                  <div className="flex flex-col sm:flex-row gap-2 flex-1">
+                    <input
+                      value={editingBlacklist.pattern}
+                      onChange={(event) => setEditingBlacklist({ ...editingBlacklist, pattern: event.target.value })}
+                      className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                    />
+                    <select
+                      value={editingBlacklist.type}
+                      onChange={(event) => setEditingBlacklist({ ...editingBlacklist, type: event.target.value as 'title' | 'url' })}
+                      className="px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                    >
+                      <option value="title">Titel</option>
+                      <option value="url">URL</option>
+                    </select>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-slate-200">{entry.pattern}</p>
+                    <p className="text-xs text-slate-400 uppercase">{entry.type}</p>
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  {editingBlacklistId === entry.id ? (
+                    <button
+                      onClick={() => updateBlacklistEntry(entry.id!)}
+                      className="px-3 py-1.5 bg-emerald-400 text-slate-950 rounded-lg"
+                    >
+                      Speichern
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setEditingBlacklistId(entry.id!);
+                        setEditingBlacklist({ pattern: entry.pattern, type: entry.type });
+                      }}
+                      className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg"
+                    >
+                      Bearbeiten
+                    </button>
+                  )}
+                  <button
+                    onClick={() => deleteBlacklistEntry(entry.id!)}
+                    className="px-3 py-1.5 bg-rose-500/10 text-rose-300 border border-rose-500/40 rounded-lg"
+                  >
+                    Löschen
+                  </button>
+                </div>
+              </div>
+            ))}
+          </section>
         )}
-      </div>
+      </main>
     </div>
   );
 }

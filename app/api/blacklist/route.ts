@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllBlacklistEntries, createBlacklistEntry } from '@/lib/blacklist';
+import { getAdminFromRequest } from '@/lib/auth';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const session = getAdminFromRequest(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const entries = await getAllBlacklistEntries();
     return NextResponse.json(entries);
@@ -15,6 +21,11 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const session = getAdminFromRequest(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { pattern, type } = body;
@@ -49,4 +60,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

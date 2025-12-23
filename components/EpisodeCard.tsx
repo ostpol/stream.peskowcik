@@ -19,24 +19,24 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
     : '—';
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+    <div className="bg-slate-900 border border-slate-800 rounded-lg shadow-md overflow-hidden">
       <div className="p-4">
-        <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">
+        <h3 className="text-lg font-semibold mb-2 text-white">
           {episode.displayTitle}
         </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+        <p className="text-sm text-slate-400 mb-3">
           {dateStr} · {episode.displayLanguage}
         </p>
 
         {description && (
           <div className="mb-3">
-            <p className={`text-sm text-gray-700 dark:text-gray-300 ${!expanded && shouldTruncate ? 'line-clamp-2' : ''}`}>
+            <p className={`text-sm text-slate-200 ${!expanded && shouldTruncate ? 'line-clamp-2' : ''}`}>
               {description}
             </p>
             {shouldTruncate && (
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="text-xs text-blue-600 dark:text-blue-400 hover:underline mt-1"
+                className="text-xs text-emerald-300 hover:underline mt-1"
               >
                 {expanded ? 'Weniger' : 'Mehr lesen'}
               </button>
@@ -53,8 +53,8 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
             rel="noopener noreferrer"
             className="block"
           >
-            <div className="w-full aspect-video bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
-              <span className="text-gray-500 dark:text-gray-400">Vorschau</span>
+            <div className="w-full aspect-video bg-slate-800 rounded flex items-center justify-center">
+              <span className="text-slate-400">Vorschau</span>
             </div>
           </a>
         )}
@@ -64,7 +64,7 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
             href={episode.url_website}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+            className="text-sm text-emerald-300 hover:underline"
           >
             Zur Website →
           </a>
@@ -73,4 +73,3 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
     </div>
   );
 }
-
