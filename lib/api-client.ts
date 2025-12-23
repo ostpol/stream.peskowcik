@@ -1,17 +1,5 @@
 import axios from 'axios';
 
-export interface MediathekQuery {
-  queries: Array<{
-    fields: string[];
-    query: string;
-  }>;
-  sortBy: string;
-  sortOrder: 'asc' | 'desc';
-  future: boolean;
-  offset: number;
-  size: number;
-}
-
 export interface MediathekResult {
   title: string;
   description: string;
@@ -24,58 +12,115 @@ export interface MediathekResult {
   topic?: string;
 }
 
-export interface MediathekResponse {
-  result: {
-    results: MediathekResult[];
-    totalResults: number;
-  };
-  err?: string;
+
+const ARD_API_BASE = 'https://api.ardmediathek.de/page-gateway/pages/ard/item';
+const ARD_SEARCH_API_BASE = 'https://api.ardmediathek.de/search-system/search/vods/ard';
+
+function toTimestamp(value: string | number | null | undefined): number {
+  if (!value) return 0;
+  if (typeof value === 'number') return Math.floor(value / (value > 10_000_000_000 ? 1000 : 1));
+  const parsed = Date.parse(value);
+  if (Number.isNaN(parsed)) return 0;
+  return Math.floor(parsed / 1000);
 }
 
-const MEDIATHEK_API_BASE = 'https://mediathekviewweb.de/api/query';
-const ARD_API_BASE = 'https://api.ardmediathek.de/page-gateway/pages/ard/item';
+function firstString(value: unknown, fallback = ''): string {
+  if (typeof value === 'string' && value.trim().length > 0) return value;
+  return fallback;
+}
 
-export async function fetchMediathekResults(
-  topic: string | null = 'Unser Sandmännchen',
-  titleFilter: string | null = null,
-  size: number = 50,
-  offset: number = 0
-): Promise<MediathekResult[]> {
-  const queries: MediathekQuery['queries'] = [];
-  
-  if (topic) {
-    queries.push({ fields: ['topic'], query: topic });
+function getArdVideoUrl(base64Id: string | null): string | null {
+  if (!base64Id) return null;
+  return `https://www.ardmediathek.de/video/${base64Id}`;
+}
+
+function resolveArdId(item: Record<string, any>): string | null {
+  const candidates = [
+    item.id,
+    item.ardId,
+    item.mediaIdentifier,
+    item?.target?.id,
+  ];
+  for (const candidate of candidates) {
+    if (typeof candidate === 'string' && candidate.startsWith('Y3Jp')) {
+      return candidate;
+    }
   }
-  
-  if (titleFilter) {
-    queries.push({ fields: ['title'], query: titleFilter });
-  }
-  
-  const query: MediathekQuery = {
-    queries,
-    sortBy: 'timestamp',
-    sortOrder: 'desc',
-    future: false,
-    offset,
-    size,
-  };
-  
-  try {
-    // Use POST method with JSON body as per API documentation example
-    const response = await axios.post<MediathekResponse>(
-      MEDIATHEK_API_BASE,
-      query,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        timeout: 6000,
+  return null;
+}
+
+function resolveArdUrl(item: Record<string, any>, base64Id: string | null): string {
+  const linkCandidates = [
+    item.url,
+    item.url_website,
+    item.href,
+    item?.links?.self?.href,
+    item?.links?.canonical?.href,
+    item?.links?.main?.href,
+    item?.links?.web?.href,
+  ];
+  for (const link of linkCandidates) {
+    if (typeof link === 'string' && link.length > 0) {
+      if (link.includes('page-gateway/pages/ard/item/') && base64Id) {
+        return getArdVideoUrl(base64Id) || link;
       }
-    );
-    
-    return response.data.result?.results || [];
+      if (link.includes('ardmediathek.de/video/') || link.includes('ardmediathek.de')) {
+        return link;
+      }
+    }
+  }
+  return getArdVideoUrl(base64Id) || '';
+}
+
+export async function fetchArdSearchResults(
+  query: string,
+  pageSize: number = 50,
+  pageNumber: number = 0
+): Promise<MediathekResult[]> {
+  try {
+    const response = await axios.get(ARD_SEARCH_API_BASE, {
+      params: {
+        query,
+        platform: 'MEDIA_THEK',
+        sortingCriteria: 'SCORE_DESC',
+        pageNumber,
+        pageSize,
+      },
+      timeout: 6000,
+      headers: {
+        accept: '*/*',
+        origin: 'https://www.ardmediathek.de',
+      },
+    });
+
+    const data = response.data;
+    const rawResults = data?.results || data?.searchResults || data?.result?.results || [];
+    if (!Array.isArray(rawResults)) return [];
+
+    return rawResults.map((item: Record<string, any>) => {
+      const base64Id = resolveArdId(item);
+      const title = firstString(
+        item.longTitle || item.mediumTitle || item.title || item.teaserTitle || item.name
+      );
+      const description = firstString(
+        item.longSynopsis || item.synopsis || item.shortSynopsis || item.teaserText || item.description
+      );
+      const timestamp = toTimestamp(
+        item.broadcastedOn || item.publicationStartDate || item.publicationDate || item.availableFrom
+      );
+      const url_website = resolveArdUrl(item, base64Id);
+      return {
+        title,
+        description,
+        timestamp,
+        duration: typeof item.duration === 'number' ? item.duration : undefined,
+        url_website,
+        channel: item.publisher?.name || item.channel?.name || item.station?.name || undefined,
+        topic: item.topic || undefined,
+      };
+    });
   } catch (error) {
-    console.error('Error fetching MediathekView results:', error);
+    console.error('Error fetching ARD search results:', error);
     return [];
   }
 }
@@ -245,5 +290,3 @@ export async function detectLanguage(
   
   return null;
 }
-
-

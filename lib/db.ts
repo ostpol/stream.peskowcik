@@ -67,6 +67,13 @@ export interface ManualSeed {
   updated_at: string;
 }
 
+export interface SearchTerm {
+  id?: number;
+  term: string;
+  created_at: string;
+  updated_at: string;
+}
+
 let db: Database.Database | null = null;
 
 export function getDb(): Database.Database {
@@ -148,6 +155,15 @@ export function getDb(): Database.Database {
     );
 
     CREATE INDEX IF NOT EXISTS idx_manual_seeds_kind ON manual_seeds(kind);
+
+    CREATE TABLE IF NOT EXISTS search_terms (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      term TEXT NOT NULL UNIQUE,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_search_terms_term ON search_terms(term);
   `);
 
   const ensureColumn = (table: string, columnName: string, columnDefinition: string) => {

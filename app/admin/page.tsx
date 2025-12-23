@@ -10,6 +10,13 @@ interface Keyword {
   updated_at?: string;
 }
 
+interface SearchTerm {
+  id?: number;
+  term: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
 interface LanguageRule {
   id?: number;
   pattern: string;
@@ -44,17 +51,20 @@ interface ManualSeed {
 export default function AdminPage() {
   const [episodes, setEpisodes] = useState<EpisodeWithLanguage[]>([]);
   const [keywords, setKeywords] = useState<Keyword[]>([]);
+  const [searchTerms, setSearchTerms] = useState<SearchTerm[]>([]);
   const [languageRules, setLanguageRules] = useState<LanguageRule[]>([]);
   const [blacklistEntries, setBlacklistEntries] = useState<BlacklistEntry[]>([]);
   const [manualSeeds, setManualSeeds] = useState<ManualSeed[]>([]);
   const [loading, setLoading] = useState(true);
   const [keywordsLoading, setKeywordsLoading] = useState(true);
+  const [searchTermsLoading, setSearchTermsLoading] = useState(true);
   const [rulesLoading, setRulesLoading] = useState(true);
   const [blacklistLoading, setBlacklistLoading] = useState(true);
   const [manualSeedsLoading, setManualSeedsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'episodes' | 'keywords' | 'language-rules' | 'blacklist' | 'manual-seeds'>('episodes');
+  const [activeTab, setActiveTab] = useState<'episodes' | 'keywords' | 'search-terms' | 'language-rules' | 'blacklist' | 'manual-seeds'>('episodes');
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingKeywordId, setEditingKeywordId] = useState<number | null>(null);
+  const [editingSearchTermId, setEditingSearchTermId] = useState<number | null>(null);
   const [editingRuleId, setEditingRuleId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState({
     custom_title: '',
@@ -63,6 +73,9 @@ export default function AdminPage() {
   });
   const [keywordForm, setKeywordForm] = useState({
     keyword: '',
+  });
+  const [searchTermForm, setSearchTermForm] = useState({
+    term: '',
   });
   const [ruleForm, setRuleForm] = useState({
     pattern: '',
@@ -75,6 +88,7 @@ export default function AdminPage() {
     type: 'title' as 'title' | 'url',
   });
   const [newKeyword, setNewKeyword] = useState('');
+  const [newSearchTerm, setNewSearchTerm] = useState('');
   const [editingBlacklistId, setEditingBlacklistId] = useState<number | null>(null);
   const [editingManualSeedId, setEditingManualSeedId] = useState<number | null>(null);
   const [newManualSeed, setNewManualSeed] = useState({
@@ -99,6 +113,7 @@ export default function AdminPage() {
   useEffect(() => {
     fetchEpisodes();
     fetchKeywords();
+    fetchSearchTerms();
     fetchLanguageRules();
     fetchBlacklist();
     fetchManualSeeds();
@@ -129,6 +144,20 @@ export default function AdminPage() {
       console.error(err);
     } finally {
       setKeywordsLoading(false);
+    }
+  }
+
+  async function fetchSearchTerms() {
+    try {
+      setSearchTermsLoading(true);
+      const response = await fetch('/api/search-terms');
+      if (!response.ok) throw new Error('Failed to fetch search terms');
+      const data = await response.json();
+      setSearchTerms(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSearchTermsLoading(false);
     }
   }
 
@@ -271,6 +300,65 @@ export default function AdminPage() {
   function startEditKeyword(keyword: Keyword) {
     setEditingKeywordId(keyword.id!);
     setKeywordForm({ keyword: keyword.keyword });
+  }
+
+  async function handleCreateSearchTerm() {
+    if (!newSearchTerm.trim()) return;
+    try {
+      const response = await fetch('/api/search-terms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ term: newSearchTerm.trim() }),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create search term');
+      }
+      setNewSearchTerm('');
+      await fetchSearchTerms();
+    } catch (err) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : 'Fehler beim Erstellen');
+    }
+  }
+
+  async function handleUpdateSearchTerm(id: number) {
+    try {
+      const response = await fetch(`/api/search-terms/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ term: searchTermForm.term.trim() }),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update search term');
+      }
+      await fetchSearchTerms();
+      setEditingSearchTermId(null);
+      setSearchTermForm({ term: '' });
+    } catch (err) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : 'Fehler beim Aktualisieren');
+    }
+  }
+
+  async function handleDeleteSearchTerm(id: number) {
+    if (!confirm('Möchten Sie diesen Suchbegriff wirklich löschen?')) return;
+    try {
+      const response = await fetch(`/api/search-terms/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete search term');
+      await fetchSearchTerms();
+    } catch (err) {
+      console.error(err);
+      alert('Fehler beim Löschen');
+    }
+  }
+
+  function startEditSearchTerm(term: SearchTerm) {
+    setEditingSearchTermId(term.id!);
+    setSearchTermForm({ term: term.term });
   }
 
   async function handleCreateLanguageRule() {
@@ -559,6 +647,7 @@ export default function AdminPage() {
             onClick={() => {
               if (activeTab === 'episodes') fetchEpisodes();
               else if (activeTab === 'keywords') fetchKeywords();
+              else if (activeTab === 'search-terms') fetchSearchTerms();
               else if (activeTab === 'language-rules') fetchLanguageRules();
               else if (activeTab === 'blacklist') fetchBlacklist();
               else if (activeTab === 'manual-seeds') fetchManualSeeds();
@@ -567,6 +656,7 @@ export default function AdminPage() {
           >
             {activeTab === 'episodes' && 'Episoden aktualisieren'}
             {activeTab === 'keywords' && 'Schlüsselwörter aktualisieren'}
+            {activeTab === 'search-terms' && 'Suchbegriffe aktualisieren'}
             {activeTab === 'language-rules' && 'Sprachregeln aktualisieren'}
             {activeTab === 'blacklist' && 'Blacklist aktualisieren'}
             {activeTab === 'manual-seeds' && 'Manuelle Seeds aktualisieren'}
@@ -635,6 +725,16 @@ export default function AdminPage() {
               }`}
             >
               Schlüsselwörter
+            </button>
+            <button
+              onClick={() => setActiveTab('search-terms')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'search-terms'
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+              }`}
+            >
+              Suchbegriffe
             </button>
             <button
               onClick={() => setActiveTab('language-rules')}
@@ -758,6 +858,111 @@ export default function AdminPage() {
                               </button>
                               <button
                                 onClick={() => handleDeleteKeyword(keyword.id!)}
+                                className="text-red-600 hover:text-red-900 dark:text-red-400"
+                              >
+                                Löschen
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
+        )}
+
+        {activeTab === 'search-terms' && (
+          <div className="mb-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+              <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                Neuen Suchbegriff hinzufügen
+              </h2>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newSearchTerm}
+                  onChange={(e) => setNewSearchTerm(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleCreateSearchTerm()}
+                  placeholder="Suchbegriff eingeben..."
+                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                />
+                <button
+                  onClick={handleCreateSearchTerm}
+                  className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg"
+                >
+                  Hinzufügen
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'search-terms' && (
+          <>
+            {searchTermsLoading ? (
+              <p className="text-gray-600 dark:text-gray-400">Lade Suchbegriffe…</p>
+            ) : (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead className="bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Suchbegriff
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                        Aktionen
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {searchTerms.map(term => (
+                      <tr key={term.id}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {editingSearchTermId === term.id ? (
+                            <input
+                              type="text"
+                              value={searchTermForm.term}
+                              onChange={(e) => setSearchTermForm({ term: e.target.value })}
+                              className="w-full px-2 py-1 border rounded dark:bg-gray-700 dark:text-white"
+                            />
+                          ) : (
+                            <div className="text-sm font-medium text-gray-900 dark:text-white">
+                              {term.term}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          {editingSearchTermId === term.id ? (
+                            <div className="space-x-2">
+                              <button
+                                onClick={() => handleUpdateSearchTerm(term.id!)}
+                                className="text-green-600 hover:text-green-900 dark:text-green-400"
+                              >
+                                Speichern
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setEditingSearchTermId(null);
+                                  setSearchTermForm({ term: '' });
+                                }}
+                                className="text-gray-600 hover:text-gray-900 dark:text-gray-400"
+                              >
+                                Abbrechen
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="space-x-2">
+                              <button
+                                onClick={() => startEditSearchTerm(term)}
+                                className="text-blue-600 hover:text-blue-900 dark:text-blue-400"
+                              >
+                                Bearbeiten
+                              </button>
+                              <button
+                                onClick={() => handleDeleteSearchTerm(term.id!)}
                                 className="text-red-600 hover:text-red-900 dark:text-red-400"
                               >
                                 Löschen
