@@ -22,6 +22,7 @@ interface EpisodeOverrideForm {
   custom_title: string;
   custom_description: string;
   custom_language: string;
+  custom_preview_image_url: string;
   available_until: string;
 }
 
@@ -50,6 +51,7 @@ export default function AdminPage() {
     custom_title: '',
     custom_description: '',
     custom_language: '',
+    custom_preview_image_url: '',
     available_until: '',
   });
   const [newSearchTerm, setNewSearchTerm] = useState('');
@@ -173,6 +175,7 @@ export default function AdminPage() {
       custom_title: episode.custom_title || '',
       custom_description: episode.custom_description || '',
       custom_language: episode.custom_language || '',
+      custom_preview_image_url: episode.custom_preview_image_url || '',
       available_until: episode.available_until || '',
     });
   }
@@ -562,6 +565,17 @@ export default function AdminPage() {
                             className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
                           />
                         </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm text-slate-300 mb-1">Custom Vorschaubild (URL)</label>
+                        <input
+                          value={overrideForm.custom_preview_image_url}
+                          onChange={(event) =>
+                            setOverrideForm({ ...overrideForm, custom_preview_image_url: event.target.value })
+                          }
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg"
+                          placeholder="https://…"
+                        />
                       </div>
                       <div className="flex gap-2">
                         <button

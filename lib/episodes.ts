@@ -24,6 +24,7 @@ export interface EpisodeWithLanguage {
   custom_title?: string | null;
   custom_description?: string | null;
   custom_language?: string | null;
+  custom_preview_image_url?: string | null;
   available_until?: string | null;
   override_id?: number | null;
   language?: string | null;
@@ -78,11 +79,12 @@ function mergeEpisodeWithOverride(entry: MediathekResult & { base64_id: string |
   const displayTitle = override?.custom_title || entry.title || 'Untitled';
   const displayDescription = override?.custom_description || entry.description || '';
   const customLanguage = override?.custom_language || null;
+  const customPreviewImageUrl = override?.custom_preview_image_url || null;
   return {
     base64_id: entry.base64_id,
     url_website: entry.url_website,
     url_video: entry.url_video || null,
-    preview_image_url: entry.preview_image_url || null,
+    preview_image_url: customPreviewImageUrl || entry.preview_image_url || null,
     original_title: entry.title,
     original_description: entry.description,
     timestamp: entry.timestamp || 0,
@@ -91,6 +93,7 @@ function mergeEpisodeWithOverride(entry: MediathekResult & { base64_id: string |
     custom_title: override?.custom_title || null,
     custom_description: override?.custom_description || null,
     custom_language: customLanguage,
+    custom_preview_image_url: customPreviewImageUrl,
     available_until: override?.available_until || null,
     override_id: override?.id || null,
     displayTitle,
@@ -212,6 +215,7 @@ export function upsertEpisodeOverride(
           custom_title = ?,
           custom_description = ?,
           custom_language = ?,
+          custom_preview_image_url = ?,
           available_until = ?,
           updated_at = datetime('now')
       WHERE url_website = ?
@@ -221,6 +225,7 @@ export function upsertEpisodeOverride(
       data.custom_title ?? null,
       data.custom_description ?? null,
       data.custom_language ?? null,
+      data.custom_preview_image_url ?? null,
       data.available_until ?? null,
       url
     );
@@ -228,8 +233,8 @@ export function upsertEpisodeOverride(
     db.prepare(
       `
       INSERT INTO episode_overrides (
-        base64_id, url_website, custom_title, custom_description, custom_language, available_until
-      ) VALUES (?, ?, ?, ?, ?, ?)
+        base64_id, url_website, custom_title, custom_description, custom_language, custom_preview_image_url, available_until
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
       `
     ).run(
       data.base64_id ?? null,
@@ -237,6 +242,7 @@ export function upsertEpisodeOverride(
       data.custom_title ?? null,
       data.custom_description ?? null,
       data.custom_language ?? null,
+      data.custom_preview_image_url ?? null,
       data.available_until ?? null
     );
   }
