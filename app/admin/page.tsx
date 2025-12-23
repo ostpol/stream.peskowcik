@@ -41,7 +41,7 @@ export default function AdminPage() {
   const [user, setUser] = useState<{ username: string } | null>(null);
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [loginError, setLoginError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'episodes' | 'search-terms' | 'blacklist'>('episodes');
+  const [activeTab, setActiveTab] = useState<'episodes' | 'ard-raw' | 'search-terms' | 'blacklist'>('episodes');
   const [editingUrl, setEditingUrl] = useState<string | null>(null);
   const [overrideForm, setOverrideForm] = useState<EpisodeOverrideForm>({
     custom_title: '',
@@ -370,7 +370,7 @@ export default function AdminPage() {
 
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex flex-wrap gap-3 mb-8">
-          {(['episodes', 'search-terms', 'blacklist'] as const).map(tab => (
+          {(['episodes', 'ard-raw', 'search-terms', 'blacklist'] as const).map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -380,12 +380,47 @@ export default function AdminPage() {
                   : 'border-slate-700 text-slate-300 hover:border-slate-500'
               }`}
             >
-              {tab === 'episodes' ? 'Episode Overrides' : tab === 'search-terms' ? 'Suchbegriffe' : 'Blacklist'}
+              {tab === 'episodes'
+                ? 'Episode Overrides'
+                : tab === 'ard-raw'
+                ? 'ARD Rohdaten'
+                : tab === 'search-terms'
+                ? 'Suchbegriffe'
+                : 'Blacklist'}
             </button>
           ))}
         </div>
 
         {loading && <p className="text-slate-400">Lade Daten…</p>}
+
+        {!loading && activeTab === 'ard-raw' && (
+          <section className="space-y-6">
+            <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
+              <h2 className="text-lg font-semibold mb-2">ARD Suchtreffer (Pěskowčik)</h2>
+              <p className="text-sm text-slate-400 mb-4">
+                Rohdaten aus der ARD-Suche. Diese Liste zeigt alle Metadaten pro Treffer.
+              </p>
+              {!searchResults ? (
+                <p className="text-sm text-rose-300">Suchergebnisse konnten nicht geladen werden.</p>
+              ) : searchResults.results.length === 0 ? (
+                <p className="text-sm text-rose-300">Keine Suchtreffer gefunden.</p>
+              ) : (
+                <div className="space-y-3">
+                  {searchResults.results.map((result, index) => (
+                    <details key={`${searchResults.query}-${index}`} className="border border-slate-800 rounded-lg">
+                      <summary className="cursor-pointer px-3 py-2 text-sm text-emerald-200">
+                        Treffer #{index + 1}
+                      </summary>
+                      <pre className="px-3 pb-3 text-xs text-slate-300 whitespace-pre-wrap break-words">
+                        {JSON.stringify(result, null, 2)}
+                      </pre>
+                    </details>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         {!loading && activeTab === 'episodes' && (
           <section className="space-y-6">
