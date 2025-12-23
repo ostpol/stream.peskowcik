@@ -127,7 +127,13 @@ export async function getAllEpisodes(options?: { includeUnavailable?: boolean })
         if (base64Id) {
           const detailResult = await fetchCachedEpisode(base64Id);
           if (detailResult) {
-            detailed = { ...detailResult, url_website: entry.url_website };
+            detailed = {
+              ...entry,
+              ...detailResult,
+              url_website: entry.url_website,
+              url_video: detailResult.url_video || entry.url_video,
+              preview_image_url: detailResult.preview_image_url || entry.preview_image_url,
+            };
           }
         }
 
