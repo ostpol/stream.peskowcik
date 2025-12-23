@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getBlacklistEntryById, updateBlacklistEntry, deleteBlacklistEntry } from '@/lib/blacklist';
+import { getAdminFromRequest } from '@/lib/auth';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const session = getAdminFromRequest(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const id = parseInt(params.id);
     if (isNaN(id)) {
@@ -36,6 +42,11 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const session = getAdminFromRequest(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const id = parseInt(params.id);
     if (isNaN(id)) {
@@ -90,6 +101,11 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const session = getAdminFromRequest(request);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const id = parseInt(params.id);
     if (isNaN(id)) {
@@ -116,4 +132,3 @@ export async function DELETE(
     );
   }
 }
-

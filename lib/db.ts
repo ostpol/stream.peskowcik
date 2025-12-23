@@ -10,38 +10,9 @@ if (!fs.existsSync(dataDir)) {
 
 const dbPath = path.join(dataDir, 'episodes.db');
 
-export interface Episode {
+export interface SearchTerm {
   id?: number;
-  base64_id: string | null;
-  url_website: string;
-  url_video: string | null;
-  custom_title: string | null;
-  custom_description: string | null;
-  custom_language: string | null;
-  available_until: string | null;
-  original_title: string | null;
-  original_description: string | null;
-  timestamp: number;
-  duration: number | null;
-  channel: string | null;
-  is_manual: number; // SQLite uses 0/1 for boolean
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Keyword {
-  id?: number;
-  keyword: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface LanguageRule {
-  id?: number;
-  pattern: string;
-  language: string; // 'Obersorbisch' or 'Niedersorbisch'
-  priority: number; // Lower numbers checked first
-  is_active: number; // SQLite uses 0/1 for boolean
+  term: string;
   created_at: string;
   updated_at: string;
 }
@@ -54,24 +25,41 @@ export interface BlacklistEntry {
   updated_at: string;
 }
 
-export interface ManualSeed {
+export interface EpisodeOverride {
   id?: number;
-  kind: string; // 'base64' or 'url'
-  value: string;
+  base64_id: string | null;
+  url_website: string;
   custom_title: string | null;
   custom_description: string | null;
-  custom_date: string | null; // YYYY-MM-DD
   custom_language: string | null;
-  available_until: string | null; // YYYY-MM-DD
+  available_until: string | null;
   created_at: string;
   updated_at: string;
 }
 
-export interface SearchTerm {
+export interface AdminUser {
   id?: number;
-  term: string;
+  username: string;
+  password_hash: string;
+  password_salt: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface AdminSession {
+  id?: number;
+  token: string;
+  user_id: number;
+  expires_at: string;
+  created_at: string;
+}
+
+export interface ApiCacheEntry {
+  id?: number;
+  cache_key: string;
+  payload: string;
+  fetched_at: string;
+  expires_at: string;
 }
 
 let db: Database.Database | null = null;
@@ -84,52 +72,30 @@ export function getDb(): Database.Database {
   db = new Database(dbPath);
   db.pragma('journal_mode = WAL');
   
-  // Create episodes table
+  // Core tables
   db.exec(`
-    CREATE TABLE IF NOT EXISTS episodes (
+    CREATE TABLE IF NOT EXISTS episode_overrides (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       base64_id TEXT,
       url_website TEXT NOT NULL UNIQUE,
-      url_video TEXT,
       custom_title TEXT,
       custom_description TEXT,
       custom_language TEXT,
       available_until TEXT,
-      original_title TEXT,
-      original_description TEXT,
-      timestamp INTEGER NOT NULL DEFAULT 0,
-      duration INTEGER,
-      channel TEXT,
-      is_manual INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
     
-    CREATE INDEX IF NOT EXISTS idx_episodes_timestamp ON episodes(timestamp DESC);
-    CREATE INDEX IF NOT EXISTS idx_episodes_base64_id ON episodes(base64_id);
-    CREATE INDEX IF NOT EXISTS idx_episodes_is_manual ON episodes(is_manual);
+    CREATE INDEX IF NOT EXISTS idx_episode_overrides_base64_id ON episode_overrides(base64_id);
     
-    CREATE TABLE IF NOT EXISTS keywords (
+    CREATE TABLE IF NOT EXISTS search_terms (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      keyword TEXT NOT NULL UNIQUE,
+      term TEXT NOT NULL UNIQUE,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
     
-    CREATE INDEX IF NOT EXISTS idx_keywords_keyword ON keywords(keyword);
-    
-    CREATE TABLE IF NOT EXISTS language_rules (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      pattern TEXT NOT NULL,
-      language TEXT NOT NULL,
-      priority INTEGER NOT NULL DEFAULT 0,
-      is_active INTEGER NOT NULL DEFAULT 1,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
-    );
-    
-    CREATE INDEX IF NOT EXISTS idx_language_rules_priority ON language_rules(priority ASC);
-    CREATE INDEX IF NOT EXISTS idx_language_rules_active ON language_rules(is_active);
+    CREATE INDEX IF NOT EXISTS idx_search_terms_term ON search_terms(term);
     
     CREATE TABLE IF NOT EXISTS blacklist (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -141,42 +107,39 @@ export function getDb(): Database.Database {
     
     CREATE INDEX IF NOT EXISTS idx_blacklist_type ON blacklist(type);
 
-    CREATE TABLE IF NOT EXISTS manual_seeds (
+    CREATE TABLE IF NOT EXISTS admin_users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      kind TEXT NOT NULL CHECK(kind IN ('base64', 'url')),
-      value TEXT NOT NULL UNIQUE,
-      custom_title TEXT,
-      custom_description TEXT,
-      custom_date TEXT,
-      custom_language TEXT,
-      available_until TEXT,
+      username TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      password_salt TEXT NOT NULL,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
 
-    CREATE INDEX IF NOT EXISTS idx_manual_seeds_kind ON manual_seeds(kind);
+    CREATE INDEX IF NOT EXISTS idx_admin_users_username ON admin_users(username);
 
-    CREATE TABLE IF NOT EXISTS search_terms (
+    CREATE TABLE IF NOT EXISTS admin_sessions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      term TEXT NOT NULL UNIQUE,
+      token TEXT NOT NULL UNIQUE,
+      user_id INTEGER NOT NULL,
+      expires_at TEXT NOT NULL,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+      FOREIGN KEY(user_id) REFERENCES admin_users(id) ON DELETE CASCADE
     );
 
-    CREATE INDEX IF NOT EXISTS idx_search_terms_term ON search_terms(term);
+    CREATE INDEX IF NOT EXISTS idx_admin_sessions_expires ON admin_sessions(expires_at);
+
+    CREATE TABLE IF NOT EXISTS api_cache (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      cache_key TEXT NOT NULL UNIQUE,
+      payload TEXT NOT NULL,
+      fetched_at TEXT NOT NULL,
+      expires_at TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_api_cache_expires ON api_cache(expires_at);
   `);
 
-  const ensureColumn = (table: string, columnName: string, columnDefinition: string) => {
-    const columns = db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
-    if (!columns.some(column => column.name === columnName)) {
-      db.exec(`ALTER TABLE ${table} ADD COLUMN ${columnDefinition}`);
-    }
-  };
-
-  ensureColumn('episodes', 'available_until', 'available_until TEXT');
-  ensureColumn('manual_seeds', 'custom_language', 'custom_language TEXT');
-  ensureColumn('manual_seeds', 'available_until', 'available_until TEXT');
-  
   return db;
 }
 

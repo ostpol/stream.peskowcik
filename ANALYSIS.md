@@ -13,7 +13,7 @@
 ### Core Functionality
 
 1. **API Integration**
-   - Fetches episodes from MediathekViewWeb API (`https://mediathekviewweb.de/api/query`)
+   - Fetches episodes from ARD Mediathek API (`https://api.ardmediathek.de`)
    - Queries for "Unser Sandmännchen" episodes
    - Supports pagination (offset/size)
 
@@ -85,7 +85,7 @@
 - **Node.js + Express** or **Python + FastAPI**
   - RESTful API for episode management
   - Database operations
-  - API proxy for MediathekViewWeb (CORS handling)
+  - API proxy for ARD Mediathek (CORS handling)
 
 **Database:**
 - **SQLite** (development) or **PostgreSQL** (production)
@@ -156,4 +156,3 @@
    - Improve UI/UX
    - Add search/filter
    - Optimize performance
-

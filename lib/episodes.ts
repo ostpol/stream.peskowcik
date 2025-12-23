@@ -1,4 +1,4 @@
-import { getDb, Episode } from './db';
+import { EpisodeOverride, getDb } from './db';
 import {
   fetchArdEpisode,
   fetchArdSearchResults,
@@ -7,283 +7,237 @@ import {
   detectLanguage,
   MediathekResult,
 } from './api-client';
-import { getKeywordsAsArray } from './keywords';
-import { getAllLanguageRules } from './language-rules';
-import { isBlacklisted } from './blacklist';
 import { getSearchTermsAsArray } from './search-terms';
+import { isBlacklisted } from './blacklist';
+import { getCachedValue, setCachedValue } from './cache';
 
-export interface EpisodeWithLanguage extends Episode {
+export interface EpisodeWithLanguage {
+  base64_id: string | null;
+  url_website: string;
+  url_video?: string | null;
+  original_title: string;
+  original_description: string;
+  timestamp: number;
+  duration?: number | null;
+  channel?: string | null;
+  custom_title?: string | null;
+  custom_description?: string | null;
+  custom_language?: string | null;
+  available_until?: string | null;
+  override_id?: number | null;
   language?: string | null;
   displayTitle: string;
   displayDescription: string;
   displayLanguage: string;
 }
 
-export async function getAllEpisodes(options?: { includeUnavailable?: boolean }): Promise<EpisodeWithLanguage[]> {
-  const db = getDb();
-  const includeUnavailable = options?.includeUnavailable ?? false;
-  const availabilityFilter = includeUnavailable
-    ? ''
-    : `WHERE available_until IS NULL OR date(available_until) >= date('now')`;
-  const rows = db.prepare(`
-    SELECT * FROM episodes 
-    ${availabilityFilter}
-    ORDER BY timestamp DESC
-  `).all() as Episode[];
-  
-  // Enrich all episodes in parallel
-  return Promise.all(rows.map(ep => enrichEpisode(ep)));
-}
+const CACHE_TTL_SECONDS = 60 * 60 * 24;
+const MAX_RESULTS = 40;
+const PAGE_SIZE = 50;
+const DEFAULT_TERMS = ['Pěskowčik', 'Naš pěskowy'];
 
-export async function getEpisodeById(id: number): Promise<EpisodeWithLanguage | null> {
-  const db = getDb();
-  const row = db.prepare('SELECT * FROM episodes WHERE id = ?').get(id) as Episode | undefined;
-  
-  if (!row) return null;
-  return await enrichEpisode(row);
-}
+async function fetchCachedSearchResults(
+  query: string,
+  pageSize: number,
+  pageNumber: number
+): Promise<MediathekResult[]> {
+  const cacheKey = `search:${query}:${pageSize}:${pageNumber}`;
+  const cached = await getCachedValue<MediathekResult[]>(cacheKey);
+  if (cached?.isFresh) return cached.data;
 
-export async function getEpisodeByUrl(url: string): Promise<EpisodeWithLanguage | null> {
-  const db = getDb();
-  const row = db.prepare('SELECT * FROM episodes WHERE url_website = ?').get(url) as Episode | undefined;
-  
-  if (!row) return null;
-  return await enrichEpisode(row);
-}
-
-export async function enrichEpisode(ep: Episode): Promise<EpisodeWithLanguage> {
-  // Use custom values if available, otherwise fall back to original
-  const displayTitle = ep.custom_title || ep.original_title || 'Untitled';
-  const displayDescription = ep.custom_description || ep.original_description || '';
-  
-  // Detect language if not set
-  let language = ep.custom_language;
-  if (!language && ep.original_title) {
-    const tempEntry: MediathekResult = {
-      title: ep.original_title,
-      description: ep.original_description || '',
-      timestamp: ep.timestamp,
-      url_website: ep.url_website,
-      url_video: ep.url_video || undefined,
-      channel: ep.channel || undefined,
-    };
-    
-    // Get language rules from database
-    const rules = await getAllLanguageRules();
-    const rulesForDetection = rules.map(r => ({ pattern: r.pattern, language: r.language }));
-    language = await detectLanguage(tempEntry, rulesForDetection);
+  const results = await fetchArdSearchResults(query, pageSize, pageNumber);
+  if (results.length > 0) {
+    await setCachedValue(cacheKey, results, CACHE_TTL_SECONDS);
+    return results;
   }
-  
+
+  if (cached) {
+    return cached.data;
+  }
+
+  return [];
+}
+
+async function fetchCachedEpisode(base64Id: string) {
+  const cacheKey = `item:${base64Id}`;
+  const cached = await getCachedValue<MediathekResult | null>(cacheKey);
+  if (cached?.isFresh) return cached.data;
+
+  const data = await fetchArdEpisode(base64Id);
+  if (data) {
+    await setCachedValue(cacheKey, data, CACHE_TTL_SECONDS);
+    return data;
+  }
+
+  if (cached) return cached.data;
+  return null;
+}
+
+function mergeEpisodeWithOverride(entry: MediathekResult & { base64_id: string | null }, override?: EpisodeOverride) {
+  const displayTitle = override?.custom_title || entry.title || 'Untitled';
+  const displayDescription = override?.custom_description || entry.description || '';
+  const customLanguage = override?.custom_language || null;
   return {
-    ...ep,
-    language,
+    base64_id: entry.base64_id,
+    url_website: entry.url_website,
+    url_video: entry.url_video || null,
+    original_title: entry.title,
+    original_description: entry.description,
+    timestamp: entry.timestamp || 0,
+    duration: entry.duration || null,
+    channel: entry.channel || null,
+    custom_title: override?.custom_title || null,
+    custom_description: override?.custom_description || null,
+    custom_language: customLanguage,
+    available_until: override?.available_until || null,
+    override_id: override?.id || null,
     displayTitle,
     displayDescription,
-    displayLanguage: language || '—',
   };
 }
 
-export async function createOrUpdateEpisode(
-  url: string,
-  data: Partial<Episode>
-): Promise<Episode> {
-  const db = getDb();
-  
-  const existing = db.prepare('SELECT * FROM episodes WHERE url_website = ?').get(url) as Episode | undefined;
-  
-  if (existing) {
-    // Update
-    const stmt = db.prepare(`
-      UPDATE episodes 
-      SET base64_id = COALESCE(?, base64_id),
-          url_video = COALESCE(?, url_video),
-          custom_title = COALESCE(?, custom_title),
-          custom_description = COALESCE(?, custom_description),
-          custom_language = COALESCE(?, custom_language),
-          available_until = COALESCE(?, available_until),
-          original_title = COALESCE(?, original_title),
-          original_description = COALESCE(?, original_description),
-          timestamp = COALESCE(?, timestamp),
-          duration = COALESCE(?, duration),
-          channel = COALESCE(?, channel),
-          is_manual = COALESCE(?, is_manual),
-          updated_at = datetime('now')
-      WHERE url_website = ?
-    `);
-    
-    stmt.run(
-      data.base64_id ?? null,
-      data.url_video ?? null,
-      data.custom_title ?? null,
-      data.custom_description ?? null,
-      data.custom_language ?? null,
-      data.available_until ?? null,
-      data.original_title ?? null,
-      data.original_description ?? null,
-      data.timestamp ?? null,
-      data.duration ?? null,
-      data.channel ?? null,
-      data.is_manual ?? null,
-      url
-    );
-    
-    return db.prepare('SELECT * FROM episodes WHERE url_website = ?').get(url) as Episode;
-  } else {
-    // Insert
-    const stmt = db.prepare(`
-      INSERT INTO episodes (
-        base64_id, url_website, url_video,
-        custom_title, custom_description, custom_language, available_until,
-        original_title, original_description,
-        timestamp, duration, channel, is_manual
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    
-    stmt.run(
-      data.base64_id ?? null,
-      url,
-      data.url_video ?? null,
-      data.custom_title ?? null,
-      data.custom_description ?? null,
-      data.custom_language ?? null,
-      data.available_until ?? null,
-      data.original_title ?? null,
-      data.original_description ?? null,
-      data.timestamp ?? 0,
-      data.duration ?? null,
-      data.channel ?? null,
-      data.is_manual ?? 0
-    );
-    
-    return db.prepare('SELECT * FROM episodes WHERE url_website = ?').get(url) as Episode;
-  }
-}
-
-export async function updateEpisodeMetadata(
-  id: number,
-  updates: {
-    custom_title?: string | null;
-    custom_description?: string | null;
-    custom_language?: string | null;
-  }
-): Promise<Episode | null> {
-  const db = getDb();
-  
-  const stmt = db.prepare(`
-    UPDATE episodes 
-    SET custom_title = ?,
-        custom_description = ?,
-        custom_language = ?,
-        updated_at = datetime('now')
-    WHERE id = ?
-  `);
-  
-  stmt.run(
-    updates.custom_title ?? null,
-    updates.custom_description ?? null,
-    updates.custom_language ?? null,
-    id
-  );
-  
-  return db.prepare('SELECT * FROM episodes WHERE id = ?').get(id) as Episode | undefined || null;
-}
-
-export async function deleteEpisode(id: number): Promise<boolean> {
-  const db = getDb();
-  const result = db.prepare('DELETE FROM episodes WHERE id = ?').run(id);
-  return result.changes > 0;
-}
-
-export async function clearAllEpisodes(): Promise<number> {
-  const db = getDb();
-  const result = db.prepare('DELETE FROM episodes').run();
-  return result.changes;
-}
-
-export async function syncEpisodesFromAPI(): Promise<number> {
-  const db = getDb();
-  let synced = 0;
-  
-  // Get keywords from database
-  const keywords = await getKeywordsAsArray();
+export async function getAllEpisodes(options?: { includeUnavailable?: boolean }): Promise<EpisodeWithLanguage[]> {
+  const includeUnavailable = options?.includeUnavailable ?? false;
   const searchTerms = await getSearchTermsAsArray();
-  const effectiveTerms = searchTerms.length > 0
-    ? searchTerms
-    : ['Pěskowčik', 'Naš pěskowy'];
-  
-  // Fetch episodes from API
-  const pageSize = 50;
-  const maxResults = 15;
-  const cutoffDate = new Date();
-  cutoffDate.setDate(cutoffDate.getDate() - 120); // Last 120 days
-  
-  const seenUrls = new Set<string>();
-  
-  for (const term of effectiveTerms) {
-    let pageNumber = 0;
-    while (synced < maxResults) {
-      const results = await fetchArdSearchResults(term, pageSize, pageNumber);
+  const terms = searchTerms.length > 0 ? searchTerms : DEFAULT_TERMS;
 
+  const seenUrls = new Set<string>();
+  const entries: Array<MediathekResult & { base64_id: string | null }> = [];
+
+  for (const term of terms) {
+    let pageNumber = 0;
+    while (entries.length < MAX_RESULTS) {
+      const results = await fetchCachedSearchResults(term, PAGE_SIZE, pageNumber);
       if (results.length === 0) break;
 
       for (const entry of results) {
-        if (synced >= maxResults) break;
+        if (entries.length >= MAX_RESULTS) break;
 
-        if (entry.timestamp) {
-          const entryDate = new Date(entry.timestamp * 1000);
-          if (entryDate < cutoffDate) {
-            continue;
+        if (!(await isSorbianEpisode(entry))) continue;
+        if (isBlacklisted(entry.title, entry.url_website)) continue;
+
+        const url = entry.url_website || '';
+        if (!url || seenUrls.has(url)) continue;
+        seenUrls.add(url);
+
+        const base64Id = extractBase64Id(url);
+        let detailed = entry;
+        if (base64Id) {
+          const detailResult = await fetchCachedEpisode(base64Id);
+          if (detailResult) {
+            detailed = { ...detailResult, url_website: entry.url_website };
           }
         }
 
-        if (!(await isSorbianEpisode(entry, keywords))) continue;
-
-        // Check if blacklisted
-        if (isBlacklisted(entry.title, entry.url_website)) {
-          continue;
-        }
-
-        const url = entry.url_website || '';
-        if (!url) continue;
-
-        // Skip duplicates
-        if (seenUrls.has(url)) continue;
-        seenUrls.add(url);
-
-        // Check if already exists
-        const existing = db.prepare('SELECT id FROM episodes WHERE url_website = ?').get(url);
-        if (existing) continue;
-
-        // Extract base64 ID if available
-        const base64Id = extractBase64Id(url);
-        let episodeData: MediathekResult | null = null;
-        if (base64Id) {
-          episodeData = await fetchArdEpisode(base64Id);
-        }
-
-        const source = episodeData || entry;
-
-        // Create episode
-        await createOrUpdateEpisode(url, {
-          base64_id: base64Id,
-          url_video: source.url_video || null,
-          original_title: source.title,
-          original_description: source.description,
-          timestamp: source.timestamp,
-          duration: source.duration || null,
-          channel: source.channel || null,
-          is_manual: 0,
-        });
-
-        synced++;
+        entries.push({ ...detailed, base64_id: base64Id });
       }
 
-      if (results.length < pageSize) break;
+      if (results.length < PAGE_SIZE) break;
       pageNumber += 1;
     }
-
-    if (synced >= maxResults) break;
   }
-  
-  return synced;
+
+  const overrides = getAllEpisodeOverrides();
+  const overridesByUrl = new Map(overrides.map(override => [override.url_website, override]));
+  const overridesByBase64 = new Map(
+    overrides.filter(override => override.base64_id).map(override => [override.base64_id as string, override])
+  );
+
+  const enriched: EpisodeWithLanguage[] = [];
+
+  for (const entry of entries) {
+    const override = overridesByUrl.get(entry.url_website) || (entry.base64_id ? overridesByBase64.get(entry.base64_id) : undefined);
+    const merged = mergeEpisodeWithOverride(entry, override);
+    const language = merged.custom_language
+      ? merged.custom_language
+      : await detectLanguage({
+          title: merged.original_title,
+          description: merged.original_description,
+          timestamp: merged.timestamp,
+          url_website: merged.url_website,
+          url_video: merged.url_video || undefined,
+          channel: merged.channel || undefined,
+        });
+
+    const displayLanguage = language || '—';
+
+    if (!includeUnavailable && merged.available_until) {
+      const untilDate = new Date(merged.available_until);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (untilDate < today) continue;
+    }
+
+    enriched.push({
+      ...merged,
+      language,
+      displayLanguage,
+    });
+  }
+
+  return enriched.sort((a, b) => b.timestamp - a.timestamp);
+}
+
+export function getAllEpisodeOverrides(): EpisodeOverride[] {
+  const db = getDb();
+  return db.prepare('SELECT * FROM episode_overrides ORDER BY created_at DESC').all() as EpisodeOverride[];
+}
+
+export function getEpisodeOverrideById(id: number): EpisodeOverride | null {
+  const db = getDb();
+  const row = db.prepare('SELECT * FROM episode_overrides WHERE id = ?').get(id) as EpisodeOverride | undefined;
+  return row || null;
+}
+
+export function upsertEpisodeOverride(
+  url: string,
+  data: Partial<EpisodeOverride> & { base64_id?: string | null }
+): EpisodeOverride {
+  const db = getDb();
+  const existing = db.prepare('SELECT * FROM episode_overrides WHERE url_website = ?').get(url) as EpisodeOverride | undefined;
+
+  if (existing) {
+    db.prepare(
+      `
+      UPDATE episode_overrides
+      SET base64_id = COALESCE(?, base64_id),
+          custom_title = ?,
+          custom_description = ?,
+          custom_language = ?,
+          available_until = ?,
+          updated_at = datetime('now')
+      WHERE url_website = ?
+      `
+    ).run(
+      data.base64_id ?? null,
+      data.custom_title ?? null,
+      data.custom_description ?? null,
+      data.custom_language ?? null,
+      data.available_until ?? null,
+      url
+    );
+  } else {
+    db.prepare(
+      `
+      INSERT INTO episode_overrides (
+        base64_id, url_website, custom_title, custom_description, custom_language, available_until
+      ) VALUES (?, ?, ?, ?, ?, ?)
+      `
+    ).run(
+      data.base64_id ?? null,
+      url,
+      data.custom_title ?? null,
+      data.custom_description ?? null,
+      data.custom_language ?? null,
+      data.available_until ?? null
+    );
+  }
+
+  return db.prepare('SELECT * FROM episode_overrides WHERE url_website = ?').get(url) as EpisodeOverride;
+}
+
+export function deleteEpisodeOverride(id: number): boolean {
+  const db = getDb();
+  const result = db.prepare('DELETE FROM episode_overrides WHERE id = ?').run(id);
+  return result.changes > 0;
 }

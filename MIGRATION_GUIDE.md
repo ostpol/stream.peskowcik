@@ -78,35 +78,19 @@ The new database stores:
    npm install
    ```
 
-2. **Seed Database**
-   ```bash
-   npm run db:seed
-   ```
-   This will populate the database with all manual episodes from the original Python code.
-
-3. **Start Development Server**
+2. **Start Development Server**
    ```bash
    npm run dev
    ```
 
-4. **Access the Application**
+3. **Access the Application**
    - Main page: http://localhost:3000
    - Admin panel: http://localhost:3000/admin
 
-## Data Migration
+## Data Management
 
-The seed script (`scripts/seed.ts`) automatically migrates:
-- All `MANUAL_EPISODES` base64 IDs
-- All `MANUAL_EPISODE_URLS`
-- All `MANUAL_EPISODE_METADATA` custom titles/descriptions
-
-## Custom Episode Management
-
-To add a new manual episode:
-
-1. Go to `/admin`
-2. Use the API or add directly via database
-3. Or use the seed script to add to `MANUAL_EPISODE_URLS` and re-run seed
+- Provide `ADMIN_USERNAME` and `ADMIN_PASSWORD` in the environment to bootstrap the admin account.
+- Use `/admin` to manage search terms, blacklist entries, and episode overrides.
 
 ## Deployment
 
@@ -131,4 +115,3 @@ The original Python code is preserved in `stream.app.peskowcik.py` for reference
 - Admin interface
 - Better performance
 - Modern web stack
-
